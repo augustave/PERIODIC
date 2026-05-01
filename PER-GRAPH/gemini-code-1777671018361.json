@@ -1,0 +1,16 @@
+{
+  "document_id": "REE_Report_2026",
+  "new_nodes": [
+    { "id": "FORGE", "type": "Organization", "subtype": "Diplomatic Bloc", "description": "Forum on Resource Geostrategic Engagement, 55 nations." },
+    { "id": "Niron_Magnetics", "type": "Entity", "subtype": "Company", "description": "Developer of Iron Nitride rare-earth-free magnets." },
+    { "id": "Project_Vault", "type": "Policy", "subtype": "Strategic Reserve", "description": "US domestic stockpiling initiative via EXIM Bank." },
+    { "id": "Eudialyte", "type": "Mineral", "subtype": "Complex Silicate", "description": "High HREE, low radiation source found in Sweden." },
+    { "id": "Chromatography_Refining", "type": "Technology", "subtype": "Metallurgy", "description": "Patented non-solvent separation method." }
+  ],
+  "new_edges": [
+    { "source": "China", "target": "HREE", "relation": "monopolizes_processing", "sentiment": "asymmetric_dominance" },
+    { "source": "Export_Controls_2025", "target": "Global_Economy", "relation": "risks_6.5_trillion_USD", "sentiment": "coercive" },
+    { "source": "Niron_Magnetics", "target": "Iron_Nitride", "relation": "commercializes", "evidence": "Sartell_MN_facility" },
+    { "source": "Japan", "target": "Deep_Sea_Mud", "relation": "retrieved_at_5700m", "location": "Minamitorishima_EEZ" }
+  ]
+}

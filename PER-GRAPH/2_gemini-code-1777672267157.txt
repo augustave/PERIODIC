@@ -1,0 +1,41 @@
+graph TD
+    %% Focal Point
+    IEA_Policies[IEA: 8 Policy Recommendations]
+
+    %% 1st Degree: The Recommendations
+    R1[R1: Data & Risk Assessment]
+    R2[R2: Emergency Buffers]
+    R3[R3: Ecosystem Approach]
+    R4[R4: Financial/Policy Support]
+    R5[R5: Supply Innovation]
+    R6[R6: Demand Innovation]
+    R7[R7: Recycling Expansion]
+    R8[R8: Price Transparency]
+
+    IEA_Policies --> R1 & R2 & R3 & R4 & R5 & R6 & R7 & R8
+
+    %% 2nd Degree: Projects & Entities
+    R2 -- "exemplified by" --> ProjectVault[Policy: Project Vault - US Stockpiling]
+    
+    R3 -- "targets" --> Metallization[Concept: Metallization Bottleneck]
+    R3 -- "industry leaders" --> MP_Materials[Entity: MP Materials]
+    R3 -- "industry leaders" --> Lynas[Entity: Lynas Rare Earths]
+
+    R4 -- "loan of AUD 1.65B" --> Eneabba[Project: Eneabba Refinery - Australia]
+    R4 -- "loan of USD 620M" --> Vulcan[Project: Vulcan Elements Facility - US]
+    R4 -- "backed by DFC" --> SerraVerde[Project: Mineração Serra Verde - Brazil]
+
+    R5 -- "pioneers LAD" --> ReElement[Entity: ReElement Technologies]
+    R5 -- "AI-separation pilot" --> Aclara[Entity: Aclara Resources]
+
+    R6 -- " FeN substitution" --> Niron[Entity: Niron Magnetics]
+    R6 -- "30% reduction" --> Japan_Industry[Entity: Japan Tech Sector]
+
+    R7 -- "25% mandate" --> CRMA[Policy: EU Critical Raw Materials Act]
+    R7 -- "novel recovery" --> Neo_Materials[Entity: Neo Performance Materials]
+
+    R8 -- "state-backed mechanism" --> Baotou_Index[Metric: Baotou Rare Earth Price Index]
+
+    %% Connections between projects
+    MP_Materials -- "vertical integration" --> R3
+    Niron -- "building facility" --> MN[Loc: Minnesota]

@@ -1,0 +1,30 @@
+{
+  "neighborhood_view": "IEA_Policy_Recommendations",
+  "mappings": [
+    {
+      "recommendation": "R2: Emergency Preparedness",
+      "connected_projects": ["Project Vault (US)", "Strategic Mineral Reserve (Australia)"],
+      "description": "Stockpiling magnet REEs to cover one year of exposed imports[cite: 1959, 1703]."
+    },
+    {
+      "recommendation": "R4: Financial & Policy Support",
+      "connected_projects": ["Eneabba Refinery", "Vulcan Elements", "Round Top", "Serra Verde"],
+      "description": "Deployment of BRL 565M (Brazil) and AUD 1.65B (Australia) in state-backed financing[cite: 1708, 1697]."
+    },
+    {
+      "recommendation": "R5: Supply-Side Innovation",
+      "connected_projects": ["ReElement Technologies", "Aclara Resources"],
+      "description": "Advancing LAD chromatography and AI-driven separation to bypass toxic solvent extraction[cite: 2302, 2305]."
+    },
+    {
+      "recommendation": "R6: Demand-Side Innovation",
+      "connected_projects": ["Niron Magnetics", "Japan Motor Redesign Programs"],
+      "description": "Commercializing REE-free Iron Nitride (FeN) magnets to reduce supply-chain vulnerability[cite: 2389, 2384]."
+    },
+    {
+      "recommendation": "R7: Recycling potential",
+      "connected_projects": ["Carester (France)", "Neo Performance Materials (Estonia)"],
+      "description": "Targeting 35% reduction in mining needs by 2050 through circular loop integration[cite: 1332, 211]."
+    }
+  ]
+}

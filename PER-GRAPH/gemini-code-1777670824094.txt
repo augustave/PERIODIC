@@ -1,0 +1,69 @@
+graph TD
+    %% Nodes: Concepts & Entities
+    subgraph REE_Classifications [REE Classifications]
+        LREE[Concept:LREE - Light Rare Earths]
+        HREE[Concept:HREE - Heavy Rare Earths]
+    end
+
+    subgraph Geography [Key Global Locales]
+        China[Entity:China - Monopolist]
+        USA[Entity:United States - Consumer/Emerging Producer]
+        EU[Entity:European Union - Consumer]
+        Malaysia[Entity:Malaysia - Lynas Refinery]
+        Brazil[Entity:Brazil - Serra Verde]
+        Kazakhstan[Entity:Kazakhstan - Karagandy]
+        Japan[Entity:Japan - EEZ Mining]
+    end
+
+    subgraph Mining_Ores [Mineral Sources]
+        Bastnaesite[Mineral:Bastnäesite]
+        Monazite[Mineral:Monazite]
+        IonicClays[Mineral:Lateritic Ion-Adsorption Clays]
+        Eudialyte[Mineral:Eudialyte]
+    end
+
+    subgraph Tech_Vectors [Technological Applications]
+        PermMagnets[Tech:Permanent Magnets - NdFeB/SmCo]
+        EV_Motors[Tech:EV Traction Motors]
+        WindTurbines[Tech:Offshore Wind Turbines]
+        Defense[Sector:Defense - F-35/Submarines]
+        IronNitride[Tech:RE-Free Magnets - Iron Nitride]
+    end
+
+    subgraph Policies_Alliances [Geopolitical Frameworks]
+        MSP[Org:Minerals Security Partnership]
+        FORGE[Org:Forum on Resource Geostrategic Engagement]
+        ExportControls[Policy:China 2025 Export Controls]
+        ProjectVault[Policy:US Strategic Stockpiling]
+    end
+
+    %% Relationships (Edges)
+    China -- "controls 90%" --> HREE
+    China -- "implements" --> ExportControls
+    ExportControls -- "targets" --> HREE
+    ExportControls -- "threatens" --> Defense
+    ExportControls -- "threatens" --> EV_Motors
+
+    LREE -- "isComponentOf" --> PermMagnets
+    HREE -- "stabilizes" --> PermMagnets
+    PermMagnets -- "enables" --> EV_Motors
+    PermMagnets -- "enables" --> WindTurbines
+
+    Bastnaesite -- "sourcedFrom" --> China
+    Bastnaesite -- "sourcedFrom" --> USA
+    IonicClays -- "primarySourceOf" --> HREE
+    IonicClays -- "minedIn" --> China
+    IonicClays -- "minedIn" --> Brazil
+
+    Eudialyte -- "processedIn" --> EU
+    Eudialyte -- "lowers" --> IonizingRadiation
+
+    MSP -- "evolvedInto" --> FORGE
+    FORGE -- "counters" --> China
+    ProjectVault -- "insulates" --> USA
+
+    IronNitride -- "replaces" --> PermMagnets
+    IronNitride -- "developedBy" --> NironMagnetics
+
+    Recycling[Tech:Chromatography Recycling] -- "reduces" --> Mining_Ores
+    DeepSeaMining[Sector:Deep-Sea Mining] -- "explores" --> Japan
