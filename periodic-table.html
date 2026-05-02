@@ -2661,7 +2661,8 @@
     .stats-bar, .colophon-bar { page-break-inside: avoid; }
     .cb-actions { display: none !important; }
     .xds-section, .kg-section { page-break-inside: avoid; padding: 18px 14px; }
-    .kg-clusters { grid-template-columns: repeat(5, 1fr) !important; }
+    .kg-clusters { grid-template-columns: repeat(3, 1fr) !important; }
+    .iea-grid { grid-template-columns: repeat(4, 1fr) !important; }
     .kg-edges { grid-template-columns: 1fr 1fr !important; }
     .kg-title, .xds-title { font-size: 22px !important; }
   }
@@ -2910,6 +2911,129 @@
     .jump-hint { bottom: 120px; right: 10px; font-size: 9px; padding: 6px 10px; }
   }
 
+  /* ======== IEA R1–R8 POLICY FRAMEWORK SECTION ======== */
+  .iea-section {
+    padding: 56px 40px 60px;
+    border-top: 1px solid var(--ink);
+  }
+  .iea-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .iea-eyebrow {
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+  .iea-title {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-variation-settings: "opsz" 72;
+    font-size: 36px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .iea-deck {
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 460px;
+    align-self: flex-end;
+  }
+  .iea-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--ink);
+    border-left: 1px solid var(--ink);
+  }
+  .iea-card {
+    border-right: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 18px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 200px;
+  }
+  .iea-card-tag {
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .iea-card-name {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-variation-settings: "opsz" 36;
+    font-size: 18px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .iea-card-deck {
+    font-family: "DM Mono", monospace;
+    font-size: 9.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+  .iea-card-projects {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(11,4,4,0.14);
+  }
+  .iea-proj-chip {
+    font-family: "DM Mono", monospace;
+    font-size: 8.5px;
+    letter-spacing: 0.06em;
+    padding: 3px 7px;
+    border: 1px solid rgba(11,4,4,0.18);
+    background: rgba(11,4,4,0.03);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .iea-proj-chip:hover {
+    background: var(--ink);
+    color: var(--bg-paper);
+    border-color: var(--ink);
+  }
+  .iea-proj-empty {
+    font-family: "DM Mono", monospace;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+  /* IEA accent bar — color-codes the recommendation type */
+  .iea-card[data-r="r1"] .iea-card-tag,
+  .iea-card[data-r="r8"] .iea-card-tag { color: #7E5A9B; }   /* data / pricing — purple */
+  .iea-card[data-r="r2"] .iea-card-tag { color: #B51A21; }   /* emergency — red */
+  .iea-card[data-r="r3"] .iea-card-tag,
+  .iea-card[data-r="r4"] .iea-card-tag { color: #235597; }   /* ecosystem / financing — blue */
+  .iea-card[data-r="r5"] .iea-card-tag,
+  .iea-card[data-r="r6"] .iea-card-tag { color: #3A7A5A; }   /* innovation — green */
+  .iea-card[data-r="r7"] .iea-card-tag { color: #574737; }   /* recycling — umber */
+  @media print {
+    .iea-section { page-break-inside: avoid; padding: 18px 14px; }
+    .iea-grid { grid-template-columns: repeat(4, 1fr) !important; }
+    .iea-title { font-size: 22px !important; }
+  }
+  @media (max-width: 900px) {
+    .iea-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
   /* ======== KNOWLEDGE GRAPH SECTION ======== */
   .kg-section {
     padding: 56px 40px 60px;
@@ -2949,7 +3073,7 @@
   }
   .kg-clusters {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 0;
     border-top: 1px solid var(--ink);
     border-left: 1px solid var(--ink);
@@ -3332,6 +3456,18 @@
     <div class="xds-grid" id="xdsGrid">
       <!-- populated by renderCrossDataset() -->
     </div>
+  </section>
+
+  <!-- 2.5 · IEA R1–R8 Policy Framework -->
+  <section class="iea-section" id="ieaSection">
+    <div class="iea-head">
+      <div>
+        <div class="iea-eyebrow">Appendix · 政策枠組</div>
+        <div class="iea-title">IEA <span class="accent">Policy Compass</span></div>
+      </div>
+      <div class="iea-deck">The International Energy Agency's eight recommendations for critical-mineral security — each card pairs the policy with the operations in this dataset that exemplify it. Click a project chip to surface its detail card and pulse-highlight its element footprint.</div>
+    </div>
+    <div class="iea-grid" id="ieaGrid"><!-- rendered by renderIeaFramework() --></div>
   </section>
 
   <!-- 3 · Knowledge Graph appendix -->
@@ -4228,7 +4364,7 @@ let OPERATIONS = [
     firstYear: 2024, firstAnnounced: 2020, fid: 2022, funding: "DoD", fundingAmount: null,
     segment: "recycling",
     fundingNote: "DoD + DOE funding partnerships · undisclosed combined amount",
-    note: "Circular-economy approach — recovers REEs from end-of-life NdFeB magnets and mining tailings using zero-emission electrochemistry. DoD and DOE funding partnerships." },
+    note: "Circular-economy approach — recovers REEs from end-of-life NdFeB magnets and mining tailings using zero-emission solvent-free metallization (electrochemical separation). DoD and DOE funding partnerships, with In-Q-Tel Compass Fund participation bridging the Pilot-to-Commercial 'Valley of Death'. Strategically aligned with IEA R5 (Supply Innovation) and R7 (Recycling Expansion) — one of the few operations satisfying both at once." },
   { rank: 21, name: "Niron Magnetics", operator: "Niron Magnetics", region: "Sartell, Minnesota, USA",
     country: "USA", status: "project", mineralType: "Iron Nitride (RE-free)",
     outputs: [60, 59, 66, 65],
@@ -4236,7 +4372,79 @@ let OPERATIONS = [
     capacity: "Pilot · 10 MGOe target → commercial NdFeB parity",
     firstYear: 2027, firstAnnounced: 2014, fid: "TBD", funding: "DoD", fundingAmount: 28,
     segment: "magnets",
-    note: "Developing iron nitride (Fe₁₆N₂) permanent magnets that contain no rare earths whatsoever — a direct substitution threat to NdFeB. Listed under Nd, Pr, Dy, Tb because those are the demand it could displace, not what it produces. Iron nitride has a theoretical maximum energy product exceeding NdFeB, but achieving it in bulk polycrystalline form has resisted the field for decades. Niron's Sartell facility is the furthest-advanced commercial attempt. $28M+ in DoD and ARPA-E funding. If iron nitride reaches 40–50 MGOe at scale, it would be the first rare-earth-free magnet capable of replacing NdFeB in EV traction motors and wind turbine generators — collapsing demand for Nd, Pr, Dy, and Tb simultaneously." }
+    note: "Developing iron nitride (Fe₁₆N₂) permanent magnets that contain no rare earths whatsoever — a direct substitution threat to NdFeB. Listed under Nd, Pr, Dy, Tb because those are the demand it could displace, not what it produces. Iron nitride has a theoretical maximum energy product exceeding NdFeB, but achieving it in bulk polycrystalline form has resisted the field for decades. Niron's Sartell facility is the furthest-advanced commercial attempt. $28M+ in DoD and ARPA-E funding. Faces engineering hurdles: thermal instability and unproven scalability remain open questions. If iron nitride reaches 40–50 MGOe at scale, it would be the first rare-earth-free magnet capable of replacing NdFeB in EV traction motors and wind turbine generators — collapsing demand for Nd, Pr, Dy, and Tb simultaneously." },
+
+  { rank: 22, name: "Vulcan Elements", operator: "Vulcan Elements", region: "Research Triangle, North Carolina, USA",
+    country: "USA", status: "build", mineralType: "Sintered NdFeB Magnet",
+    outputs: [60, 59, 66, 65],
+    capacity: "≈ 10,000 t/yr sintered NdFeB magnets (planned)",
+    firstYear: 2027, firstAnnounced: 2022, fid: 2024, funding: "DOE", fundingAmount: 620,
+    segment: "magnets",
+    iea: ["R3", "R4"],
+    note: "$620M DOE Loan Programs Office conditional commitment (2024) for the first non-Chinese sintered-NdFeB magnet plant at industrial scale. Targets the metallization bottleneck that no Western magnet maker outside MP Materials and Lynas has bridged. Strategic partnership with ReElement Technologies for solvent-free feedstock. Confronts the 5–12× equipment-cost penalty for non-Chinese strip casters and alignment pressers — the structural reason Western magnet capacity has lagged mining and separation by a decade." },
+
+  { rank: 23, name: "ReElement Technologies", operator: "ReElement Technologies", region: "Marion, Indiana, USA",
+    country: "USA", status: "online", mineralType: "Ligand-Assisted Chromatography",
+    outputs: [60, 59, 66, 65, 39, 64],
+    capacity: "≈ 1.5 kt REO/yr (Phase 1) → 9 kt/yr (Phase 4)",
+    firstYear: 2024, firstAnnounced: 2020, fid: 2022, funding: "DoD", fundingAmount: 53,
+    segment: "separation",
+    iea: ["R5"],
+    note: "Pioneers ligand-assisted displacement (LAD) chromatography — REE separation without the toxic solvent extraction (Solx) chains that monopolize global processing. $53M DoD DPA Title III award, plus partnership with Vulcan Elements for downstream magnet feed. The technology matters because Solx is the permitting bottleneck blocking most Western REE refineries; LAD chromatography is one of two non-solvent routes (alongside crystallization) capable of bypassing it." },
+
+  { rank: 24, name: "Aclara Resources", operator: "Aclara Resources · Hochschild", region: "Concepción, Chile + Goiás, Brazil",
+    country: "Chile", status: "build", mineralType: "Ionic-Adsorption Clay",
+    outputs: [66, 65, 67, 68, 39],
+    capacity: "≈ 191 t HREE/yr (Penco pilot)",
+    firstYear: 2026, firstAnnounced: 2021, fid: 2024, funding: null, fundingAmount: null,
+    segment: "separation",
+    iea: ["R5"],
+    note: "AI-driven separation pilot for ionic-clay HREE — the only ore type that yields heavy rare earths in commercial concentration outside southern China. Aclara's Penco circuit is paired with a separation plant in Goiás, Brazil; together they target full mine-to-oxide HREE chain in the Western Hemisphere. Spun out of Hochschild Mining in 2023; NYSE-listed. Most strategically significant non-Chinese HREE pilot because the Mountain Pass / Lynas / Eneabba axis is LREE-focused." },
+
+  { rank: 25, name: "Carester (Caremag)", operator: "Carester · MagREEsource JV", region: "Lacq, France",
+    country: "France", status: "build", mineralType: "Recycled NdFeB + Solx",
+    outputs: [60, 59, 66, 65],
+    capacity: "≈ 800 t REO-equivalent/yr (Phase 1, recycled)",
+    firstYear: 2026, firstAnnounced: 2022, fid: 2024, funding: "EU CRMA", fundingAmount: 217,
+    segment: "refining",
+    iea: ["R7"],
+    note: "France's first REE refinery — €200M with Caisse des Dépôts backing plus EU CRMA-aligned support. Hybrid feedstock: recycled NdFeB from EU end-of-life supply + virgin oxides for blending. Strategic for the EU's 25% recycled-content mandate by 2030. Co-developed with MagREEsource (a Grenoble startup recovering magnets from hard drives, motors, and wind turbines) — closing the loop the CRMA explicitly targets." },
+
+  { rank: 26, name: "Neo Performance Materials (Silmet)", operator: "Neo Performance Materials", region: "Sillamäe, Estonia",
+    country: "Estonia", status: "online", mineralType: "Solx + Recycling",
+    outputs: [60, 59, 66, 65, 57, 58],
+    capacity: "≈ 5 kt REO/yr separation (mixed-source)",
+    firstYear: "pre-2024", firstAnnounced: 2010, fid: 2010, funding: "EU CRMA", fundingAmount: null,
+    segment: "refining",
+    iea: ["R7"],
+    note: "Europe's only commercial Nd-Pr separation facility. Soviet-era heavy-mineral processing site retooled for REE; now processes feed from MP Materials concentrate and increasingly from EU recycling streams. Designated a CRMA strategic project (2024). Together with the Carester refinery and the Eneabba/Lynas axis it forms the operational backbone of the EU's planned non-Chinese REE supply chain." },
+
+  { rank: 27, name: "Alta Resources", operator: "Alta Resources", region: "Sandy, Utah, USA",
+    country: "USA", status: "project", mineralType: "Bioengineered Protein Separation",
+    outputs: [60, 59, 66, 65, 39, 64],
+    capacity: "Pre-pilot · selectivity targets per element",
+    firstYear: "TBD", firstAnnounced: 2021, fid: "TBD", funding: "In-Q-Tel", fundingAmount: null,
+    segment: "separation",
+    iea: ["R5"],
+    note: "Develops bioengineered protein 'molecular robots' — synthetic biology designed to bind individual rare-earth ions selectively, eliminating the multi-stage solvent extraction chains that define conventional separation. Funded by In-Q-Tel's Compass Fund (the U.S. intelligence community's strategic VC arm), bridging the Technology and Pilot-Scale 'Valleys of Death' that have stalled most non-Chinese REE separation startups. Highest-risk / highest-reward of the leapfrog pathways: if it scales, REE separation could become a small-footprint distributed process rather than the centralized chemical-plant-scale operation it is today." },
+
+  { rank: 28, name: "Genomines", operator: "Genomines", region: "Évry, France",
+    country: "France", status: "project", mineralType: "Phytomining",
+    outputs: [28, 27, 60],
+    capacity: "Pre-commercial · tailings + degraded-land trials",
+    firstYear: "TBD", firstAnnounced: 2017, fid: "TBD", funding: "EU CRMA", fundingAmount: null,
+    segment: "mining",
+    iea: ["R5"],
+    note: "Phytomining — using hyperaccumulator plants (Alyssum, Rinorea, Berkheya) to take up Ni, Co, and select REEs from contaminated soils, mine tailings, and degraded land. Genomines applies genetic engineering to boost accumulation rates beyond what wild hyperaccumulators achieve naturally. Genuinely circular: turns environmental remediation into supply. Currently sub-commercial scale, but a serious R5 ('Supply-Side Innovation') candidate at the long horizon — and one of the few REE pathways with negative net land-use impact." },
+
+  { rank: 29, name: "Rio Tinto Nuton", operator: "Rio Tinto · Nuton LLC", region: "Multiple sites · USA, Chile, Australia",
+    country: "USA", status: "project", mineralType: "Microorganism Bioleaching",
+    outputs: [29, 60, 59],
+    capacity: "Pilot scale · Bingham + Resolution test plots",
+    firstYear: 2026, firstAnnounced: 2022, fid: "TBD", funding: null, fundingAmount: null,
+    segment: "mining",
+    iea: ["R5"],
+    note: "Microorganism-based metal recovery — Rio Tinto's Nuton subsidiary deploys engineered bioleaching bacteria to extract copper (and increasingly REE / Co byproducts) from ores too low-grade or refractory for conventional flotation. Lower energy, lower water, lower CO₂ than thermal smelting. Strategic because it unlocks waste rock and historic tailings as an ore source — adding domestic supply without opening new mines. R5 ('Supply Innovation') alongside LAD chromatography and bioengineered separation in the leapfrog basket." }
 ];
 
 /* reverse index: element atomic number → list of operations producing it */
@@ -5508,9 +5716,9 @@ const DATASET_REE = {
   meta: {
     titleSection2: "Twenty Rare Earth <span class=\"accent\">Minerals</span>",
     deck2: "Production data: <span class=\"designers\">USGS MCS 2025</span> — global REO output ≈ 390,000 t in 2024. Eudialyte (rank 8) is the EU's low-radioactivity HREE pathway.",
-    titleSection3: "Twenty-One Allied <span class=\"accent\">Operations</span>  (incl. Niron substitution)",
-    deck3: "U.S., Australian, Canadian, Brazilian, and Greenlandic REE projects — the build-out beyond Chinese supply concentration. Includes Niron Magnetics (iron nitride RE-free magnets) and the FORGE diplomatic bloc (55 nations) as structural counters to China's export-control leverage. Status as of Q1 2026; sources <span class=\"src\">USGS · MP Materials FY25 · Lynas FY25 · Arafura · Iluka · DoD FORGE briefings</span>.",
-    capitalDeck: "U.S. federal allocations follow the bottleneck. Mining gets the public-record glory; separation and magnets get the dollars. Project Vault (EXIM Bank strategic stockpiling) adds a buffer layer — the first explicit recognition that build-out timelines leave a vulnerability window that only reserves can close."
+    titleSection3: "Twenty-Nine Allied <span class=\"accent\">Operations</span>  (mine · separate · refine · magnetize · recycle · leapfrog)",
+    deck3: "U.S., Australian, Canadian, Brazilian, Greenlandic, and European REE projects — the build-out beyond Chinese supply concentration. Spans the full IEA-aligned chain: mining, solvent-free separation (LAD chromatography, AI-driven, bioengineered protein), refining (Carester, Neo Silmet), magnet finishing (Vulcan Elements), recycling (Phoenix Tailings, MagREEsource), and leapfrog R&D (phytomining, microorganism bioleaching). Includes Niron Magnetics (iron nitride RE-free substitution) and the FORGE diplomatic bloc (55 nations) as structural counters to China's export-control leverage. Status as of Q1 2026; sources <span class=\"src\">USGS · MP Materials FY25 · Lynas FY25 · Arafura · Iluka · IEA Critical Minerals Outlook · DoD FORGE briefings · CFR CSR101</span>.",
+    capitalDeck: "U.S. federal allocations follow the bottleneck. Mining gets the public-record glory; separation and magnets get the dollars (DOE LPO $620M Vulcan, $2.26B Thacker Pass, $1B MP Materials DoW). The IEA's R4 framework — financial and policy support — operates here as patient capital from DoD, DOE LPO, In-Q-Tel, and the EU's CRMA-aligned €217M Carester loan. Project Vault (EXIM Bank stockpiling) adds a buffer layer — the first explicit recognition that build-out timelines leave a vulnerability window that only reserves can close."
   }
 };
 
@@ -5740,7 +5948,9 @@ const COUNTRY_PATCHES = {
   "Czech Republic": { risk: "low" },
   "Zimbabwe":   { risk: "medium", iso: { code: "ZW", flag: "🇿🇼" } },
   "Namibia":    { risk: "medium", iso: { code: "NA", flag: "🇳🇦" } },
-  "France":     { risk: "low",    iso: { code: "FR", flag: "🇫🇷" } }
+  "France":     { risk: "low",    iso: { code: "FR", flag: "🇫🇷" } },
+  "Estonia":    { risk: "low",    iso: { code: "EE", flag: "🇪🇪" } },
+  "Multiple":   { risk: "medium", iso: { code: "XX", flag: "🌐" } }
 };
 Object.entries(COUNTRY_PATCHES).forEach(([name, p]) => {
   if (p.risk && !COUNTRY_RISK[name]) COUNTRY_RISK[name] = p.risk;
@@ -5925,6 +6135,7 @@ const DATASET_COBALT = {
       capacity: "35 kt Li₂CO₃-eq/yr recycling",
       firstYear: "TBD", firstAnnounced: 2021, fid: 2022, funding: "DOE", fundingAmount: 375,
       segment: "recycling",
+      iea: ["R7"],
       note: "$375M DOE LPO loan conditional commitment 2022. Project paused in 2023 after construction cost overrun ($485M vs $485M revised); Li-Cycle exploring restructuring. Represents the strategic bet on recycling as a domestic cobalt source." },
     { rank: 18, name: "Redwood Materials", operator: "Redwood Materials · Panasonic", region: "McCarran, Nevada + Charleston, SC, USA",
       country: "USA", status: "project", mineralType: "Black Mass (recycling)",
@@ -5932,6 +6143,7 @@ const DATASET_COBALT = {
       capacity: "100 GWh battery materials/yr (target)",
       firstYear: 2026, firstAnnounced: 2020, fid: 2023, funding: "DOE", fundingAmount: 2000,
       segment: "recycling",
+      iea: ["R4", "R7"],
       note: "$2B DOE Advanced Technology Vehicles Manufacturing loan (2023). Refurbishes end-of-life battery materials into cathode active material and anode copper foil. Panasonic offtake for the Nevada Gigafactory cell supply chain." },
     { rank: 19, name: "Zambian Copperbelt Expansion", operator: "ZCCM-IH · First Quantum · Vedanta", region: "Copperbelt Province, Zambia",
       country: "Zambia", status: "project", mineralType: "Heterogenite + Carrollite",
@@ -5954,6 +6166,7 @@ const DATASET_COBALT = {
       capacity: "≈ 40% of global EV battery installs (2024) and rising",
       firstYear: 2020, firstAnnounced: 2010, fid: 2014, funding: null, fundingAmount: null,
       segment: "magnets",
+      iea: ["R6"],
       note: "Lithium iron phosphate (LFP) cathode chemistry contains zero cobalt, nickel, or manganese — a direct demand-displacement threat to NMC. Listed under Co, Ni, Mn because those are the elements it could displace, not what it produces. CATL's Shenxing platform and BYD's Blade Battery have pushed LFP energy density into mainstream EV ranges (>500 km). Tesla Standard Range, Ford Mustang Mach-E, and most Chinese EVs now ship LFP. If LFP captures 60%+ of the EV market by 2030 (BloombergNEF projection), global cobalt demand growth flattens despite EV sales tripling — the supply-side build-out captured in this dataset becomes overcapacity." }
   ],
   meta: {
@@ -6350,10 +6563,58 @@ switchDataset = function(key) {
   renderStats();
   updateStickyState();
   renderCrossDataset();
+  if (typeof renderIeaFramework === "function") renderIeaFramework();
 };
 
 renderStats();
 renderCrossDataset();
+
+/* ===== IEA R1–R8 POLICY FRAMEWORK RENDERER =====
+   Pairs each IEA recommendation with operations in the active dataset
+   that carry a matching `iea: [...]` tag. Project chips select the op,
+   reusing the existing selectOperation() flow + jump-hint. */
+const IEA_RECS = [
+  { id: "R1", title: "Data & Risk Assessment",   deck: "Structured visibility into supply-chain exposure — the precondition for every other recommendation. Underpins the OECD Critical Minerals Inventory and IEA's annual outlook." },
+  { id: "R2", title: "Emergency Buffers",        deck: "Stockpiling enough magnet-grade REEs and battery-critical metals to cover one year of exposed imports. Project Vault and Australia's Strategic Reserve are the operational templates." },
+  { id: "R3", title: "Ecosystem Approach",       deck: "Vertically integrate mine-to-magnet rather than letting separation/refining bottlenecks strand upstream investment. MP Materials and Lynas are the working examples; Vulcan + ReElement extend the model into magnet finishing." },
+  { id: "R4", title: "Financial & Policy Support", deck: "Patient capital through DOE LPO ($620M Vulcan, $2.26B Thacker Pass), the EU CRMA's €217M Carester loan, AUD 1.65B for Eneabba, BRL 565M for Serra Verde. R4 underwrites every other recommendation." },
+  { id: "R5", title: "Supply-Side Innovation",   deck: "Bypass China's solvent-extraction monopoly via LAD chromatography (ReElement), AI-driven separation (Aclara), bioengineered protein binding (Alta), phytomining (Genomines), and microorganism bioleaching (Rio Tinto Nuton)." },
+  { id: "R6", title: "Demand-Side Innovation",   deck: "Reduce REE demand at the source: iron-nitride magnets (Niron) and motor redesigns (Japan's industry-wide 30% reduction programs) are the leading substitution vectors. Faces engineering risk — thermal stability, scale-up." },
+  { id: "R7", title: "Recycling Expansion",      deck: "EU CRMA mandates 25% recycled content by 2030. Carester (France), Neo Performance Materials (Estonia), and Phoenix Tailings (USA) operate the closed-loop refineries that satisfy it. Recycling targets a 35% reduction in mining needs by 2050." },
+  { id: "R8", title: "Price Transparency",       deck: "China's Baotou Rare Earth Price Index is a state-controlled mechanism. R8 calls for Western indices and futures markets to provide hedge-eligible pricing — still largely unbuilt, but a structural prerequisite for project finance." }
+];
+
+function renderIeaFramework() {
+  const grid = document.getElementById("ieaGrid");
+  if (!grid) return;
+
+  /* Map each recommendation to ops in the active dataset that tag it */
+  grid.innerHTML = IEA_RECS.map(rec => {
+    const matched = OPERATIONS.filter(o => Array.isArray(o.iea) && o.iea.includes(rec.id));
+    const chips = matched.length
+      ? matched.map(o => `<span class="iea-proj-chip" data-op-rank="${o.rank}" title="${o.operator || o.name}">${o.name}</span>`).join("")
+      : `<span class="iea-proj-empty">— no operations tagged in active dataset —</span>`;
+
+    return `
+      <div class="iea-card" data-r="${rec.id.toLowerCase()}">
+        <div class="iea-card-tag">${rec.id} · Recommendation</div>
+        <div class="iea-card-name">${rec.title}</div>
+        <div class="iea-card-deck">${rec.deck}</div>
+        <div class="iea-card-projects">${chips}</div>
+      </div>`;
+  }).join("");
+
+  /* Wire project-chip clicks to selectOperation() */
+  grid.querySelectorAll(".iea-proj-chip[data-op-rank]").forEach(chip => {
+    chip.addEventListener("click", () => {
+      const rank = parseInt(chip.dataset.opRank, 10);
+      const op = OPERATIONS.find(o => o.rank === rank);
+      if (op && typeof selectOperation === "function") selectOperation(op);
+    });
+  });
+}
+
+renderIeaFramework();
 
 /* ===== PULSE-ATTENTION + JUMP-HINT (replaces auto-scroll on selection) =====
    When a mineral or op is selected, briefly pulse the matched element cells
@@ -6401,23 +6662,30 @@ const KG_CLUSTERS = [
       { id: "eudialyte",  label: "Eudialyte",   sub: "HREE, low-radiation · Sweden, Greenland" }
     ]
   },
-  { id: "tech", name: "Technology Vectors", accent: "where the REEs go",
+  { id: "tech", name: "Technology Vectors", accent: "where the REEs go and what bypasses them",
     nodes: [
-      { id: "permmagnet",  label: "NdFeB / SmCo Magnets",  sub: "Nd+Pr body · Dy/Tb stabilizer" },
-      { id: "evmotor",     label: "EV Traction Motors",    sub: "largest growing demand vector" },
-      { id: "wind",        label: "Offshore Wind Turbines", sub: "≈ 600 kg REE/MW direct-drive" },
-      { id: "defense",     label: "Defense Systems",        sub: "F-35 · submarines · munitions" },
-      { id: "ironnitride", label: "Iron Nitride (Niron)",   sub: "RE-free · Sartell MN pilot" }
+      { id: "permmagnet",   label: "NdFeB / SmCo Magnets",   sub: "Nd+Pr body · Dy/Tb stabilizer" },
+      { id: "evmotor",      label: "EV Traction Motors",     sub: "largest growing demand vector" },
+      { id: "wind",         label: "Offshore Wind Turbines", sub: "≈ 600 kg REE/MW direct-drive" },
+      { id: "defense",      label: "Defense Systems",        sub: "F-35 · submarines · munitions" },
+      { id: "ironnitride",  label: "Iron Nitride (Niron)",   sub: "RE-free · Sartell MN pilot" },
+      { id: "ladchrom",     label: "LAD Chromatography",     sub: "ReElement · solvent-free separation" },
+      { id: "aisep",        label: "AI-Driven Separation",   sub: "Aclara Resources · Penco pilot" },
+      { id: "bioprotein",   label: "Bioengineered Proteins", sub: "Alta Resources · molecular robots" },
+      { id: "phytomining",  label: "Phytomining",            sub: "Genomines · hyperaccumulator plants" },
+      { id: "nuton",        label: "Nuton Bioleaching",      sub: "Rio Tinto · microorganism recovery" },
+      { id: "solventfreemet", label: "Solvent-Free Metallization", sub: "Phoenix Tailings · electrochemistry" }
     ]
   },
-  { id: "geo", name: "Key Geographies", accent: "where it is mined and processed",
+  { id: "geo", name: "Key Geographies", accent: "where it is mined, processed, finished",
     nodes: [
       { id: "china",    label: "China",          sub: "90% HREE processing · export controls" },
-      { id: "usa",      label: "United States",  sub: "Mountain Pass · Project Vault" },
-      { id: "eu",       label: "European Union", sub: "eudialyte pathway · CRMA" },
+      { id: "usa",      label: "United States",  sub: "Mountain Pass · Vulcan · Project Vault" },
+      { id: "eu",       label: "European Union", sub: "Carester · Neo Silmet · CRMA mandate" },
       { id: "malaysia", label: "Malaysia",       sub: "Lynas LAMP refinery" },
-      { id: "brazil",   label: "Brazil",         sub: "Serra Verde ionic clay project" },
-      { id: "japan",    label: "Japan",           sub: "deep-sea mud · Minamitorishima EEZ" }
+      { id: "brazil",   label: "Brazil",         sub: "Serra Verde · Aclara separation" },
+      { id: "australia", label: "Australia",     sub: "Lynas Mt Weld · Eneabba · Strategic Reserve" },
+      { id: "japan",    label: "Japan",          sub: "deep-sea mud · 30% reduction redesign" }
     ]
   },
   { id: "policy", name: "Geopolitical Frameworks", accent: "the institutional response",
@@ -6425,30 +6693,97 @@ const KG_CLUSTERS = [
       { id: "exportcontrols", label: "China Export Controls", sub: "Apr + Oct 2025 · $6.5T at risk" },
       { id: "forge",          label: "FORGE",                 sub: "55-nation bloc · evolved from MSP" },
       { id: "projectvault",   label: "Project Vault",         sub: "EXIM Bank · US strategic stockpile" },
-      { id: "chromrefining",  label: "Chromatography Refining", sub: "non-solvent separation · EU pathway" }
+      { id: "ausreserve",     label: "Strategic Mineral Reserve", sub: "Australia · 1-yr buffer" },
+      { id: "crma",           label: "EU CRMA",               sub: "25% recycled-content mandate by 2030" },
+      { id: "metalbottleneck", label: "Metallization Bottleneck", sub: "strip casters + alignment pressers" },
+      { id: "equipshortage",  label: "Equipment Shortage",    sub: "5–12× capex penalty outside China" },
+      { id: "leapfrog",       label: "Leapfrogging Strategy", sub: "out-innovate, not out-mine" },
+      { id: "valleysofdeath", label: "Valleys of Death",      sub: "4 financing gaps: Tech · Pilot · Comm · Profit" },
+      { id: "nedc",           label: "NEDC",                  sub: "US National Energy Dominance Council" },
+      { id: "inqtel",         label: "In-Q-Tel",              sub: "intelligence VC · patient capital" },
+      { id: "g7fund",         label: "G7 Innovation Fund",    sub: "proposed · bridges Valleys of Death" },
+      { id: "baotouindex",    label: "Baotou Price Index",    sub: "Chinese state-backed pricing" }
+    ]
+  },
+  { id: "iea", name: "IEA R1–R8 Framework", accent: "the policy compass for critical minerals",
+    nodes: [
+      { id: "r1", label: "R1 · Data & Risk",         sub: "structured supply-chain visibility" },
+      { id: "r2", label: "R2 · Emergency Buffers",   sub: "stockpiling exposed-import coverage" },
+      { id: "r3", label: "R3 · Ecosystem Approach",  sub: "vertical integration · MP, Lynas" },
+      { id: "r4", label: "R4 · Financial Support",   sub: "DOE LPO · CRMA · DFC loans" },
+      { id: "r5", label: "R5 · Supply Innovation",   sub: "LAD · AI · bioengineered separation" },
+      { id: "r6", label: "R6 · Demand Innovation",   sub: "FeN substitution · 30% redesign" },
+      { id: "r7", label: "R7 · Recycling Expansion", sub: "EU 25% mandate · closed-loop refiners" },
+      { id: "r8", label: "R8 · Price Transparency",  sub: "counter Baotou · Western indices" }
     ]
   }
 ];
 
 const KG_EDGES = [
+  /* threats / control */
   { s: "china",          t: "hree",         label: "controls 90% of processing",   type: "threat"  },
   { s: "china",          t: "exportcontrols", label: "implements",                  type: "threat"  },
+  { s: "china",          t: "metalbottleneck", label: "monopolizes equipment",       type: "threat" },
   { s: "exportcontrols", t: "defense",      label: "threatens supply",              type: "threat"  },
   { s: "exportcontrols", t: "evmotor",      label: "threatens supply ($6.5T)",      type: "threat"  },
+  { s: "metalbottleneck", t: "permmagnet",  label: "blocks Western magnet capacity", type: "threat" },
+  { s: "equipshortage",  t: "metalbottleneck", label: "creates",                    type: "threat"  },
+  { s: "equipshortage",  t: "permmagnet",   label: "imposes 5–12× capex penalty",   type: "threat"  },
   { s: "ironnitride",    t: "permmagnet",   label: "could replace (RE-free)",       type: "threat"  },
+  { s: "ironnitride",    t: "metalbottleneck", label: "designed to bypass",          type: "threat" },
+  { s: "valleysofdeath", t: "leapfrog",     label: "stalls scaling",                type: "threat"  },
+
+  /* enables */
   { s: "hree",           t: "permmagnet",   label: "stabilizes (Dy / Tb)",          type: "enables" },
   { s: "lree",           t: "permmagnet",   label: "primary component (Nd / Pr)",   type: "enables" },
   { s: "permmagnet",     t: "evmotor",      label: "enables traction",              type: "enables" },
   { s: "permmagnet",     t: "wind",         label: "enables generation",            type: "enables" },
+  { s: "ladchrom",       t: "permmagnet",   label: "supplies feed (solvent-free)",  type: "enables" },
+  { s: "bioprotein",     t: "hree",         label: "selectively binds",             type: "enables" },
+  { s: "phytomining",    t: "lree",         label: "extracts from tailings",        type: "enables" },
+  { s: "nuton",          t: "lree",         label: "low-energy bioleach recovery",  type: "enables" },
+  { s: "solventfreemet", t: "permmagnet",   label: "closes the magnet loop",        type: "enables" },
+
+  /* sources */
   { s: "ionicclay",      t: "hree",         label: "primary HREE source",           type: "source"  },
   { s: "ionicclay",      t: "china",        label: "mined predominantly in",        type: "source"  },
+  { s: "ionicclay",      t: "brazil",       label: "Serra Verde + Aclara",          type: "source"  },
   { s: "bastnasite",     t: "lree",         label: "LREE-dominant ore",             type: "source"  },
   { s: "eudialyte",      t: "hree",         label: "HREE-bearing",                  type: "source"  },
   { s: "eudialyte",      t: "eu",           label: "low-radiation EU pathway",      type: "source"  },
   { s: "japan",          t: "hree",         label: "deep-sea mud retrieval 5700m",  type: "source"  },
+  { s: "australia",      t: "lree",         label: "Mt Weld · Eneabba refinery",    type: "source"  },
+
+  /* policy / counter */
   { s: "forge",          t: "china",        label: "counters (55 nations)",         type: "policy"  },
   { s: "projectvault",   t: "usa",          label: "strategic insulation",          type: "policy"  },
-  { s: "chromrefining",  t: "eudialyte",    label: "enables non-toxic separation",  type: "policy"  }
+  { s: "ausreserve",     t: "australia",    label: "1-year import buffer",          type: "policy"  },
+  { s: "crma",           t: "eu",           label: "25% recycled mandate by 2030",  type: "policy"  },
+  { s: "leapfrog",       t: "china",        label: "designed to bypass",            type: "policy"  },
+  { s: "nedc",           t: "leapfrog",     label: "coordinates US strategy",       type: "policy"  },
+  { s: "inqtel",         t: "valleysofdeath", label: "bridges (patient capital)",   type: "policy"  },
+  { s: "inqtel",         t: "bioprotein",   label: "funds Alta Resources",          type: "policy"  },
+  { s: "inqtel",         t: "solventfreemet", label: "funds Phoenix Tailings",      type: "policy"  },
+  { s: "g7fund",         t: "valleysofdeath", label: "proposed bridge",             type: "policy"  },
+  { s: "baotouindex",    t: "china",        label: "state-controlled pricing",      type: "policy"  },
+
+  /* IEA R1–R8 mappings — what each recommendation operationalizes */
+  { s: "r2", t: "projectvault",  label: "exemplifies (US stockpile)",  type: "policy" },
+  { s: "r2", t: "ausreserve",    label: "exemplifies (AUS stockpile)", type: "policy" },
+  { s: "r3", t: "metalbottleneck", label: "targets the bottleneck",    type: "policy" },
+  { s: "r4", t: "usa",           label: "DOE LPO loans flow here",     type: "policy" },
+  { s: "r4", t: "eu",            label: "CRMA + Carester loan",        type: "policy" },
+  { s: "r4", t: "australia",     label: "AUD 1.65B Eneabba support",   type: "policy" },
+  { s: "r5", t: "ladchrom",      label: "supply-side innovation",      type: "policy" },
+  { s: "r5", t: "aisep",         label: "supply-side innovation",      type: "policy" },
+  { s: "r5", t: "bioprotein",    label: "supply-side innovation",      type: "policy" },
+  { s: "r5", t: "phytomining",   label: "supply-side innovation",      type: "policy" },
+  { s: "r5", t: "nuton",         label: "supply-side innovation",      type: "policy" },
+  { s: "r6", t: "ironnitride",   label: "demand-side substitution",    type: "policy" },
+  { s: "r6", t: "japan",         label: "30% motor redesign",          type: "policy" },
+  { s: "r7", t: "crma",          label: "25% recycling mandate",       type: "policy" },
+  { s: "r7", t: "solventfreemet", label: "circular-loop integration",  type: "policy" },
+  { s: "r8", t: "baotouindex",   label: "counter-mechanism target",    type: "policy" }
 ];
 
 function renderKnowledgeGraph() {

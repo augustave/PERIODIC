@@ -1,0 +1,15 @@
+{
+  "document_id": "IEA_Pathways_R3_R6_Duality",
+  "new_nodes": [
+    { "id": "Equipment_Shortage", "type": "Concept", "subtype": "Supply Chain Constraint", "description": "Severe lack of competitive suppliers for strip casters and alignment pressers outside China." },
+    { "id": "Cost_Barrier_5x_to_12x", "type": "Concept", "subtype": "Economic", "description": "Capital expenditure penalty for purchasing specialized magnet manufacturing equipment outside dominant supply chains." },
+    { "id": "Engineering_Risks", "type": "Concept", "subtype": "Technical Constraint", "description": "Current limitations of FeN technology including thermal stability and long-term durability." },
+    { "id": "Globally_Abundant_Materials", "type": "Concept", "subtype": "Resource", "description": "Inputs like iron and nitrogen used to synthesize FeN magnets, removing reliance on critical minerals." }
+  ],
+  "new_edges": [
+    { "source": "Equipment_Shortage", "target": "Cost_Barrier_5x_to_12x", "relation": "creates", "sentiment": "negative" },
+    { "source": "Iron_Nitride_Magnets", "target": "Metallization_Bottleneck", "relation": "bypasses", "sentiment": "positive" },
+    { "source": "Iron_Nitride_Magnets", "target": "Engineering_Risks", "relation": "faces_hurdles", "sentiment": "cautionary" },
+    { "source": "Cost_Barrier_5x_to_12x", "target": "R6_Demand_Innovation", "relation": "incentivizes", "sentiment": "strategic_shift" }
+  ]
+}

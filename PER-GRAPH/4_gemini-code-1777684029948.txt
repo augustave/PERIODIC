@@ -1,0 +1,44 @@
+graph TD
+    %% R3: Replicating the Ecosystem
+    subgraph R3_Pathway [R3: Ecosystem Replication]
+        R3[Concept:R3_Ecosystem_Approach]
+        MetGap[Concept:Metallization_Bottleneck]
+        EqBot[Concept:Equipment_Shortage]
+        Cost[Concept:Cost_Barrier_5x_to_12x]
+        MP[Entity:MP_Materials_US]
+        Lynas[Entity:Lynas_Malaysia]
+        Pressers[Tech:Alignment_Pressers]
+        Casters[Tech:Strip_Casters]
+    end
+
+    %% R6: Erasing the Dependency
+    subgraph R6_Pathway [R6: Demand Innovation & Decoupling]
+        R6[Concept:R6_Demand_Innovation]
+        FeN[Tech:Iron_Nitride_Magnets]
+        Niron[Entity:Niron_Magnetics]
+        Abundant[Concept:Globally_Abundant_Materials]
+        Risks[Concept:Engineering_Risks]
+        Scale[Concept:Unproven_Scalability]
+        Thermal[Concept:Thermal_Instability]
+    end
+
+    %% R3 Relationships
+    R3 -- "identifies" --> MetGap
+    MP -- "attempts to bridge" --> MetGap
+    Lynas -- "attempts to bridge" --> MetGap
+    MetGap -- "constrained by" --> EqBot
+    EqBot -- "includes" --> Pressers
+    EqBot -- "includes" --> Casters
+    EqBot -- "results in" --> Cost
+
+    %% R6 Relationships
+    R6 -- "proposes" --> FeN
+    Niron -- "commercializes" --> FeN
+    FeN -- "utilizes" --> Abundant
+    FeN -- "faces" --> Risks
+    Risks -- "includes" --> Scale
+    Risks -- "includes" --> Thermal
+
+    %% The Strategic Bridge / Duality
+    Cost -- "drives capital toward" --> R6
+    FeN -- "designed to bypass" --> MetGap

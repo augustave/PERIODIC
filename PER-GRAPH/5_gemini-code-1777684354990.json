@@ -1,0 +1,17 @@
+{
+  "document_id": "CFR_CSR101_2026",
+  "new_nodes": [
+    { "id": "Leapfrogging_Strategy", "type": "Concept", "subtype": "Geoeconomic Strategy", "description": "Out-innovating rather than out-mining China via materials science and recycling." },
+    { "id": "Valleys_of_Death", "type": "Concept", "subtype": "Financing Gap", "description": "The four distinct scaling gaps: Technology, Pilot-Scale, Commercialization, and Profitability." },
+    { "id": "In_Q_Tel", "type": "Organization", "subtype": "Strategic Venture Capital", "description": "U.S. intelligence community fund bridging early-stage deep-tech financing." },
+    { "id": "Phytomining", "type": "Technology", "subtype": "Bio-Extraction", "description": "Farming critical metals using hyperaccumulator plants from waste and tailings." },
+    { "id": "Alta_Resources", "type": "Entity", "subtype": "Startup", "description": "Develops bioengineered molecular robots for highly selective REE separation." },
+    { "id": "Phoenix_Tailings", "type": "Entity", "subtype": "Startup", "description": "Develops solvent-free, zero-emission metallurgical separation." }
+  ],
+  "new_edges": [
+    { "source": "Leapfrogging_Strategy", "target": "China_Monopoly", "relation": "designed_to_bypass", "sentiment": "strategic_imperative" },
+    { "source": "In_Q_Tel", "target": "Alta_Resources", "relation": "provides_patient_capital_to", "evidence": "Compass Fund Investment" },
+    { "source": "In_Q_Tel", "target": "Phoenix_Tailings", "relation": "provides_patient_capital_to", "evidence": "Compass Fund Investment" },
+    { "source": "Mine_Waste", "target": "Primary_Mining", "relation": "cleaner_and_faster_alternative", "sentiment": "highly_favorable" }
+  ]
+}

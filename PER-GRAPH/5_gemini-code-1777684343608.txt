@@ -1,0 +1,56 @@
+graph TD
+    %% Strategic Concepts
+    Leapfrog[Concept: Leapfrogging Strategy]
+    ValleysOfDeath[Concept: Mineral Valleys of Death]
+    CircularEconomy[Concept: E-Waste & Mine Tailings]
+    
+    %% Government & Policy Nodes
+    NEDC[Org: National Energy Dominance Council]
+    IQT[Org: In-Q-Tel Venture Fund]
+    G7_Fund[Policy: Proposed G7 Innovation Fund]
+    
+    %% Breakthrough Companies & Technologies
+    Alta[Entity: Alta Resources]
+    BioSep[Tech: Bioengineered Protein Separation]
+    
+    Phoenix[Entity: Phoenix Tailings]
+    SolventFree[Tech: Solvent-Free Metallization]
+    
+    Genomines[Entity: Genomines]
+    Phyto[Tech: Phytomining / Hyperaccumulators]
+    
+    RioTinto[Entity: Rio Tinto]
+    Nuton[Tech: Nuton Microorganism Recovery]
+
+    %% Existing Nodes for Integration
+    China[Entity: China Monopoly]
+    Niron[Entity: Niron Magnetics]
+    FeN[Tech: Iron Nitride Magnets]
+    Vulcan[Entity: Vulcan Elements]
+    ReElement[Entity: ReElement Technologies]
+
+    %% Edges
+    NEDC -- "coordinates" --> Leapfrog
+    Leapfrog -- "bypasses" --> China
+    Leapfrog -- "relies on" --> CircularEconomy
+    Leapfrog -- "relies on" --> FeN
+    
+    ValleysOfDeath -- "stalls" --> Leapfrog
+    IQT -- "bridges" --> ValleysOfDeath
+    G7_Fund -- "bridges" --> ValleysOfDeath
+    
+    IQT -- "funds" --> Alta
+    IQT -- "funds" --> Phoenix
+    
+    Alta -- "develops" --> BioSep
+    Phoenix -- "develops" --> SolventFree
+    Genomines -- "develops" --> Phyto
+    RioTinto -- "commercializes" --> Nuton
+    
+    BioSep -- "unlocks" --> CircularEconomy
+    SolventFree -- "unlocks" --> CircularEconomy
+    Phyto -- "unlocks" --> CircularEconomy
+    Nuton -- "unlocks" --> CircularEconomy
+    
+    Vulcan -- "partners with" --> ReElement
+    ReElement -- "processes" --> CircularEconomy
