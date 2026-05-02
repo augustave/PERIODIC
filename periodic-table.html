@@ -1095,9 +1095,22 @@
     font-size: 12px;
     line-height: 1.45;
     opacity: 0.85;
-    margin-top: auto;
-    padding-top: 8px;
+    flex: 1 1 0;
+    min-height: 60px;
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 8px 4px 0 0;
+    /* Subtle scrollbar — only shows when content overflows */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(236, 233, 207, 0.32) transparent;
   }
+  .mineral-card .note::-webkit-scrollbar { width: 6px; }
+  .mineral-card .note::-webkit-scrollbar-track { background: transparent; }
+  .mineral-card .note::-webkit-scrollbar-thumb {
+    background: rgba(236, 233, 207, 0.28);
+    border-radius: 3px;
+  }
+  .mineral-card .note::-webkit-scrollbar-thumb:hover { background: rgba(236, 233, 207, 0.5); }
   .mineral-card .stat-row {
     display: flex;
     justify-content: space-between;
@@ -1437,9 +1450,21 @@
     font-size: 12px;
     line-height: 1.45;
     opacity: 0.92;
-    margin-top: auto;
-    padding-top: 8px;
+    flex: 1 1 0;
+    min-height: 60px;
+    max-height: 280px;
+    overflow-y: auto;
+    padding: 8px 4px 0 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(236, 233, 207, 0.32) transparent;
   }
+  .op-card .note::-webkit-scrollbar { width: 6px; }
+  .op-card .note::-webkit-scrollbar-track { background: transparent; }
+  .op-card .note::-webkit-scrollbar-thumb {
+    background: rgba(236, 233, 207, 0.28);
+    border-radius: 3px;
+  }
+  .op-card .note::-webkit-scrollbar-thumb:hover { background: rgba(236, 233, 207, 0.5); }
   .op-card .stat-row {
     display: flex;
     justify-content: space-between;
@@ -2987,9 +3012,16 @@
     line-height: 1.55;
     color: var(--ink-soft);
     letter-spacing: 0.02em;
+    flex: 1 1 0;
+    overflow-y: auto;
+    max-height: 220px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(11,4,4,0.18) transparent;
   }
+  .iea-card-deck::-webkit-scrollbar { width: 5px; }
+  .iea-card-deck::-webkit-scrollbar-thumb { background: rgba(11,4,4,0.18); border-radius: 2px; }
   .iea-card-projects {
-    margin-top: auto;
+    flex-shrink: 0;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
@@ -3221,6 +3253,8 @@
   .kg-clusters {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
+    grid-auto-rows: minmax(min-content, max-content);
+    align-items: stretch;
     gap: 0;
     border-top: 1px solid var(--ink);
     border-left: 1px solid var(--ink);
@@ -3253,7 +3287,15 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1 1 auto;
+    max-height: 360px;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(11,4,4,0.18) transparent;
   }
+  .kg-nodes::-webkit-scrollbar { width: 5px; }
+  .kg-nodes::-webkit-scrollbar-thumb { background: rgba(11,4,4,0.18); border-radius: 2px; }
   .kg-node {
     padding: 4px 7px;
     border: 1px solid rgba(11,4,4,0.14);
