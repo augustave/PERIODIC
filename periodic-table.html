@@ -4551,8 +4551,8 @@ const sectionOverlay = document.getElementById("sectionOverlay");
 
 function openSectionDetail(id) {
   const info = SECTION_INFO[id];
-  if (!info) return;
-  closeDetail(); /* ensure element panel is closed */
+  if (!info) { console.warn("[section-detail] unknown section id:", id); return; }
+  try { closeDetail(); } catch(e) { /* element panel may not exist yet */ }
 
   document.getElementById("sdEyebrow").textContent = info.eyebrow();
   document.getElementById("sdTitle").innerHTML = info.title();
@@ -4597,12 +4597,20 @@ function closeSectionDetail() {
 document.getElementById("sectionCloseBtn")?.addEventListener("click", closeSectionDetail);
 sectionOverlay?.addEventListener("click", closeSectionDetail);
 
-/* Click delegation — works for current AND dynamically-rewritten section titles
-   (switchDataset rewrites mineral/op H2 contents, so we delegate from document) */
-document.addEventListener("click", (e) => {
+/* Click delegation — both bubble (for static titles) AND capture (so any
+   parent stopPropagation upstream doesn't swallow the click). Wrapped in
+   try/catch so a bad SECTION_INFO entry can't silently kill all delegation. */
+function _kgSectionTitleClick(e) {
   const target = e.target.closest(".section-title-clickable");
-  if (target) openSectionDetail(target.dataset.sectionId);
-});
+  if (!target) return;
+  try {
+    openSectionDetail(target.dataset.sectionId);
+  } catch (err) {
+    console.error("[section-detail] failed to open", target.dataset.sectionId, err);
+  }
+}
+document.addEventListener("click", _kgSectionTitleClick);
+document.addEventListener("click", _kgSectionTitleClick, true);
 
 /* ===== LEGEND ===== */
 const legend = document.getElementById("legend");
