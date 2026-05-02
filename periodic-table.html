@@ -1130,6 +1130,8 @@
   .minerals-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-auto-rows: min-content;
+    align-items: start;
     gap: 0;
     border-top: 1px solid var(--ink);
     border-left: 1px solid var(--ink);
@@ -1146,7 +1148,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    min-height: 240px;
     font-family: inherit;
     position: relative;
   }
@@ -1233,13 +1234,7 @@
     font-size: 12px;
     line-height: 1.45;
     opacity: 0.85;
-    flex: 1 1 auto;
-    min-height: 60px;
-    overflow-y: auto;
-    padding: 8px 4px 0 0;
-    /* Subtle scrollbar — only shows when content overflows */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(236, 233, 207, 0.32) transparent;
+    padding: 8px 0 0 0;
   }
   .mineral-card .note::-webkit-scrollbar { width: 6px; }
   .mineral-card .note::-webkit-scrollbar-track { background: transparent; }
@@ -1272,13 +1267,7 @@
     flex-wrap: wrap;
     gap: 4px;
     padding-top: 2px;
-    flex-shrink: 0;
   }
-  /* Within a card, country-row is the first chip-row after .note —
-     pushing it down with margin-top: auto absorbs any leftover space
-     above (rather than letting it pool below the chips). */
-  .mineral-card .country-row,
-  .op-card .country-row { margin-top: auto; }
   .country-chip {
     display: inline-flex;
     align-items: center;
@@ -1483,6 +1472,8 @@
   .ops-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-auto-rows: min-content;
+    align-items: start;
     gap: 0;
     border-top: 1px solid var(--ink);
     border-left: 1px solid var(--ink);
@@ -1500,7 +1491,6 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    min-height: 260px;
     font-family: inherit;
     position: relative;
   }
@@ -1594,12 +1584,7 @@
     font-size: 12px;
     line-height: 1.45;
     opacity: 0.92;
-    flex: 1 1 auto;
-    min-height: 60px;
-    overflow-y: auto;
-    padding: 8px 4px 0 0;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(236, 233, 207, 0.32) transparent;
+    padding: 8px 0 0 0;
   }
   .op-card .note::-webkit-scrollbar { width: 6px; }
   .op-card .note::-webkit-scrollbar-track { background: transparent; }
