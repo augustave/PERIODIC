@@ -2235,7 +2235,7 @@
   .ca-ops-list {
     padding: 8px 14px 14px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 6px;
   }
   .ca-op-chip {
@@ -3151,6 +3151,8 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 0;
   }
+  /* If the last edge is alone in its row (odd count), span both columns */
+  .kg-edge-row:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .kg-edge-row {
     display: grid;
     grid-template-columns: 140px 160px 1fr;
@@ -3201,9 +3203,13 @@
   .kg-leg-enables::before { background: #235597; }
   .kg-leg-source::before  { background: #3A7A5A; }
   .kg-leg-policy::before  { background: #7E5A9B; }
+  @media (max-width: 1300px) {
+    .kg-clusters { grid-template-columns: repeat(3, 1fr); }
+  }
   @media (max-width: 900px) {
     .kg-clusters { grid-template-columns: repeat(2, 1fr); }
     .kg-edges { grid-template-columns: 1fr; }
+    .kg-edge-row:last-child:nth-child(odd) { grid-column: auto; }
     .kg-head { flex-direction: column; }
   }
 
