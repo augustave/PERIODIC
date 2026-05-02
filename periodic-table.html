@@ -3036,6 +3036,151 @@
     .iea-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
+  /* ======== KNOWLEDGE GRAPH — INTERACTIVE GRAPH OVERLAY ======== */
+  .kg-canvas { position: relative; }
+  .kg-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 2;
+  }
+  .kg-edge-curve {
+    fill: none;
+    stroke-width: 1.4;
+    opacity: 0.78;
+    transition: opacity 0.2s ease, stroke-width 0.2s ease;
+    stroke-linecap: round;
+  }
+  .kg-edge-curve.threat   { stroke: #B51A21; marker-end: url(#kgArrowThreat); }
+  .kg-edge-curve.enables  { stroke: #235597; marker-end: url(#kgArrowEnables); }
+  .kg-edge-curve.source   { stroke: #3A7A5A; marker-end: url(#kgArrowSource); }
+  .kg-edge-curve.policy   { stroke: #7E5A9B; marker-end: url(#kgArrowPolicy); }
+  .kg-edge-curve.outgoing { stroke-dasharray: none; }
+  .kg-edge-curve.incoming { stroke-dasharray: 4 3; opacity: 0.55; }
+  .kg-edge-curve.faded    { opacity: 0.12; }
+
+  /* Filter chips */
+  .kg-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed rgba(11,4,4,0.16);
+  }
+  .kg-filter-label {
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-right: 4px;
+  }
+  .kg-filter-chip {
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border: 1px solid rgba(11,4,4,0.22);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .kg-filter-chip:hover { background: rgba(11,4,4,0.06); }
+  .kg-filter-chip.active { background: var(--ink); color: var(--bg-paper); border-color: var(--ink); }
+  .kg-filter-chip[data-filter="threat"].active   { background: #B51A21; border-color: #B51A21; }
+  .kg-filter-chip[data-filter="enables"].active  { background: #235597; border-color: #235597; }
+  .kg-filter-chip[data-filter="source"].active   { background: #3A7A5A; border-color: #3A7A5A; }
+  .kg-filter-chip[data-filter="policy"].active   { background: #7E5A9B; border-color: #7E5A9B; }
+  .kg-filter-chip .kg-filter-count {
+    font-size: 8px;
+    opacity: 0.7;
+    font-feature-settings: "tnum";
+  }
+  .kg-filter-chip.active .kg-filter-count { opacity: 1; }
+  .kg-filter-spacer { flex: 1; }
+  .kg-filter-showall { letter-spacing: 0.08em; font-style: italic; }
+  .kg-filter-showall.active { background: var(--ink); color: var(--bg-paper); }
+
+  /* Cross-link hint embedded in the deck text */
+  .kg-link-hint {
+    font-family: "DM Mono", monospace;
+    font-size: 8.5px;
+    background: rgba(35,85,151,0.12);
+    color: #235597;
+    padding: 1px 4px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Node states (pinned, connected, faded) */
+  .kg-node {
+    position: relative;
+    z-index: 3; /* above the SVG overlay */
+  }
+  .kg-node.pinned {
+    background: var(--ink) !important;
+    border-color: var(--ink) !important;
+  }
+  .kg-node.pinned .kg-node-label,
+  .kg-node.pinned .kg-node-sub { color: var(--bg-paper); }
+  .kg-node.connected {
+    background: rgba(11,4,4,0.07);
+    border-color: var(--ink);
+  }
+  .kg-node.faded { opacity: 0.32; }
+  .kg-node.has-op-link::after {
+    content: "→ Op";
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-family: "DM Mono", monospace;
+    font-size: 8px;
+    letter-spacing: 0.04em;
+    background: rgba(35,85,151,0.12);
+    color: #235597;
+    padding: 1px 4px;
+    border-radius: 2px;
+    pointer-events: none;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .kg-node.has-op-link:hover::after {
+    background: #235597;
+    color: var(--bg-paper);
+  }
+  .kg-node.pinned.has-op-link::after {
+    background: rgba(236, 233, 207, 0.16);
+    color: var(--bg-paper);
+  }
+
+  /* Edge-row table refinements */
+  .kg-edges-count {
+    font-family: "DM Mono", monospace;
+    font-size: 8px;
+    letter-spacing: 0.14em;
+    color: var(--ink-muted);
+    font-weight: 400;
+    margin-left: 8px;
+  }
+  .kg-edge-row.faded { opacity: 0.18; }
+  .kg-edge-row.highlighted { background: rgba(11,4,4,0.05); }
+  .kg-edge-row { transition: opacity 0.18s ease, background 0.18s ease; }
+
+  @media (max-width: 720px) {
+    .kg-overlay { display: none; } /* curves get noisy on narrow viewports */
+    .kg-filter-row { gap: 4px; }
+    .kg-filter-chip { padding: 3px 7px; font-size: 8px; }
+  }
+
   /* ======== KNOWLEDGE GRAPH SECTION ======== */
   .kg-section {
     padding: 56px 40px 60px;
@@ -3485,13 +3630,39 @@
         <div class="kg-eyebrow">Appendix · 関係図</div>
         <div class="kg-title">Supply-Chain <span class="accent">Topology</span></div>
       </div>
-      <div class="kg-deck">Five concept clusters and the edges binding them — classifications, mineralogy, technology, geography, and policy. Structured knowledge-graph export from REE supply-chain analysis.</div>
+      <div class="kg-deck">Six concept clusters and the edges binding them — IEA framework, mineralogy, technology, geography, and policy. <strong>Hover</strong> a node to see its connections drawn live · <strong>click</strong> to pin · tech nodes marked <span class="kg-link-hint">→ Op</span> link to their operation card.</div>
     </div>
-    <div class="kg-clusters" id="kgClusters"><!-- rendered by renderKnowledgeGraph() --></div>
+
+    <!-- Edge-type filter chips -->
+    <div class="kg-filter-row" id="kgFilterRow">
+      <span class="kg-filter-label">Filter edges →</span>
+      <button class="kg-filter-chip active" data-filter="all">All</button>
+      <button class="kg-filter-chip" data-filter="threat">Threat</button>
+      <button class="kg-filter-chip" data-filter="enables">Enables</button>
+      <button class="kg-filter-chip" data-filter="source">Source</button>
+      <button class="kg-filter-chip" data-filter="policy">Policy</button>
+      <span class="kg-filter-spacer"></span>
+      <button class="kg-filter-chip kg-filter-showall" id="kgShowAll" title="Draw all edges at once (busy view)">Show full graph</button>
+    </div>
+
+    <!-- Canvas wraps clusters + SVG overlay so curves can be drawn between nodes -->
+    <div class="kg-canvas" id="kgCanvas">
+      <div class="kg-clusters" id="kgClusters"><!-- rendered by renderKnowledgeGraph() --></div>
+      <svg class="kg-overlay" id="kgOverlay" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <marker id="kgArrowThreat"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#B51A21"/></marker>
+          <marker id="kgArrowEnables" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#235597"/></marker>
+          <marker id="kgArrowSource"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3A7A5A"/></marker>
+          <marker id="kgArrowPolicy"  viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7E5A9B"/></marker>
+        </defs>
+      </svg>
+    </div>
+
     <div class="kg-edges-wrap">
-      <div class="kg-edges-head">Key Relationships</div>
+      <div class="kg-edges-head" id="kgEdgesHead">Key Relationships  <span class="kg-edges-count" id="kgEdgesCount"></span></div>
       <div class="kg-edges" id="kgEdges"><!-- rendered by renderKnowledgeGraph() --></div>
     </div>
+
     <div class="kg-legend">
       <span class="kg-leg-item kg-leg-threat">threat / control</span>
       <span class="kg-leg-item kg-leg-enables">enables</span>
@@ -6787,6 +6958,23 @@ const KG_EDGES = [
   { s: "r8", t: "baotouindex",   label: "counter-mechanism target",    type: "policy" }
 ];
 
+/* Tech-cluster nodes that map to specific REE operations — clicking the
+   "→ Op" affordance selects that operation in the dataset (with the
+   pulse + sticky-bar status group flow). */
+const NODE_TO_OP_RANK = {
+  ironnitride:    21,  /* Niron Magnetics */
+  ladchrom:       23,  /* ReElement Technologies */
+  aisep:          24,  /* Aclara Resources */
+  bioprotein:     27,  /* Alta Resources */
+  phytomining:    28,  /* Genomines */
+  nuton:          29,  /* Rio Tinto Nuton */
+  solventfreemet: 20   /* Phoenix Tailings */
+};
+
+let _kgPinnedNode = null;
+let _kgFilter = "all";
+let _kgShowAll = false;
+
 function renderKnowledgeGraph() {
   const clusterEl = document.getElementById("kgClusters");
   const edgesEl   = document.getElementById("kgEdges");
@@ -6799,11 +6987,14 @@ function renderKnowledgeGraph() {
         <div class="kg-cluster-accent">${c.accent}</div>
       </div>
       <div class="kg-nodes">
-        ${c.nodes.map(n => `
-          <div class="kg-node" data-node="${n.id}">
+        ${c.nodes.map(n => {
+          const hasOp = NODE_TO_OP_RANK[n.id] != null;
+          return `
+          <div class="kg-node${hasOp ? ' has-op-link' : ''}" data-node="${n.id}"${hasOp ? ` data-op-rank="${NODE_TO_OP_RANK[n.id]}"` : ''}>
             <div class="kg-node-label">${n.label}</div>
             <div class="kg-node-sub">${n.sub}</div>
-          </div>`).join("")}
+          </div>`;
+        }).join("")}
       </div>
     </div>`).join("");
 
@@ -6818,22 +7009,236 @@ function renderKnowledgeGraph() {
       <span class="kg-edge-tgt">${nodeLabel[e.t] || e.t}</span>
     </div>`).join("");
 
-  /* Node hover — highlight all edges that involve this node */
+  /* Filter chip counts */
+  const counts = { all: KG_EDGES.length, threat: 0, enables: 0, source: 0, policy: 0 };
+  KG_EDGES.forEach(e => { counts[e.type] = (counts[e.type] || 0) + 1; });
+  document.querySelectorAll(".kg-filter-chip[data-filter]").forEach(chip => {
+    const t = chip.dataset.filter;
+    if (counts[t] != null) {
+      const existing = chip.querySelector(".kg-filter-count");
+      const html = `<span class="kg-filter-count">${counts[t]}</span>`;
+      if (existing) existing.outerHTML = html;
+      else chip.insertAdjacentHTML("beforeend", " " + html);
+    }
+  });
+  updateKgEdgesCount();
+
+  /* === Node interactions === */
   const edgeRows = edgesEl.querySelectorAll(".kg-edge-row");
+
   clusterEl.querySelectorAll(".kg-node").forEach(node => {
     node.addEventListener("mouseenter", () => {
-      const id = node.dataset.node;
-      clusterEl.querySelectorAll(".kg-node").forEach(n =>
-        n.classList.toggle("active", n.dataset.node === id));
-      edgeRows.forEach(row => {
-        const involved = row.dataset.src === id || row.dataset.tgt === id;
-        row.style.opacity = involved ? "1" : "0.3";
-      });
+      if (_kgPinnedNode) return; /* pinned state takes precedence */
+      applyKgFocus(node.dataset.node);
     });
     node.addEventListener("mouseleave", () => {
-      clusterEl.querySelectorAll(".kg-node").forEach(n => n.classList.remove("active"));
-      edgeRows.forEach(row => row.style.opacity = "");
+      if (_kgPinnedNode) return;
+      clearKgFocus();
     });
+    node.addEventListener("click", (e) => {
+      const id = node.dataset.node;
+      const opRank = node.dataset.opRank;
+      /* Click on a node with an op-link affordance + clicking near the badge → select the op.
+         We approximate the badge area as the top-right ~50px corner. */
+      if (opRank) {
+        const r = node.getBoundingClientRect();
+        const isBadgeArea = (e.clientX > r.right - 56) && (e.clientY < r.top + 22);
+        if (isBadgeArea) {
+          const op = OPERATIONS.find(o => o.rank === parseInt(opRank, 10));
+          if (op && typeof selectOperation === "function") selectOperation(op);
+          return;
+        }
+      }
+      /* Otherwise toggle pin */
+      if (_kgPinnedNode === id) {
+        _kgPinnedNode = null;
+        clearKgFocus();
+      } else {
+        _kgPinnedNode = id;
+        applyKgFocus(id);
+      }
+    });
+  });
+
+  /* Click on canvas background clears pin */
+  document.getElementById("kgCanvas")?.addEventListener("click", (e) => {
+    if (e.target.closest(".kg-node")) return;
+    if (_kgPinnedNode) {
+      _kgPinnedNode = null;
+      clearKgFocus();
+    }
+  });
+
+  /* Filter chips */
+  document.querySelectorAll(".kg-filter-chip[data-filter]").forEach(chip => {
+    chip.addEventListener("click", () => {
+      _kgFilter = chip.dataset.filter;
+      _kgShowAll = false;
+      document.querySelectorAll(".kg-filter-chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      applyKgFilter();
+      /* Re-render curves if a node is focused */
+      if (_kgPinnedNode) drawKgEdges(_kgPinnedNode);
+      else if (_kgShowAll) drawKgEdges(null);
+    });
+  });
+
+  /* "Show full graph" toggle — draws all edges at once */
+  document.getElementById("kgShowAll")?.addEventListener("click", () => {
+    _kgShowAll = !_kgShowAll;
+    const btn = document.getElementById("kgShowAll");
+    btn.classList.toggle("active", _kgShowAll);
+    if (_kgShowAll) drawKgEdges(null);
+    else if (_kgPinnedNode) drawKgEdges(_kgPinnedNode);
+    else clearOverlay();
+  });
+
+  /* Redraw curves when the canvas resizes (cluster grid reflows responsively) */
+  if (typeof ResizeObserver !== "undefined") {
+    const ro = new ResizeObserver(() => {
+      if (_kgShowAll) drawKgEdges(null);
+      else if (_kgPinnedNode) drawKgEdges(_kgPinnedNode);
+    });
+    ro.observe(document.getElementById("kgCanvas"));
+  }
+}
+
+function applyKgFocus(nodeId) {
+  const clusterEl = document.getElementById("kgClusters");
+  if (!clusterEl) return;
+
+  /* Build connected set */
+  const connected = new Set();
+  KG_EDGES.forEach(e => {
+    if (_kgFilter !== "all" && e.type !== _kgFilter) return;
+    if (e.s === nodeId) connected.add(e.t);
+    if (e.t === nodeId) connected.add(e.s);
+  });
+
+  /* Node states */
+  clusterEl.querySelectorAll(".kg-node").forEach(n => {
+    const id = n.dataset.node;
+    n.classList.toggle("pinned", id === nodeId && _kgPinnedNode === nodeId);
+    n.classList.toggle("connected", connected.has(id));
+    n.classList.toggle("faded", id !== nodeId && !connected.has(id));
+  });
+
+  /* Edge-table rows */
+  document.querySelectorAll(".kg-edge-row").forEach(row => {
+    const involved = row.dataset.src === nodeId || row.dataset.tgt === nodeId;
+    const passesFilter = _kgFilter === "all" || row.dataset.type === _kgFilter;
+    row.classList.toggle("highlighted", involved && passesFilter);
+    row.classList.toggle("faded", !involved || !passesFilter);
+  });
+
+  /* Curves */
+  drawKgEdges(nodeId);
+}
+
+function clearKgFocus() {
+  const clusterEl = document.getElementById("kgClusters");
+  if (!clusterEl) return;
+  clusterEl.querySelectorAll(".kg-node").forEach(n =>
+    n.classList.remove("pinned", "connected", "faded"));
+  document.querySelectorAll(".kg-edge-row").forEach(row =>
+    row.classList.remove("highlighted", "faded"));
+  applyKgFilter(); /* re-apply edge-row filter without focus */
+  if (!_kgShowAll) clearOverlay();
+}
+
+function applyKgFilter() {
+  document.querySelectorAll(".kg-edge-row").forEach(row => {
+    if (_kgFilter === "all") {
+      row.classList.remove("faded-by-filter");
+      row.style.display = "";
+    } else {
+      row.style.display = (row.dataset.type === _kgFilter) ? "" : "none";
+    }
+  });
+  updateKgEdgesCount();
+}
+
+function updateKgEdgesCount() {
+  const countEl = document.getElementById("kgEdgesCount");
+  if (!countEl) return;
+  const visible = _kgFilter === "all"
+    ? KG_EDGES.length
+    : KG_EDGES.filter(e => e.type === _kgFilter).length;
+  countEl.textContent = `· ${visible} ${_kgFilter === "all" ? "total" : _kgFilter}`;
+}
+
+function clearOverlay() {
+  const overlay = document.getElementById("kgOverlay");
+  if (!overlay) return;
+  /* Keep the <defs> markers, clear paths only */
+  overlay.querySelectorAll(".kg-edge-curve").forEach(p => p.remove());
+}
+
+function drawKgEdges(focusNodeId) {
+  const overlay = document.getElementById("kgOverlay");
+  const canvas  = document.getElementById("kgCanvas");
+  if (!overlay || !canvas) return;
+  clearOverlay();
+
+  const cb = canvas.getBoundingClientRect();
+  overlay.setAttribute("width", cb.width);
+  overlay.setAttribute("height", cb.height);
+  overlay.setAttribute("viewBox", `0 0 ${cb.width} ${cb.height}`);
+
+  /* Choose which edges to render */
+  const filtered = KG_EDGES.filter(e => _kgFilter === "all" || e.type === _kgFilter);
+  const edgesToDraw = focusNodeId
+    ? filtered.filter(e => e.s === focusNodeId || e.t === focusNodeId)
+    : filtered; /* "show full graph" mode */
+
+  const nodePos = (id) => {
+    const el = canvas.querySelector(`.kg-node[data-node="${id}"]`);
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return {
+      cx: r.left + r.width / 2 - cb.left,
+      cy: r.top + r.height / 2 - cb.top,
+      r
+    };
+  };
+
+  const svgNS = "http://www.w3.org/2000/svg";
+  edgesToDraw.forEach(e => {
+    const sp = nodePos(e.s); const tp = nodePos(e.t);
+    if (!sp || !tp) return;
+
+    /* Anchor curves to the edge of the source/target rects (not their centers)
+       so the arrowhead lands cleanly on the target edge. */
+    const dx = tp.cx - sp.cx;
+    const dy = tp.cy - sp.cy;
+    const dist = Math.hypot(dx, dy);
+    if (dist < 4) return;
+
+    /* Approximate edge anchor: shift each endpoint by a fraction of the
+       node half-size in the direction of the other endpoint. */
+    const sourceShrink = Math.min((sp.r.width / 2) - 4, dist * 0.35);
+    const targetShrink = Math.min((tp.r.width / 2) - 8, dist * 0.4);
+    const ux = dx / dist, uy = dy / dist;
+    const x1 = sp.cx + ux * sourceShrink;
+    const y1 = sp.cy + uy * sourceShrink;
+    const x2 = tp.cx - ux * targetShrink;
+    const y2 = tp.cy - uy * targetShrink;
+
+    /* Bezier control point: perpendicular offset for an arc */
+    const arcMag = Math.min(80, dist * 0.22);
+    const px = -uy * arcMag;
+    const py =  ux * arcMag;
+    const ctrlX = (x1 + x2) / 2 + px;
+    const ctrlY = (y1 + y2) / 2 + py;
+
+    const direction = focusNodeId
+      ? (e.s === focusNodeId ? "outgoing" : "incoming")
+      : "outgoing";
+
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute("class", `kg-edge-curve ${e.type} ${direction}`);
+    path.setAttribute("d", `M${x1.toFixed(1)},${y1.toFixed(1)} Q${ctrlX.toFixed(1)},${ctrlY.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`);
+    overlay.appendChild(path);
   });
 }
 
