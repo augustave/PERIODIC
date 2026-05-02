@@ -536,7 +536,8 @@
   }
   .detail-overlay.open { opacity: 1; pointer-events: auto; }
 
-  .detail-panel {
+  .detail-panel,
+  .section-detail-panel {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -552,11 +553,148 @@
     transition: all 0.3s cubic-bezier(0.2, 0.8, 0.3, 1.1);
     box-shadow: 0 30px 80px -20px rgba(11,4,4,0.5);
   }
-  .detail-panel.open {
+  .detail-panel.open,
+  .section-detail-panel.open {
     opacity: 1;
     pointer-events: auto;
     transform: translate(-50%, -50%) scale(1);
   }
+
+  /* === Section-detail panel (about-this-section card) === */
+  .sd-header {
+    padding: 36px 36px 22px;
+    border-bottom: 1px solid var(--ink);
+  }
+  .sd-eyebrow {
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .sd-title {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-variation-settings: "opsz" 72, "SOFT" 20;
+    font-size: 38px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+    color: var(--ink);
+  }
+  .sd-title .accent { color: #574737; font-style: italic; }
+  .sd-deck {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 14;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+  }
+  .sd-body { padding: 24px 36px 36px; display: flex; flex-direction: column; gap: 22px; }
+  .sd-block {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .sd-block-head {
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .sd-block-body {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 14;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    letter-spacing: -0.003em;
+  }
+  .sd-fact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0;
+    border-top: 1px solid rgba(11,4,4,0.14);
+    border-left: 1px solid rgba(11,4,4,0.14);
+  }
+  .sd-fact {
+    border-right: 1px solid rgba(11,4,4,0.14);
+    border-bottom: 1px solid rgba(11,4,4,0.14);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .sd-fact .k {
+    font-family: "DM Mono", monospace;
+    font-size: 8px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .sd-fact .v {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-variation-settings: "opsz" 36;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .sd-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .sd-bullets li {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    gap: 10px;
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 14;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .sd-bullets li::before {
+    content: "→";
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+  .sd-bullets strong {
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    font-style: normal;
+    margin-right: 4px;
+  }
+
+  /* Clickable section-title affordance — small ⓘ badge appears on hover */
+  .section-title-clickable {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    transition: color 0.15s ease;
+  }
+  .section-title-clickable::after {
+    content: "ⓘ";
+    font-family: "DM Mono", monospace;
+    font-size: 0.55em;
+    color: var(--ink-muted);
+    margin-left: 0.35em;
+    vertical-align: super;
+    opacity: 0.4;
+    transition: opacity 0.15s ease, color 0.15s ease;
+  }
+  .section-title-clickable:hover::after { opacity: 1; color: #574737; }
+  .section-title-clickable:hover { color: var(--ink); }
 
   .detail-header {
     display: grid;
@@ -3540,7 +3678,7 @@
     <div class="minerals-head">
       <div>
         <div class="super">Appendix · 二〇</div>
-        <h2>Twenty Rare Earth <span class="accent">Minerals</span></h2>
+        <h2><span class="section-title-clickable" data-section-id="minerals">Twenty Rare Earth <span class="accent">Minerals</span></span></h2>
         <div class="deck" style="margin-top:8px;">
           Production data: <span class="designers">USGS MCS 2025</span> — global REO output ≈ 390,000 t in 2024
         </div>
@@ -3561,7 +3699,7 @@
     <div class="ops-head">
       <div>
         <div class="super">Appendix · 西側 The Western Build</div>
-        <h2>Twenty Allied <span class="accent">Operations</span></h2>
+        <h2><span class="section-title-clickable" data-section-id="operations">Twenty Allied <span class="accent">Operations</span></span></h2>
         <div class="deck">
           U.S., Australian, Canadian, Brazilian, and Greenlandic REE projects — the build-out beyond Chinese supply concentration. Status as of Q1 2026; sources <span class="src">USGS · MP Materials FY25 · Lynas FY25 · Arafura · Iluka</span>.
         </div>
@@ -3600,7 +3738,7 @@
     <!-- Capital Allocation by Segment -->
     <div class="capital-block">
       <div class="capital-head">
-        <div class="capital-title">Allied Capital — <span class="accent">deployed by segment</span></div>
+        <div class="capital-title section-title-clickable" data-section-id="capital-segment">Allied Capital — <span class="accent">deployed by segment</span></div>
         <div class="capital-deck">U.S. federal allocations follow the bottleneck. Mining gets the public-record glory; separation and magnets get the dollars.</div>
       </div>
       <div class="capital-bars" id="capitalBars"></div>
@@ -3612,7 +3750,7 @@
     <!-- Country accordion: same operations grouped by sovereignty -->
     <div class="country-block">
       <div class="country-block-head">
-        <div class="capital-title">By Country — <span class="accent">sovereignty view</span></div>
+        <div class="capital-title section-title-clickable" data-section-id="capital-country">By Country — <span class="accent">sovereignty view</span></div>
         <div class="country-sort">
           <span class="sort-label">Sort by →</span>
           <button class="sort-btn active" data-sort="capital">Capital</button>
@@ -3644,7 +3782,7 @@
     <div class="xds-head">
       <div>
         <div class="xds-eyebrow">Appendix · 対比</div>
-        <div class="xds-title">Cross-dataset <span class="accent">Capital</span></div>
+        <div class="xds-title section-title-clickable" data-section-id="xds">Cross-dataset <span class="accent">Capital</span></div>
       </div>
       <div class="xds-deck">Federal capital by supply-chain segment, compared across all three datasets. The shape of investment reveals the shape of each supply problem.</div>
     </div>
@@ -3658,7 +3796,7 @@
     <div class="iea-head">
       <div>
         <div class="iea-eyebrow">Appendix · 政策枠組</div>
-        <div class="iea-title">IEA <span class="accent">Policy Compass</span></div>
+        <div class="iea-title section-title-clickable" data-section-id="iea">IEA <span class="accent">Policy Compass</span></div>
       </div>
       <div class="iea-deck">The International Energy Agency's eight recommendations for critical-mineral security — each card pairs the policy with the operations in this dataset that exemplify it. Click a project chip to surface its detail card and pulse-highlight its element footprint.</div>
     </div>
@@ -3670,7 +3808,7 @@
     <div class="kg-head">
       <div>
         <div class="kg-eyebrow">Appendix · 関係図</div>
-        <div class="kg-title">Supply-Chain <span class="accent">Topology</span></div>
+        <div class="kg-title section-title-clickable" data-section-id="topology">Supply-Chain <span class="accent">Topology</span></div>
       </div>
       <div class="kg-deck">Six concept clusters and the edges binding them — IEA framework, mineralogy, technology, geography, and policy. <strong>Hover</strong> a node to see its connections drawn live · <strong>click</strong> to pin · tech nodes marked <span class="kg-link-hint">→ Op</span> link to their operation card.</div>
     </div>
@@ -3841,6 +3979,18 @@
       </div>
     </div>
     <div class="detail-body" id="dBody"></div>
+  </div>
+
+  <!-- Section Detail Panel — opens when a section title is clicked -->
+  <div class="detail-overlay" id="sectionOverlay"></div>
+  <div class="section-detail-panel" id="sectionDetailPanel" role="dialog" aria-modal="true" aria-hidden="true">
+    <button class="detail-close" id="sectionCloseBtn" aria-label="Close">×</button>
+    <div class="sd-header">
+      <div class="sd-eyebrow" id="sdEyebrow"></div>
+      <h2 class="sd-title" id="sdTitle"></h2>
+      <div class="sd-deck" id="sdDeck"></div>
+    </div>
+    <div class="sd-body" id="sdBody"></div>
   </div>
 
 <script>
@@ -4214,7 +4364,245 @@ function closeDetail() {
 
 document.getElementById("closeBtn").addEventListener("click", closeDetail);
 overlay.addEventListener("click", closeDetail);
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeDetail(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { closeDetail(); closeSectionDetail(); } });
+
+/* ===== SECTION DETAIL PANEL =====
+   Clicking a section title (Minerals / Operations / Allied Capital / Cross-dataset
+   Capital / IEA / Topology) opens a detail card explaining what the section is,
+   how to read it, and surfacing live counts/metrics from the active dataset. */
+const SECTION_INFO = {
+  minerals: {
+    eyebrow: () => `Section II · 鉱物 · ${activeDataset.toUpperCase()} dataset`,
+    title:   () => DATASETS[activeDataset].meta.titleSection2,
+    deck:    () => DATASETS[activeDataset].meta.deck2,
+    facts:   () => {
+      const list = MINERALS;
+      const tiers = { primary: 0, secondary: 0, minor: 0 };
+      list.forEach(m => { if (tiers[m.tier] != null) tiers[m.tier]++; });
+      return [
+        ["Total minerals", list.length],
+        ["Primary tier", tiers.primary],
+        ["Secondary tier", tiers.secondary],
+        ["Minor tier", tiers.minor]
+      ];
+    },
+    blocks: [
+      { head: "How to read", body: "Each card is one mineral host of the dataset's primary element. Cards are ranked by commercial significance and tier-coded by color: terracotta = Primary (commercially dominant), umber = Secondary (industrially relevant), khaki = Minor (mineralogical interest)." },
+      { head: "Interactivity", body: "Click any card to highlight every element it contains across the periodic table. The matched cells pulse, and a status indicator appears in the sticky bar at the bottom with a ↑ Table jump button." }
+    ],
+    bullets: [
+      ["Country chips", "Color-dotted by sovereign-supply risk: green (low), orange (medium), red (high)."],
+      ["Element chips", "Show which periodic-table elements the mineral hosts. Click an element cell separately to see all minerals containing it."],
+      ["Production line", "Where present, real annualized output figures from USGS, company filings, or industry sources cited in the deck above."]
+    ]
+  },
+
+  operations: {
+    eyebrow: () => `Section III · 鉱業 · ${activeDataset.toUpperCase()} dataset`,
+    title:   () => DATASETS[activeDataset].meta.titleSection3,
+    deck:    () => DATASETS[activeDataset].meta.deck3,
+    facts:   () => {
+      const list = OPERATIONS;
+      const status = { online: 0, build: 0, project: 0 };
+      list.forEach(o => { if (status[o.status] != null) status[o.status]++; });
+      const funded = list.filter(o => o.fundingAmount).reduce((s, o) => s + o.fundingAmount, 0);
+      return [
+        ["Total ops", list.length],
+        ["Online", status.online],
+        ["Build", status.build],
+        ["Project", status.project],
+        ["Federal capital", funded >= 1000 ? `$${(funded/1000).toFixed(2)}B` : `$${funded}M`]
+      ];
+    },
+    blocks: [
+      { head: "Status colors", body: "Blue = online (producing today). Orange = build (under construction or final permitting). Gray = project (in development, not yet funded for construction)." },
+      { head: "Interactivity", body: "Click an op card to highlight its element outputs in the periodic table. Substitution-target ops (Niron iron-nitride magnets, LFP cathodes) point to the elements they could displace, not what they extract — they're how the dataset acknowledges demand-side disruption." }
+    ],
+    bullets: [
+      ["Capacity line", "Annualized nameplate capacity, often phased (e.g., \"Phase 1 → Phase 4\")."],
+      ["FID & First Year", "Final Investment Decision year + first production year. Used in the Timeline section to plot project chronology and the 3-leg Compare view."],
+      ["Funding badge", "Where present, the federal/sovereign loan or grant amount in USD millions. Color-coded by program (DOE LPO, DoD DPA, EU CRMA)."]
+    ]
+  },
+
+  "capital-segment": {
+    eyebrow: () => `Section IV · 資本 · by supply-chain segment`,
+    title:   () => "Allied Capital — <span class=\"accent\">deployed by segment</span>",
+    deck:    () => DATASETS[activeDataset].meta.capitalDeck,
+    facts:   () => {
+      const segs = { mining: 0, separation: 0, refining: 0, magnets: 0, recycling: 0 };
+      OPERATIONS.forEach(o => { if (o.fundingAmount && segs[o.segment] != null) segs[o.segment] += o.fundingAmount; });
+      const fmt = v => v >= 1000 ? `$${(v/1000).toFixed(1)}B` : v ? `$${v}M` : "—";
+      return [
+        ["Mining", fmt(segs.mining)],
+        ["Separation", fmt(segs.separation)],
+        ["Refining", fmt(segs.refining)],
+        ["Magnets", fmt(segs.magnets)],
+        ["Recycling", fmt(segs.recycling)]
+      ];
+    },
+    blocks: [
+      { head: "What this shows", body: "Federal and sovereign capital allocated to each step of the active dataset's supply chain. Each row is a segment (Mining → Separation → Refining → Magnets → Recycling). Bar widths are normalized within the dataset — the longest bar represents the most-funded segment." },
+      { head: "Why it matters", body: "Capital flow reveals strategic priority. In the REE dataset, federal money concentrates downstream — separation and magnets get the dollars because that's where the bottleneck is, not at the mine. Mining capacity exists; magnetization capacity outside China largely doesn't." }
+    ],
+    bullets: [
+      ["Click a row", "Expands to show the operations counted in that segment."],
+      ["Empty bars (—)", "Mean no federally-funded ops in that segment for the active dataset — usually because the segment doesn't exist (e.g., Cobalt has no \"Magnets\" segment because LFP is upstream of magnetization)."]
+    ]
+  },
+
+  "capital-country": {
+    eyebrow: () => `Section IV · 国別 · by sovereign jurisdiction`,
+    title:   () => "By Country — <span class=\"accent\">sovereignty view</span>",
+    deck:    () => "Federal capital aggregated by country of operation. Reveals which jurisdictions are absorbing the bulk of allied investment — and which Western nations are still on the sidelines.",
+    facts:   () => {
+      const byCountry = {};
+      OPERATIONS.forEach(o => {
+        if (!o.fundingAmount) return;
+        byCountry[o.country] = (byCountry[o.country] || 0) + o.fundingAmount;
+      });
+      const top = Object.entries(byCountry).sort((a, b) => b[1] - a[1]).slice(0, 4);
+      const fmt = v => v >= 1000 ? `$${(v/1000).toFixed(1)}B` : `$${v}M`;
+      return top.length
+        ? top.map(([country, sum]) => [country, fmt(sum)])
+        : [["No data", "—"]];
+    },
+    blocks: [
+      { head: "What this shows", body: "Operations grouped under their host nation, with total federal/sovereign capital summed. Risk-dot color (green/orange/red) repeats the supply-risk classification from the country chips elsewhere." },
+      { head: "Reading the absences", body: "Countries with no funded operations may still appear elsewhere in the dataset (mineral-occurrence countries, refining hubs) but are receiving no allied capital flow yet. That's often the more interesting signal." }
+    ],
+    bullets: [
+      ["Click a country row", "Drills into the operations hosted there."]
+    ]
+  },
+
+  xds: {
+    eyebrow: () => "Appendix · 対比 · all three datasets compared",
+    title:   () => "Cross-dataset <span class=\"accent\">Capital</span>",
+    deck:    () => "Federal capital across REE, Lithium, and Cobalt — same supply-chain segments, normalized to the global maximum so the magnitudes are directly comparable.",
+    facts:   () => {
+      const totals = {};
+      Object.keys(DATASETS).forEach(key => {
+        const sum = DATASETS[key].operations.reduce((s, o) => s + (o.fundingAmount || 0), 0);
+        totals[key] = sum;
+      });
+      const fmt = v => v >= 1000 ? `$${(v/1000).toFixed(1)}B` : `$${v}M`;
+      return [
+        ["REE total", fmt(totals.ree || 0)],
+        ["Lithium total", fmt(totals.lithium || 0)],
+        ["Cobalt total", fmt(totals.cobalt || 0)],
+        ["Largest segment overall", "Mining (Lithium · Thacker Pass + Hell's Kitchen)"]
+      ];
+    },
+    blocks: [
+      { head: "What this shows", body: "The shape of investment reveals the shape of each supply problem. REE concentrates downstream (separation + magnets) because that's the bottleneck. Lithium concentrates upstream (mining) because the chemistry is solved but Western feedstock isn't. Cobalt concentrates in recycling — a strategic bet that closed-loop supply can reduce DRC dependency." },
+      { head: "Why bars don't always match totals", body: "The cross-dataset bars are normalized to the global maximum across all three datasets, not within-dataset. A short bar in one column may still be a large absolute number — it's just smaller than the largest segment elsewhere." }
+    ],
+    bullets: [
+      ["Color coding", "REE = lanthanide purple, Lithium = alkali red, Cobalt = sage green. Same colors used elsewhere in the publication."]
+    ]
+  },
+
+  iea: {
+    eyebrow: () => "Appendix · 政策枠組 · IEA framework",
+    title:   () => "IEA <span class=\"accent\">Policy Compass</span>",
+    deck:    () => "The International Energy Agency's eight recommendations for critical-mineral security. Each card pairs the policy with the operations in the active dataset that exemplify it.",
+    facts:   () => [
+      ["Recommendations", "8 (R1 through R8)"],
+      ["Tagged ops (REE)", DATASET_REE.operations.filter(o => Array.isArray(o.iea)).length],
+      ["Tagged ops (Co)",  DATASET_COBALT.operations.filter(o => Array.isArray(o.iea)).length],
+      ["Most-tagged rec",  "R5 (Supply Innovation) · 5 ops"]
+    ],
+    blocks: [
+      { head: "The eight recommendations", body: "R1 Data & Risk · R2 Emergency Buffers · R3 Ecosystem Approach · R4 Financial Support · R5 Supply Innovation · R6 Demand Innovation · R7 Recycling · R8 Price Transparency. Color-coded tags on each card group them: data/pricing (purple), emergency (red), ecosystem/financing (blue), innovation (green), recycling (umber)." },
+      { head: "How to read", body: "The cards are not abstract — they bind each IEA recommendation to specific operations in the dataset. R5 is exemplified by ReElement (LAD chromatography), Aclara (AI separation), Alta Resources (bioengineered proteins), Genomines (phytomining), and Rio Tinto Nuton (microorganism leaching). Click any project chip to surface its operation card." }
+    ],
+    bullets: [
+      ["Project chips", "Click them to select the operation in the dataset and pulse-highlight its element footprint."],
+      ["Empty cards", "Mean no operations in the active dataset are tagged with that recommendation — often a signal that the policy lever is dataset-specific (R7 recycling has more cobalt + REE coverage than lithium)."]
+    ]
+  },
+
+  topology: {
+    eyebrow: () => "Appendix · 関係図 · interactive supply-chain graph",
+    title:   () => "Supply-Chain <span class=\"accent\">Topology</span>",
+    deck:    () => "Six concept clusters and the edges binding them — REE classifications, mineralogy, technology, geography, geopolitical frameworks, and the IEA R1–R8 framework.",
+    facts:   () => [
+      ["Clusters", KG_CLUSTERS.length],
+      ["Total nodes", KG_CLUSTERS.reduce((s, c) => s + c.nodes.length, 0)],
+      ["Total edges", KG_EDGES.length],
+      ["Cross-linked nodes", Object.keys(NODE_TO_OP_RANK).length]
+    ],
+    blocks: [
+      { head: "How to read", body: "Hover any node to see its connections drawn live as bezier curves in the cluster grid. Solid curves are outgoing edges (this node → other), dashed are incoming (other → this). Arrowheads always point at the target. Curve color matches edge type." },
+      { head: "Edge types", body: "Threat (red): control or supply disruption. Enables (blue): a downstream dependency. Source (green): provenance / mineral-to-element relationship. Policy (purple): institutional response." },
+      { head: "Pin & cross-link", body: "Click a node to lock its highlight (click again or click background to release). Tech nodes that map to specific operations show a → Op badge — click that badge to surface the operation card." }
+    ],
+    bullets: [
+      ["Filter chips at top", "Limit visible edges by type. Active type colors the chip and the curves drawn in the canvas."],
+      ["Show full graph", "Italic toggle on the right — draws every edge at once. A density read of the whole network."],
+      ["Mobile note", "On viewports under 720px the SVG curve overlay is hidden (curves get noisy). Filter chips, the cluster grid, and the edge table all remain functional."]
+    ]
+  }
+};
+
+const sectionPanel = document.getElementById("sectionDetailPanel");
+const sectionOverlay = document.getElementById("sectionOverlay");
+
+function openSectionDetail(id) {
+  const info = SECTION_INFO[id];
+  if (!info) return;
+  closeDetail(); /* ensure element panel is closed */
+
+  document.getElementById("sdEyebrow").textContent = info.eyebrow();
+  document.getElementById("sdTitle").innerHTML = info.title();
+  document.getElementById("sdDeck").innerHTML = info.deck() || "";
+
+  let bodyHTML = "";
+
+  /* Facts grid */
+  const facts = info.facts ? info.facts() : [];
+  if (facts.length) {
+    bodyHTML += `<div class="sd-fact-grid">`
+      + facts.map(([k, v]) => `<div class="sd-fact"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("")
+      + `</div>`;
+  }
+
+  /* Prose blocks */
+  (info.blocks || []).forEach(b => {
+    bodyHTML += `<div class="sd-block"><div class="sd-block-head">${b.head}</div><div class="sd-block-body">${b.body}</div></div>`;
+  });
+
+  /* Bullet list */
+  if (info.bullets && info.bullets.length) {
+    bodyHTML += `<ul class="sd-bullets">`
+      + info.bullets.map(([k, v]) => `<li><span><strong>${k}</strong>${v}</span></li>`).join("")
+      + `</ul>`;
+  }
+
+  document.getElementById("sdBody").innerHTML = bodyHTML;
+
+  sectionOverlay.classList.add("open");
+  sectionPanel.classList.add("open");
+  sectionPanel.setAttribute("aria-hidden", "false");
+}
+
+function closeSectionDetail() {
+  if (!sectionPanel) return;
+  sectionOverlay.classList.remove("open");
+  sectionPanel.classList.remove("open");
+  sectionPanel.setAttribute("aria-hidden", "true");
+}
+
+document.getElementById("sectionCloseBtn")?.addEventListener("click", closeSectionDetail);
+sectionOverlay?.addEventListener("click", closeSectionDetail);
+
+/* Click delegation — works for current AND dynamically-rewritten section titles
+   (switchDataset rewrites mineral/op H2 contents, so we delegate from document) */
+document.addEventListener("click", (e) => {
+  const target = e.target.closest(".section-title-clickable");
+  if (target) openSectionDetail(target.dataset.sectionId);
+});
 
 /* ===== LEGEND ===== */
 const legend = document.getElementById("legend");
@@ -6481,11 +6869,11 @@ function switchDataset(key) {
   /* Update section headers/decks */
   const m2title = document.querySelector(".minerals-section .minerals-head h2");
   const m2deck = document.querySelector(".minerals-section .minerals-head .deck");
-  if (m2title) m2title.innerHTML = ds.meta.titleSection2;
+  if (m2title) m2title.innerHTML = `<span class="section-title-clickable" data-section-id="minerals">${ds.meta.titleSection2}</span>`;
   if (m2deck) m2deck.innerHTML = ds.meta.deck2;
   const m3title = document.querySelector(".ops-section .ops-head h2");
   const m3deck = document.querySelector(".ops-section .ops-head .deck");
-  if (m3title) m3title.innerHTML = ds.meta.titleSection3;
+  if (m3title) m3title.innerHTML = `<span class="section-title-clickable" data-section-id="operations">${ds.meta.titleSection3}</span>`;
   if (m3deck) m3deck.innerHTML = ds.meta.deck3;
   const capDeck = document.querySelector(".capital-deck");
   if (capDeck) capDeck.textContent = ds.meta.capitalDeck;
