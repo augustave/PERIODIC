@@ -2556,7 +2556,7 @@
     gap: 14px;
     padding: 8px 12px 8px 38px;
     flex-wrap: wrap;
-    overflow-x: auto;
+    overflow-x: visible;
   }
 
   .su-toggle {
@@ -2627,6 +2627,11 @@
     border-color: #B51A21;
     color: var(--bg-paper);
   }
+  .su-battery.active {
+    background: #574737;
+    border-color: #574737;
+    color: var(--bg-paper);
+  }
   .su-icon {
     width: 28px;
     padding: 4px 0;
@@ -2638,6 +2643,28 @@
     border-color: var(--c-nonmetal);
     color: var(--bg-paper);
   }
+  /* Active-state status group — only visible when something is selected/filtered */
+  .su-group.su-status[hidden] { display: none !important; }
+  .su-status-text {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--bg-paper);
+    letter-spacing: -0.005em;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 4px;
+  }
+  .su-status .su-icon { border-color: rgba(236, 233, 207, 0.55); }
+  .su-status .su-icon:hover { background: #B51A21; border-color: #B51A21; }
+  /* Hide scenario buttons that don't apply to the active dataset */
+  body[data-active-dataset="ree"] #suBatteryBtn,
+  body[data-active-dataset="lithium"] #suMagnetBtn,
+  body[data-active-dataset="lithium"] #suChinaBtn,
+  body[data-active-dataset="cobalt"] #suMagnetBtn,
+  body[data-active-dataset="cobalt"] #suChinaBtn { display: none; }
 
   @media (max-width: 720px) {
     .sticky-util { left: 8px; right: 8px; bottom: 8px; }
@@ -2866,9 +2893,9 @@
   /* ======== JUMP-HINT FLOATING CHIP ======== */
   .jump-hint {
     position: fixed;
-    bottom: 84px;
+    bottom: 96px;
     right: 20px;
-    z-index: 95;
+    z-index: 50;
     padding: 8px 14px 8px 12px;
     background: var(--ink);
     color: var(--bg-paper);
@@ -3585,20 +3612,27 @@
 
       <div class="su-group su-scenarios">
         <span class="su-label">Scenario</span>
-        <button class="su-btn" id="suMagnetBtn" title="Magnet-critical (Nd Pr Dy Tb)">⚡ Magnets</button>
-        <button class="su-btn su-china" id="suChinaBtn" title="China export-restricted">⛔ China</button>
+        <button class="su-btn" id="suMagnetBtn" title="Magnet-critical: Nd, Pr, Dy, Tb">⚡ Magnets</button>
+        <button class="su-btn su-china" id="suChinaBtn" title="China export-restricted REEs">⛔ China</button>
+        <button class="su-btn su-battery" id="suBatteryBtn" title="Battery-critical: Li, C, Co, Ni, Mn, P, F">🔋 Battery</button>
       </div>
 
       <div class="su-group su-mode">
         <span class="su-label">Time</span>
-        <button class="su-btn su-tl active" data-su-mode="firstYear">Prod</button>
-        <button class="su-btn su-tl" data-su-mode="firstAnnounced">Anno</button>
-        <button class="su-btn su-tl" data-su-mode="fid">FID</button>
-        <button class="su-btn su-tl" data-su-mode="compare">⇅</button>
+        <button class="su-btn su-tl active" data-su-mode="firstYear" title="First production year">Prod</button>
+        <button class="su-btn su-tl" data-su-mode="firstAnnounced" title="When the project was first announced">Anno</button>
+        <button class="su-btn su-tl" data-su-mode="fid" title="Final Investment Decision year">FID</button>
+        <button class="su-btn su-tl" data-su-mode="compare" title="3-leg compare view: Announced → FID → Production">⇅ Compare</button>
+      </div>
+
+      <div class="su-group su-status" id="suStatus" hidden>
+        <span class="su-label">Active</span>
+        <span class="su-status-text" id="suStatusText">—</span>
+        <button class="su-btn su-icon" id="suClearAll" title="Clear all selections + filters">✕</button>
       </div>
 
       <div class="su-group su-utils">
-        <button class="su-btn su-icon" id="suShare" title="Copy deep link">⌗</button>
+        <button class="su-btn su-icon" id="suShare" title="Copy deep link to current state">⌗</button>
         <button class="su-btn su-icon" id="suTop" title="Back to top">↑</button>
       </div>
     </div>
@@ -6897,6 +6931,20 @@ document.getElementById("suMagnetBtn").addEventListener("click", () => {
 document.getElementById("suChinaBtn").addEventListener("click", () => {
   if (activeDataset === "ree") chinaBtn.click();
 });
+document.getElementById("suBatteryBtn").addEventListener("click", () => {
+  if (activeDataset !== "ree") batteryBtn.click();
+});
+
+/* Clear-all: reset selections, scenarios, and category filters */
+document.getElementById("suClearAll")?.addEventListener("click", () => {
+  if (activeMineral && typeof clearMineral === "function") clearMineral();
+  if (activeOperation && typeof clearOperation === "function") clearOperation();
+  if (activeScenario && typeof clearScenario === "function") clearScenario();
+  /* Reset category filter pill to "all" */
+  const allPill = document.querySelector('.pill[data-filter="all"]');
+  if (allPill && !allPill.classList.contains("active")) allPill.click();
+  if (typeof updateStickyState === "function") updateStickyState();
+});
 
 /* Timeline mode shortcuts */
 document.querySelectorAll(".su-tl").forEach(btn => {
@@ -6924,22 +6972,21 @@ document.getElementById("suTop").addEventListener("click", () => {
 
 /* Keep sticky bar buttons synced with main controls */
 function updateStickyState() {
+  /* Body attr drives CSS that hides scenario buttons not applicable to the active dataset */
+  document.body.dataset.activeDataset = activeDataset;
+
   /* Dataset */
   document.querySelectorAll(".su-ds-btn").forEach(b => {
     b.classList.toggle("active", b.dataset.suDataset === activeDataset);
   });
-  /* Scenarios */
+  /* Scenarios — sticky bar */
   const sm = document.getElementById("suMagnetBtn");
   const sc = document.getElementById("suChinaBtn");
-  if (sm) {
-    sm.classList.toggle("active", activeScenario === "magnet");
-    sm.disabled = activeDataset !== "ree";
-  }
-  if (sc) {
-    sc.classList.toggle("active", activeScenario === "china");
-    sc.disabled = activeDataset !== "ree";
-  }
-  /* Battery button — active in Li + Cobalt, disabled in REE */
+  const sb = document.getElementById("suBatteryBtn");
+  if (sm) sm.classList.toggle("active", activeScenario === "magnet");
+  if (sc) sc.classList.toggle("active", activeScenario === "china");
+  if (sb) sb.classList.toggle("active", activeScenario === "battery");
+  /* Main battery button (above-the-fold, in the magnet bar) — disable in REE */
   const isRee = activeDataset === "ree";
   batteryBtn.disabled = isRee;
   batteryBtn.style.opacity = isRee ? "0.35" : "";
@@ -6948,6 +6995,23 @@ function updateStickyState() {
   document.querySelectorAll(".su-tl").forEach(b => {
     b.classList.toggle("active", b.dataset.suMode === activeTimelineMode);
   });
+  /* Selection-aware status indicator */
+  const statusGroup = document.getElementById("suStatus");
+  const statusText  = document.getElementById("suStatusText");
+  if (statusGroup && statusText) {
+    let label = "";
+    if (activeOperation) label = `Op · ${activeOperation.name}`;
+    else if (activeMineral) label = `Mineral · ${activeMineral.name}`;
+    else if (activeScenario) label = `Scenario · ${activeScenario}`;
+    else if (activeFilter && activeFilter.type !== "all") label = `Filter · ${activeFilter.value}`;
+
+    if (label) {
+      statusText.textContent = label;
+      statusGroup.hidden = false;
+    } else {
+      statusGroup.hidden = true;
+    }
+  }
 }
 updateStickyState();
 
@@ -6956,6 +7020,20 @@ const _origActivateScenario = activateScenario;
 activateScenario = function(name) { _origActivateScenario(name); updateStickyState(); };
 const _origClearScenario = clearScenario;
 clearScenario = function() { _origClearScenario(); updateStickyState(); };
+
+/* Wrap selection state-changers so the status group reflects them */
+const _origSelectMineral = selectMineral;
+selectMineral = function(m) { _origSelectMineral(m); updateStickyState(); };
+const _origClearMineral = clearMineral;
+clearMineral = function() { _origClearMineral(); updateStickyState(); };
+const _origSelectOperation = selectOperation;
+selectOperation = function(o) { _origSelectOperation(o); updateStickyState(); };
+const _origClearOperation = clearOperation;
+clearOperation = function() { _origClearOperation(); updateStickyState(); };
+/* Filter pill changes affect the status indicator */
+ctrl.addEventListener("click", e => {
+  if (e.target.closest(".pill")) setTimeout(updateStickyState, 0);
+});
 
 /* Listen on tl-toggle clicks to keep sticky synced */
 document.querySelectorAll(".tl-toggle-btn").forEach(btn => {
