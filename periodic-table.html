@@ -2890,53 +2890,28 @@
   }
   .el.pulse-attention { animation: elPulseAttention 0.9s cubic-bezier(0.2,0.8,0.3,1.05); }
 
-  /* ======== JUMP-HINT FLOATING CHIP ======== */
-  .jump-hint {
-    position: fixed;
-    bottom: 96px;
-    right: 20px;
-    z-index: 50;
-    padding: 8px 14px 8px 12px;
-    background: var(--ink);
-    color: var(--bg-paper);
-    font-family: "DM Mono", monospace;
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: 1px solid var(--ink);
-    box-shadow: 0 4px 14px rgba(11,4,4,0.18);
-    opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  /* ======== STATUS-GROUP DOT + JUMP (absorbed from old floating jump-hint) ======== */
+  .su-status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(236, 233, 207, 0.55);
+    flex-shrink: 0;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 0 0 rgba(236, 233, 207, 0);
   }
-  .jump-hint.visible {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
+  /* Dot color keyed to active context (set via data-status-kind on the group) */
+  .su-status[data-kind="op"]       .su-status-dot { background: #EE8E42; box-shadow: 0 0 0 3px rgba(238,142,66,0.18); }
+  .su-status[data-kind="mineral"]  .su-status-dot { background: #235597; box-shadow: 0 0 0 3px rgba(35,85,151,0.18); }
+  .su-status[data-kind="magnet"]   .su-status-dot { background: #C9A14A; box-shadow: 0 0 0 3px rgba(201,161,74,0.18); }
+  .su-status[data-kind="china"]    .su-status-dot { background: #B51A21; box-shadow: 0 0 0 3px rgba(181,26,33,0.20); }
+  .su-status[data-kind="battery"]  .su-status-dot { background: #A07254; box-shadow: 0 0 0 3px rgba(160,114,84,0.18); }
+  .su-status[data-kind="filter"]   .su-status-dot { background: #7E5A9B; box-shadow: 0 0 0 3px rgba(126,90,155,0.18); }
+  .su-status-jump {
+    padding: 3px 8px;
+    font-size: 9px;
   }
-  .jump-hint:hover { background: var(--bg-paper); color: var(--ink); }
-  .jump-hint .jh-arrow {
-    font-family: "Fraunces", serif;
-    font-style: italic;
-    font-size: 14px;
-    line-height: 1;
-  }
-  .jump-hint .jh-count {
-    font-family: "Fraunces", serif;
-    font-style: italic;
-    font-size: 14px;
-    letter-spacing: -0.01em;
-    text-transform: none;
-  }
-  @media print { .jump-hint { display: none !important; } }
-  @media (max-width: 720px) {
-    .jump-hint { bottom: 120px; right: 10px; font-size: 9px; padding: 6px 10px; }
-  }
+  .su-status-jump[hidden] { display: none !important; }
 
   /* ======== IEA R1–R8 POLICY FRAMEWORK SECTION ======== */
   .iea-section {
@@ -3592,13 +3567,7 @@
     </div>
   </section>
 
-  <!-- Floating jump-hint (appears briefly when a mineral or op is selected; click to scroll to table) -->
-  <button class="jump-hint" id="jumpHint" type="button">
-    <span class="jh-arrow">↑</span>
-    <span><span class="jh-count" id="jumpHintCount">0</span> elements highlighted</span>
-  </button>
-
-  <!-- 3 · Sticky utility bar (fixed) -->
+  <!-- 3 · Sticky utility bar (fixed) — now absorbs the old floating jump-hint -->
   <div class="sticky-util" id="stickyUtil">
     <div class="su-inner">
       <button class="su-toggle" id="suToggle" title="Hide / show the utility bar">⌃</button>
@@ -3626,8 +3595,9 @@
       </div>
 
       <div class="su-group su-status" id="suStatus" hidden>
-        <span class="su-label">Active</span>
+        <span class="su-status-dot" id="suStatusDot"></span>
         <span class="su-status-text" id="suStatusText">—</span>
+        <button class="su-btn su-status-jump" id="suStatusJump" title="Scroll to the periodic table" hidden>↑ Table</button>
         <button class="su-btn su-icon" id="suClearAll" title="Clear all selections + filters">✕</button>
       </div>
 
@@ -4596,7 +4566,6 @@ function clearMineral() {
     c.classList.remove("featured", "featured-secondary", "dimmed");
   });
   clearBtn.classList.remove("visible");
-  document.getElementById("jumpHint")?.classList.remove("visible");
   applyFilter();  /* re-apply whatever filter is currently active */
   if (typeof writeHash === "function") writeHash();
 }
@@ -5368,7 +5337,6 @@ function clearOperation() {
   });
   document.querySelectorAll(".mineral-card").forEach(c => c.classList.remove("contains-element"));
   clearOpBtn.classList.remove("visible");
-  document.getElementById("jumpHint")?.classList.remove("visible");
   applyFilter();
   if (typeof writeHash === "function") writeHash();
 }
@@ -6656,10 +6624,11 @@ function renderIeaFramework() {
 
 renderIeaFramework();
 
-/* ===== PULSE-ATTENTION + JUMP-HINT (replaces auto-scroll on selection) =====
-   When a mineral or op is selected, briefly pulse the matched element cells
-   and surface a floating "↑ N elements highlighted" chip — clickable for users
-   who do want to jump to the table, dismissable by ignoring it. */
+/* ===== PULSE-ATTENTION (replaces auto-scroll on selection) =====
+   When a mineral or op is selected, briefly pulse the matched element cells.
+   The "where do I look?" affordance now lives inside the sticky-bar status
+   group as ↑ Table button (set up in updateStickyState), so this function
+   only handles the visual pulse cue. */
 function pulseHighlightedElements() {
   const cells = document.querySelectorAll(".el.featured, .el.featured-secondary");
   cells.forEach((el, i) => {
@@ -6667,23 +6636,15 @@ function pulseHighlightedElements() {
     void el.offsetWidth; /* force reflow so the animation can replay on rapid switches */
     setTimeout(() => el.classList.add("pulse-attention"), i * 12);
   });
-  /* Clean up the class after the animation so it doesn't accumulate */
   setTimeout(() => cells.forEach(el => el.classList.remove("pulse-attention")), 1100 + cells.length * 12);
 }
 
-const jumpHintEl = document.getElementById("jumpHint");
-const jumpHintCountEl = document.getElementById("jumpHintCount");
-let _jumpHintTimer = null;
-function showJumpHint(count) {
-  if (!jumpHintEl) return;
-  jumpHintCountEl.textContent = count;
-  jumpHintEl.classList.add("visible");
-  clearTimeout(_jumpHintTimer);
-  _jumpHintTimer = setTimeout(() => jumpHintEl.classList.remove("visible"), 4500);
-}
-jumpHintEl?.addEventListener("click", () => {
+/* No-op kept for backwards compat with selectMineral/selectOperation call sites */
+function showJumpHint(_count) { /* status group now communicates this via updateStickyState */ }
+
+/* ↑ Table button inside the sticky bar status group */
+document.getElementById("suStatusJump")?.addEventListener("click", () => {
   document.querySelector(".table-wrap")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  jumpHintEl.classList.remove("visible");
 });
 
 /* ===== KNOWLEDGE GRAPH RENDERER ===== */
@@ -6998,18 +6959,34 @@ function updateStickyState() {
   /* Selection-aware status indicator */
   const statusGroup = document.getElementById("suStatus");
   const statusText  = document.getElementById("suStatusText");
+  const statusJump  = document.getElementById("suStatusJump");
   if (statusGroup && statusText) {
-    let label = "";
-    if (activeOperation) label = `Op · ${activeOperation.name}`;
-    else if (activeMineral) label = `Mineral · ${activeMineral.name}`;
-    else if (activeScenario) label = `Scenario · ${activeScenario}`;
-    else if (activeFilter && activeFilter.type !== "all") label = `Filter · ${activeFilter.value}`;
+    let label = "", kind = "", showJump = false;
+    if (activeOperation) {
+      label = `${activeOperation.name} · ${activeOperation.outputs.length} elements`;
+      kind = "op"; showJump = true;
+    } else if (activeMineral) {
+      const elemCount = (activeMineral.primary?.length || 0) + (activeMineral.other?.length || 0);
+      label = `${activeMineral.name} · ${elemCount} elements`;
+      kind = "mineral"; showJump = true;
+    } else if (activeScenario) {
+      const SCEN_LABEL = { magnet: "Magnet-critical REEs", china: "China-restricted REEs", battery: "Battery-critical (Li/C/Co/Ni/Mn/P/F)" };
+      label = SCEN_LABEL[activeScenario] || `Scenario · ${activeScenario}`;
+      kind = activeScenario;
+    } else if (activeFilter && activeFilter.type !== "all") {
+      label = `Filter · ${activeFilter.value}`;
+      kind = "filter";
+    }
 
     if (label) {
       statusText.textContent = label;
       statusGroup.hidden = false;
+      statusGroup.dataset.kind = kind;
+      if (statusJump) statusJump.hidden = !showJump;
     } else {
       statusGroup.hidden = true;
+      delete statusGroup.dataset.kind;
+      if (statusJump) statusJump.hidden = true;
     }
   }
 }
@@ -7040,19 +7017,34 @@ document.querySelectorAll(".tl-toggle-btn").forEach(btn => {
   btn.addEventListener("click", () => setTimeout(updateStickyState, 0));
 });
 
-/* Auto-collapse sticky bar when not scrolling for 4s — feels less in-the-way */
+/* Auto-collapse sticky bar — only when scrolling DOWN, never when scrolling up,
+   and never while a selection is active (status group is showing context).
+   8s timer instead of 4s. Hover or upward scroll cancels it instantly. */
 let _scrollTimer = null;
 let _hasInteracted = false;
+let _lastScrollY = window.scrollY;
 window.addEventListener("scroll", () => {
   if (!_hasInteracted) return;
-  document.body.classList.remove("su-collapsed");
-  clearTimeout(_scrollTimer);
-  _scrollTimer = setTimeout(() => {
-    /* don't auto-collapse if user is hovering the bar */
-    if (!stickyUtil.matches(":hover")) {
-      document.body.classList.add("su-collapsed");
-    }
-  }, 4000);
+  const y = window.scrollY;
+  const dir = y - _lastScrollY;
+  _lastScrollY = y;
+  /* Scrolling up — always show the bar and cancel any pending collapse */
+  if (dir < -2) {
+    document.body.classList.remove("su-collapsed");
+    clearTimeout(_scrollTimer);
+    return;
+  }
+  /* Scrolling down — show bar, then schedule collapse if no further interaction */
+  if (dir > 2) {
+    document.body.classList.remove("su-collapsed");
+    clearTimeout(_scrollTimer);
+    _scrollTimer = setTimeout(() => {
+      const hasSelection = activeMineral || activeOperation || activeScenario || (activeFilter && activeFilter.type !== "all");
+      if (!stickyUtil.matches(":hover") && !hasSelection) {
+        document.body.classList.add("su-collapsed");
+      }
+    }, 8000);
+  }
 }, { passive: true });
 /* First interaction starts the auto-hide cycle */
 window.addEventListener("click", () => { _hasInteracted = true; }, { once: true });
