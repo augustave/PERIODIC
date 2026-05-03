@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>The Periodic Table — after Nakano</title>
+<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet">
@@ -731,6 +732,15 @@
     font-family: "DM Mono", monospace;
     font-size: 11px;
     opacity: 0.85;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  .detail-symbol.mineral-detail .sym {
+    font-size: 54px;
+  }
+  .detail-symbol.mineral-detail .mass {
+    font-size: 10px;
+    line-height: 1.35;
   }
 
   .detail-name {
@@ -876,13 +886,406 @@
   .source-block strong { color: var(--ink); font-weight: 400; }
   .source-block em { color: var(--ink); }
 
+  /* ======== PERIODIC INTELLIGENCE SHELL ======== */
+  body.pi-shell {
+    padding-top: 84px;
+    padding-left: 292px;
+  }
+  .pi-topbar,
+  .pi-left-panel,
+  .pi-bottom-strip {
+    position: fixed;
+    z-index: 42;
+    border: 1px solid rgba(11,4,4,0.22);
+    background: rgba(236,233,207,0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 18px 50px -34px rgba(11,4,4,0.48);
+  }
+  .pi-topbar {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    min-height: 50px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 12px;
+  }
+  .pi-brand {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 20px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .pi-mode-switch,
+  .pi-top-actions,
+  .pi-entry-actions,
+  .pi-mission-list,
+  .pi-panel-list {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .pi-chip,
+  .pi-nav-btn,
+  .pi-mission-btn,
+  .pi-entry-btn,
+  .pi-clear-btn,
+  .pi-breadcrumb-btn,
+  .detail-tab {
+    border: 1px solid rgba(11,4,4,0.28);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  }
+  .pi-chip,
+  .pi-clear-btn {
+    min-height: 30px;
+    padding: 7px 10px;
+  }
+  .pi-chip:hover,
+  .pi-nav-btn:hover,
+  .pi-mission-btn:hover,
+  .pi-entry-btn:hover,
+  .pi-clear-btn:hover,
+  .pi-breadcrumb-btn:hover,
+  .detail-tab:hover {
+    background: rgba(11,4,4,0.07);
+    border-color: var(--ink);
+  }
+  .pi-chip.active,
+  .pi-nav-btn.active,
+  .pi-mission-btn.active,
+  .pi-entry-btn.active,
+  .detail-tab.active {
+    background: var(--ink);
+    color: var(--bg-paper);
+    border-color: var(--ink);
+  }
+  .pi-lens-select {
+    min-height: 30px;
+    max-width: 210px;
+    border: 1px solid rgba(11,4,4,0.28);
+    background: transparent;
+    color: var(--ink);
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 8px;
+  }
+  .pi-left-panel {
+    top: 84px;
+    left: 16px;
+    width: 248px;
+    max-height: calc(100vh - 136px);
+    overflow-y: auto;
+    padding: 14px;
+  }
+  .pi-block {
+    border-top: 1px solid rgba(11,4,4,0.16);
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+  .pi-block:first-child {
+    border-top: 0;
+    padding-top: 0;
+    margin-top: 0;
+  }
+  .pi-block-label,
+  .pi-lens-legend-label {
+    font-family: "DM Mono", monospace;
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 8px;
+  }
+  .pi-entry-actions,
+  .pi-mission-list,
+  .pi-panel-list {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pi-entry-btn,
+  .pi-nav-btn,
+  .pi-mission-btn {
+    min-height: 34px;
+    padding: 7px 9px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .pi-entry-btn .meta,
+  .pi-nav-btn .meta,
+  .pi-mission-btn .meta {
+    font-size: 8px;
+    color: inherit;
+    opacity: 0.68;
+    letter-spacing: 0.08em;
+  }
+  .pi-lens-legend {
+    display: none;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+  }
+  body.pi-lens-active .pi-lens-legend { display: flex; }
+  .pi-lens-key {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: "DM Mono", monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+  }
+  .pi-lens-key::before {
+    content: "";
+    width: 14px;
+    height: 3px;
+    background: var(--lens-color, var(--ink));
+    display: inline-block;
+  }
+  .pi-bottom-strip {
+    left: 292px;
+    right: 16px;
+    bottom: 16px;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .pi-breadcrumb-btn {
+    padding: 4px 7px;
+    font-size: 8px;
+  }
+  .pi-breadcrumb-current {
+    color: var(--ink);
+  }
+
+  body.pi-shell.pi-mode-explore .controls,
+  body.pi-shell.pi-mode-explore .magnet-bar,
+  body.pi-shell.pi-mode-explore footer {
+    display: none;
+  }
+  body.pi-shell .minerals-section,
+  body.pi-shell .ops-section,
+  body.pi-shell .stats-bar,
+  body.pi-shell .xds-section,
+  body.pi-shell .iea-section,
+  body.pi-shell .kg-section,
+  body.pi-shell .colophon-bar,
+  body.pi-shell .sticky-util {
+    display: none;
+  }
+  body.pi-panel-minerals .minerals-section,
+  body.pi-panel-operations .ops-section,
+  body.pi-panel-timeline .ops-section,
+  body.pi-panel-capital .ops-section,
+  body.pi-panel-countries .ops-section,
+  body.pi-panel-stats .stats-bar,
+  body.pi-panel-cross-capital .xds-section,
+  body.pi-panel-iea .iea-section,
+  body.pi-panel-topology .kg-section {
+    display: block;
+  }
+  body.pi-panel-operations .timeline-block,
+  body.pi-panel-operations .capital-block,
+  body.pi-panel-operations .country-block,
+  body.pi-panel-timeline .ops-grid,
+  body.pi-panel-timeline .capital-block,
+  body.pi-panel-timeline .country-block,
+  body.pi-panel-capital .timeline-block,
+  body.pi-panel-capital .ops-grid,
+  body.pi-panel-capital .country-block,
+  body.pi-panel-countries .timeline-block,
+  body.pi-panel-countries .ops-grid,
+  body.pi-panel-countries .capital-block {
+    display: none !important;
+  }
+  body.pi-panel-capital .capital-block,
+  body.pi-panel-countries .country-block {
+    display: block !important;
+  }
+
+  body.pi-shell .mineral-card .note,
+  body.pi-shell .mineral-card .stat-row,
+  body.pi-shell .op-card .note,
+  body.pi-shell .op-card .operator-line,
+  body.pi-shell .op-card .stat-row,
+  body.pi-shell .op-card .country-row,
+  body.pi-shell .op-card .ree-row {
+    display: none;
+  }
+  body.pi-shell .mineral-card,
+  body.pi-shell .op-card {
+    min-height: 0;
+  }
+  body.pi-shell .op-card.has-funding {
+    padding-top: 12px;
+  }
+  body.pi-shell .op-card .funding-badge {
+    position: static;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  body.pi-mode-mission .el:not(.pi-mission-hit),
+  body.pi-mode-mission .mineral-card:not(.pi-mission-hit),
+  body.pi-mode-mission .op-card:not(.pi-mission-hit),
+  body.pi-mode-mission .tl-chip:not(.pi-mission-hit) {
+    opacity: 0.18;
+    filter: saturate(0.55);
+  }
+  .el.pi-mission-hit,
+  .mineral-card.pi-mission-hit,
+  .op-card.pi-mission-hit,
+  .tl-chip.pi-mission-hit,
+  .kg-node.pi-mission-hit {
+    outline: 2px solid rgba(181,26,33,0.72);
+    outline-offset: 2px;
+  }
+  .el.pi-lens-high,
+  .mineral-card.pi-lens-high,
+  .op-card.pi-lens-high {
+    box-shadow: 0 0 0 3px rgba(181,26,33,0.28), 0 12px 34px -24px rgba(11,4,4,0.45);
+  }
+  .el.pi-lens-medium,
+  .mineral-card.pi-lens-medium,
+  .op-card.pi-lens-medium {
+    box-shadow: 0 0 0 3px rgba(238,142,66,0.28), 0 12px 34px -24px rgba(11,4,4,0.45);
+  }
+  .el.pi-lens-low,
+  .mineral-card.pi-lens-low,
+  .op-card.pi-lens-low {
+    box-shadow: 0 0 0 3px rgba(90,138,110,0.24), 0 12px 34px -24px rgba(11,4,4,0.36);
+  }
+  .el.pi-lens-capital,
+  .op-card.pi-lens-capital {
+    box-shadow: 0 0 0 3px rgba(35,85,151,0.26), 0 12px 34px -24px rgba(11,4,4,0.42);
+  }
+  .el.pi-lens-substitution,
+  .op-card.pi-lens-substitution {
+    box-shadow: 0 0 0 3px rgba(126,35,101,0.30), 0 12px 34px -24px rgba(11,4,4,0.42);
+  }
+
+  body.pi-shell .detail-panel {
+    top: 84px;
+    right: 16px;
+    left: auto;
+    width: min(470px, calc(100vw - 32px));
+    max-height: calc(100vh - 118px);
+    transform: translateX(110%);
+    opacity: 1;
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 0.28s ease;
+  }
+  body.pi-shell .detail-overlay {
+    z-index: 41;
+  }
+  body.pi-shell .detail-panel.open {
+    transform: translateX(0);
+  }
+  body.pi-shell .detail-header {
+    grid-template-columns: 148px 1fr;
+  }
+  body.pi-shell .detail-symbol .sym {
+    font-size: 58px;
+  }
+  body.pi-shell .detail-name h2 {
+    font-size: 30px;
+    line-height: 1.05;
+  }
+  .detail-tabs {
+    display: none;
+    gap: 6px;
+    border-bottom: 1px solid rgba(11,4,4,0.18);
+    padding: 10px 12px;
+  }
+  .detail-tabs.visible {
+    display: flex;
+  }
+  .detail-tab {
+    padding: 7px 9px;
+  }
+  .detail-tab-panel {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .detail-tab-panel.active {
+    display: contents;
+  }
+  body.pi-shell .detail-body {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  body.pi-focus .masthead,
+  body.pi-focus .dataset-strip,
+  body.pi-focus .table-wrap,
+  body.pi-focus .controls,
+  body.pi-focus .magnet-bar,
+  body.pi-focus .minerals-section,
+  body.pi-focus .ops-section,
+  body.pi-focus .stats-bar,
+  body.pi-focus .xds-section,
+  body.pi-focus .iea-section,
+  body.pi-focus .kg-section {
+    transition: opacity 0.2s ease, filter 0.2s ease;
+    opacity: 0.46;
+    filter: saturate(0.78);
+  }
+
   /* Responsive tweaks */
   @media (max-width: 900px) {
-    body { padding: 20px 16px 60px; }
+    body,
+    body.pi-shell { padding: 84px 16px 80px; }
+    .pi-topbar {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+      gap: 8px;
+    }
+    .pi-left-panel {
+      position: relative;
+      top: auto;
+      left: auto;
+      width: 100%;
+      max-height: none;
+      margin-bottom: 16px;
+    }
+    .pi-bottom-strip {
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      overflow-x: auto;
+    }
     .masthead { grid-template-columns: 1fr; text-align: left; }
     .title-block { text-align: left; }
     .meta { text-align: left; }
     footer { grid-template-columns: 1fr; }
+    body.pi-shell .detail-panel {
+      top: 80px;
+      right: 8px;
+      width: calc(100vw - 16px);
+      max-height: calc(100vh - 104px);
+    }
     .detail-header { grid-template-columns: 1fr; }
     .detail-symbol { border-right: none; border-bottom: 1px solid var(--ink); }
     .detail-body { grid-template-columns: 1fr; }
@@ -3221,14 +3624,13 @@
   }
 
   /* ======== KNOWLEDGE GRAPH — INTERACTIVE GRAPH OVERLAY ======== */
-  .kg-canvas { position: relative; }
+  .kg-canvas { position: relative; overflow: hidden; }
   .kg-overlay {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    top: 0;
+    left: 0;
     pointer-events: none;
-    overflow: visible;
+    overflow: hidden;
     z-index: 2;
   }
   .kg-edge-curve {
@@ -3237,6 +3639,7 @@
     opacity: 0.78;
     transition: opacity 0.2s ease, stroke-width 0.2s ease;
     stroke-linecap: round;
+    animation: kgPathTrace 0.22s ease-out both;
   }
   .kg-edge-curve.threat   { stroke: #B51A21; marker-end: url(#kgArrowThreat); }
   .kg-edge-curve.enables  { stroke: #235597; marker-end: url(#kgArrowEnables); }
@@ -3244,7 +3647,12 @@
   .kg-edge-curve.policy   { stroke: #7E5A9B; marker-end: url(#kgArrowPolicy); }
   .kg-edge-curve.outgoing { stroke-dasharray: none; }
   .kg-edge-curve.incoming { stroke-dasharray: 4 3; opacity: 0.55; }
+  .kg-edge-curve.full-graph { opacity: 0.34; stroke-width: 1.1; }
   .kg-edge-curve.faded    { opacity: 0.12; }
+
+  @keyframes kgPathTrace {
+    from { opacity: 0; }
+  }
 
   /* Filter chips */
   .kg-filter-row {
@@ -3572,7 +3980,75 @@
 
 </style>
 </head>
-<body>
+<body class="pi-shell pi-mode-explore pi-panel-table">
+
+  <div class="pi-topbar" aria-label="Periodic intelligence controls">
+    <div class="pi-brand">Periodic Intelligence</div>
+    <div class="pi-mode-switch" role="tablist" aria-label="Interface mode">
+      <button class="pi-chip active" data-pi-mode="explore">Explore</button>
+      <button class="pi-chip" data-pi-mode="analysis">Analysis</button>
+      <button class="pi-chip" data-pi-mode="mission">Mission</button>
+    </div>
+    <div class="pi-top-actions">
+      <select class="pi-lens-select" id="piLensSelect" aria-label="Strategic lens">
+        <option value="">Strategic lens</option>
+        <option value="risk">Supply Risk</option>
+        <option value="capital">Capital Allocation</option>
+        <option value="geopolitics">Geopolitical Exposure</option>
+        <option value="substitution">Technology Substitution</option>
+      </select>
+      <button class="pi-clear-btn" id="piClearAll" title="Clear mission, lens, filters, and selections">Clear</button>
+    </div>
+  </div>
+
+  <aside class="pi-left-panel" aria-label="Mission navigation">
+    <div class="pi-block">
+      <div class="pi-block-label">Recommended starts</div>
+      <div class="pi-entry-actions">
+        <button class="pi-entry-btn active" data-pi-entry="elements"><span>Explore Elements</span><span class="meta">table</span></button>
+        <button class="pi-entry-btn" data-pi-entry="minerals"><span>View Minerals</span><span class="meta">2 clicks</span></button>
+        <button class="pi-entry-btn" data-pi-entry="mission"><span>Run Mission</span><span class="meta">guided</span></button>
+      </div>
+    </div>
+    <div class="pi-block">
+      <div class="pi-block-label">Dataset</div>
+      <div class="pi-panel-list">
+        <button class="pi-nav-btn" data-pi-dataset="ree"><span>Rare Earths</span><span class="meta">REE</span></button>
+        <button class="pi-nav-btn" data-pi-dataset="lithium"><span>Lithium</span><span class="meta">Li</span></button>
+        <button class="pi-nav-btn" data-pi-dataset="cobalt"><span>Cobalt</span><span class="meta">Co</span></button>
+      </div>
+    </div>
+    <div class="pi-block">
+      <div class="pi-block-label">Navigate</div>
+      <div class="pi-panel-list">
+        <button class="pi-nav-btn active" data-pi-panel="table"><span>Elements</span><span class="meta">anchor</span></button>
+        <button class="pi-nav-btn" data-pi-panel="minerals"><span>Minerals</span><span class="meta">hosts</span></button>
+        <button class="pi-nav-btn" data-pi-panel="operations"><span>Operations</span><span class="meta">projects</span></button>
+        <button class="pi-nav-btn" data-pi-panel="timeline"><span>Timeline</span><span class="meta">build</span></button>
+        <button class="pi-nav-btn" data-pi-panel="capital"><span>Capital</span><span class="meta">funding</span></button>
+        <button class="pi-nav-btn" data-pi-panel="countries"><span>Countries</span><span class="meta">risk</span></button>
+        <button class="pi-nav-btn" data-pi-panel="iea"><span>IEA Framework</span><span class="meta">R1-R8</span></button>
+        <button class="pi-nav-btn" data-pi-panel="topology"><span>Topology</span><span class="meta">graph</span></button>
+      </div>
+    </div>
+    <div class="pi-block">
+      <div class="pi-block-label">Missions</div>
+      <div class="pi-mission-list">
+        <button class="pi-mission-btn" data-pi-mission="magnet_supply_chain"><span>Magnet Supply Chain</span><span class="meta">REE</span></button>
+        <button class="pi-mission-btn" data-pi-mission="china_dependency"><span>China Dependency</span><span class="meta">controls</span></button>
+        <button class="pi-mission-btn" data-pi-mission="ev_bottleneck"><span>EV Bottleneck</span><span class="meta">battery</span></button>
+        <button class="pi-mission-btn" data-pi-mission="heavy_ree_access"><span>Heavy REE Access</span><span class="meta">HREE</span></button>
+      </div>
+    </div>
+    <div class="pi-block">
+      <div class="pi-lens-legend-label">Lens legend</div>
+      <div class="pi-lens-legend" id="piLensLegend"></div>
+    </div>
+  </aside>
+
+  <div class="pi-bottom-strip" id="piBreadcrumbs" aria-live="polite">
+    <span class="pi-breadcrumb-current">Rare Earths &gt; Elements</span>
+  </div>
 
   <header class="masthead">
     <div class="colophon">
@@ -3992,6 +4468,7 @@
         </div>
       </div>
     </div>
+    <div class="detail-tabs" id="detailTabs" role="tablist" aria-label="Detail panel tabs"></div>
     <div class="detail-body" id="dBody"></div>
   </div>
 
@@ -4264,9 +4741,81 @@ ctrl.addEventListener("click", e => {
 const overlay = document.getElementById("overlay");
 const panel = document.getElementById("detailPanel");
 
+function openPanel() {
+  overlay.classList.add("open");
+  panel.classList.add("open");
+  panel.setAttribute("aria-hidden", "false");
+  document.body.classList.add("pi-focus");
+  if (typeof updatePiBreadcrumbs === "function") updatePiBreadcrumbs();
+}
+
+function setDetailTabs(tabs) {
+  const tabsEl = document.getElementById("detailTabs");
+  const body = document.getElementById("dBody");
+  if (!tabsEl || !body) return;
+  if (!tabs || tabs.length < 2) {
+    tabsEl.classList.remove("visible");
+    tabsEl.innerHTML = "";
+    body.innerHTML = tabs?.[0]?.html || "";
+    return;
+  }
+  tabsEl.classList.add("visible");
+  tabsEl.innerHTML = tabs.map((tab, i) => `
+    <button class="detail-tab${i === 0 ? " active" : ""}" data-detail-tab="${tab.id}" role="tab" aria-selected="${i === 0 ? "true" : "false"}">${tab.label}</button>
+  `).join("");
+  body.innerHTML = tabs.map((tab, i) => `
+    <div class="detail-tab-panel${i === 0 ? " active" : ""}" data-detail-panel="${tab.id}" role="tabpanel">${tab.html}</div>
+  `).join("");
+  tabsEl.querySelectorAll(".detail-tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabsEl.querySelectorAll(".detail-tab").forEach(b => {
+        b.classList.toggle("active", b === btn);
+        b.setAttribute("aria-selected", b === btn ? "true" : "false");
+      });
+      body.querySelectorAll(".detail-tab-panel").forEach(p => {
+        p.classList.toggle("active", p.dataset.detailPanel === btn.dataset.detailTab);
+      });
+    });
+  });
+}
+
+function detailFields(fields) {
+  return fields.filter(Boolean).map(([k, v, mono]) =>
+    `<div class="field"><div class="k">${k}</div><div class="v ${mono ? "mono" : ""}">${v}</div></div>`
+  ).join("");
+}
+
+function wireDetailSourceChips() {
+  const body = document.getElementById("dBody");
+  body.querySelectorAll(".source-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      const rank = parseInt(chip.dataset.rank, 10);
+      const n = parseInt(chip.dataset.n, 10);
+      const kind = chip.dataset.kind;
+      closeDetail();
+      setTimeout(() => {
+        if (kind === "mineral") {
+          const m = MINERALS.find(x => x.rank === rank);
+          if (m) {
+            selectMineral(m);
+            openMineralDetail(m);
+          }
+        } else if (kind === "operation") {
+          const o = OPERATIONS.find(x => x.rank === rank);
+          if (o) selectOperation(o);
+        } else if (kind === "element") {
+          const el = ELEMENTS.find(x => x.n === n);
+          if (el) openDetail(el);
+        }
+      }, 280);
+    });
+  });
+}
+
 function openDetail(el) {
   const cat = CATS[el.cat];
   const dSym = document.getElementById("dSymbol");
+  dSym.classList.remove("mineral-detail");
   dSym.style.setProperty("--cell-bg", cat.color);
   dSym.style.setProperty("--cell-fg", cat.text);
   document.getElementById("dNum").textContent = String(el.n).padStart(3, "0");
@@ -4289,12 +4838,11 @@ function openDetail(el) {
     ["Electron Config", el.config, true],
     ["Atomic Mass", (typeof el.mass === "number" ? el.mass : el.mass) + " u", true]
   ];
-  let bodyHTML = fields.map(([k,v,mono]) =>
-    `<div class="field"><div class="k">${k}</div><div class="v ${mono?"mono":""}">${v}</div></div>`
-  ).join("");
+  const overviewHTML = detailFields(fields);
 
   /* Reverse lookup: which minerals contain this element? */
   const containingMinerals = ELEMENT_TO_MINERALS[el.n] || [];
+  let mineralHTML = `<div class="field"><div class="k">Mineral hosts</div><div class="v">No mapped mineral hosts in the active dataset.</div></div>`;
   if (containingMinerals.length > 0) {
     const sorted = containingMinerals.slice().sort((a, b) => a.rank - b.rank);
     const chips = sorted.map(m => {
@@ -4304,7 +4852,7 @@ function openDetail(el) {
         <span class="source-chip-name">${m.name}</span>
       </button>`;
     }).join("");
-    bodyHTML += `
+    mineralHTML = `
       <div class="found-in-section">
         <div class="k">Found in · ${sorted.length} mineral${sorted.length === 1 ? "" : "s"}</div>
         <div class="found-in-grid">${chips}</div>
@@ -4323,6 +4871,7 @@ function openDetail(el) {
 
   /* Reverse lookup: which operations produce this element? */
   const producingOps = ELEMENT_TO_OPERATIONS[el.n] || [];
+  let operationsHTML = `<div class="field"><div class="k">Operations</div><div class="v">No mapped operations produce this element in the active dataset.</div></div>`;
   if (producingOps.length > 0) {
     const sortedOps = producingOps.slice().sort((a, b) => a.rank - b.rank);
     const opChips = sortedOps.map(o => {
@@ -4332,46 +4881,203 @@ function openDetail(el) {
         <span class="source-chip-name">${o.name}</span>
       </button>`;
     }).join("");
-    bodyHTML += `
+    operationsHTML = `
       <div class="found-in-section">
         <div class="k">Produced by · ${sortedOps.length} allied operation${sortedOps.length === 1 ? "" : "s"}</div>
         <div class="found-in-grid">${opChips}</div>
       </div>
     `;
   }
-  body.innerHTML = bodyHTML;
+  setDetailTabs([
+    { id: "overview", label: "Overview", html: overviewHTML },
+    { id: "minerals", label: "Minerals", html: mineralHTML },
+    { id: "operations", label: "Operations", html: operationsHTML }
+  ]);
 
   /* Wire up source-chip clicks (works for both minerals and operations) */
-  body.querySelectorAll(".source-chip").forEach(chip => {
-    chip.addEventListener("click", () => {
-      const rank = parseInt(chip.dataset.rank, 10);
-      const kind = chip.dataset.kind;
-      closeDetail();
-      setTimeout(() => {
-        if (kind === "mineral") {
-          const m = MINERALS.find(x => x.rank === rank);
-          if (m) selectMineral(m);
-        } else if (kind === "operation") {
-          const o = OPERATIONS.find(x => x.rank === rank);
-          if (o) selectOperation(o);
-        }
-      }, 280);
-    });
-  });
+  wireDetailSourceChips();
 
-  overlay.classList.add("open");
-  panel.classList.add("open");
-  panel.setAttribute("aria-hidden", "false");
+  openPanel();
 
   document.querySelectorAll(".el.selected").forEach(c => c.classList.remove("selected"));
   const cell = document.querySelector(`.el[data-n="${el.n}"]`);
   if (cell) cell.classList.add("selected");
 }
 
+function getMineralTierColor(tier) {
+  return {
+    primary: "#925539",
+    secondary: "#574737",
+    minor: "#766449"
+  }[tier] || "#766449";
+}
+
+function getMineralDetailSymbol(m) {
+  if (activeDataset === "lithium") return "Li";
+  if (activeDataset === "cobalt") return "Co";
+  if ((m.primary || []).length === 1) return SYM_BY_N[m.primary[0]];
+  return "REE";
+}
+
+function openMineralDetail(m) {
+  const color = getMineralTierColor(m.tier);
+  const dSym = document.getElementById("dSymbol");
+  dSym.classList.add("mineral-detail");
+  dSym.style.setProperty("--cell-bg", color);
+  dSym.style.setProperty("--cell-fg", "var(--bg-paper)");
+  document.getElementById("dNum").textContent = `MIN ${String(m.rank).padStart(2, "0")}`;
+  document.getElementById("dSym").textContent = getMineralDetailSymbol(m);
+  document.getElementById("dMass").textContent = m.formula;
+  document.getElementById("dCat").textContent = `${m.tier.toUpperCase()} · ${m.type}`;
+  document.getElementById("dName").textContent = m.name;
+
+  const dot = document.getElementById("dDot");
+  dot.style.setProperty("--cell-bg", color);
+  dot.style.background = color;
+  document.getElementById("dDesigner").textContent = `${getDatasetLabel(activeDataset)} mineral host · ${m.countries.join(" · ")}`;
+
+  const elementNums = [...new Set([...(m.primary || []), ...(m.other || [])])];
+  const elementChips = elementNums.map(n => {
+    const el = ELEMENTS.find(x => x.n === n);
+    const isPrimary = (m.primary || []).includes(n);
+    return `<button class="source-chip" data-kind="element" data-n="${n}">
+      <span class="source-chip-tier-dot" data-tier="${isPrimary ? m.tier : "minor"}"></span>
+      <span class="source-chip-rank">${SYM_BY_N[n]}</span>
+      <span class="source-chip-name">${el ? el.name : `Element ${n}`}</span>
+    </button>`;
+  }).join("");
+
+  const relatedOps = OPERATIONS
+    .filter(o => (o.outputs || []).some(n => elementNums.includes(n)))
+    .sort((a, b) => a.rank - b.rank);
+  const opChips = relatedOps.length
+    ? relatedOps.map(o => `<button class="source-chip" data-kind="operation" data-rank="${o.rank}">
+        <span class="source-chip-tier-dot" data-status="${o.status}"></span>
+        <span class="source-chip-rank">${String(o.rank).padStart(2,"0")}</span>
+        <span class="source-chip-name">${o.name}</span>
+      </button>`).join("")
+    : `<span class="iea-proj-empty">— no allied operations mapped in active dataset —</span>`;
+
+  const productionRow = m.production
+    ? `<div class="field"><div class="k">Production</div><div class="v mono">${m.production}</div></div>`
+    : "";
+  setDetailTabs([
+    {
+      id: "overview",
+      label: "Overview",
+      html: `
+        <div class="field"><div class="k">Formula</div><div class="v mono">${m.formula}</div></div>
+        <div class="field"><div class="k">Type</div><div class="v">${m.type}</div></div>
+        <div class="field"><div class="k">Tier</div><div class="v">${m.tier}</div></div>
+        <div class="field"><div class="k">Note</div><div class="v">${m.note}</div></div>
+      `
+    },
+    {
+      id: "production",
+      label: "Production",
+      html: `
+        ${productionRow || `<div class="field"><div class="k">Production</div><div class="v">No production figure mapped.</div></div>`}
+        <div class="found-in-section">
+          <div class="k">Elements · ${elementNums.length}</div>
+          <div class="found-in-grid">${elementChips}</div>
+        </div>
+        <div class="found-in-section">
+          <div class="k">Related operations · ${relatedOps.length}</div>
+          <div class="found-in-grid">${opChips}</div>
+        </div>
+      `
+    },
+    {
+      id: "geopolitics",
+      label: "Geopolitics",
+      html: `
+        <div class="field"><div class="k">Countries</div><div class="v">${m.countries.join(" · ")}</div></div>
+        <div class="field"><div class="k">Supply risk</div><div class="v">${m.countries.map(c => `${c}: ${COUNTRY_RISK[c] || "medium"}`).join(" · ")}</div></div>
+      `
+    }
+  ]);
+  wireDetailSourceChips();
+
+  document.querySelectorAll(".el.selected").forEach(c => c.classList.remove("selected"));
+  openPanel();
+}
+
+function openOperationDetail(o) {
+  const color = {
+    online: "#235597",
+    build: "#EE8E42",
+    project: "#A79E8F"
+  }[o.status] || "#574737";
+  const dSym = document.getElementById("dSymbol");
+  dSym.classList.add("mineral-detail");
+  dSym.style.setProperty("--cell-bg", color);
+  dSym.style.setProperty("--cell-fg", o.status === "project" ? "var(--ink)" : "var(--bg-paper)");
+  document.getElementById("dNum").textContent = `OP ${String(o.rank).padStart(2, "0")}`;
+  document.getElementById("dSym").textContent = (o.outputs || []).slice(0, 2).map(n => SYM_BY_N[n]).join("") || "OP";
+  document.getElementById("dMass").textContent = o.status.toUpperCase();
+  document.getElementById("dCat").textContent = `${o.segment || "operation"} · ${o.mineralType}`;
+  document.getElementById("dName").textContent = o.name;
+
+  const dot = document.getElementById("dDot");
+  dot.style.setProperty("--cell-bg", color);
+  dot.style.background = color;
+  document.getElementById("dDesigner").textContent = `${o.operator} · ${o.region}`;
+
+  const outputChips = (o.outputs || []).map(n => {
+    const el = ELEMENTS.find(x => x.n === n);
+    return `<button class="source-chip" data-kind="element" data-n="${n}">
+      <span class="source-chip-tier-dot" data-status="${o.status}"></span>
+      <span class="source-chip-rank">${SYM_BY_N[n]}</span>
+      <span class="source-chip-name">${el ? el.name : `Element ${n}`}</span>
+    </button>`;
+  }).join("");
+  const ieaChips = (o.iea || []).map(id => {
+    const rec = IEA_RECS.find(r => r.id === id);
+    return `<div class="field"><div class="k">${id}</div><div class="v">${rec ? rec.title : "IEA recommendation"}</div></div>`;
+  }).join("");
+  const fundingLabel = o.funding
+    ? `${o.funding}${o.fundingAmount ? ` · ${o.fundingAmount >= 1000 ? "$" + (o.fundingAmount/1000).toFixed(2) + "B" : "$" + o.fundingAmount + "M"}` : ""}`
+    : "No public federal funding mapped.";
+
+  setDetailTabs([
+    {
+      id: "overview",
+      label: "Overview",
+      html: `
+        <div class="field"><div class="k">Operator</div><div class="v">${o.operator}</div></div>
+        <div class="field"><div class="k">Location</div><div class="v">${renderCountryChip(o.country)} ${o.region}</div></div>
+        <div class="field"><div class="k">Note</div><div class="v">${o.note}</div></div>
+      `
+    },
+    {
+      id: "production",
+      label: "Production",
+      html: `
+        <div class="field"><div class="k">Capacity</div><div class="v">${o.capacity || "No capacity figure mapped."}</div></div>
+        <div class="field"><div class="k">First production</div><div class="v mono">${o.firstYear}</div></div>
+        <div class="field"><div class="k">FID</div><div class="v mono">${o.fid}</div></div>
+        <div class="found-in-section"><div class="k">Outputs · ${(o.outputs || []).length}</div><div class="found-in-grid">${outputChips}</div></div>
+      `
+    },
+    {
+      id: "geopolitics",
+      label: "Geopolitics",
+      html: `
+        <div class="field"><div class="k">Country risk</div><div class="v">${o.country}: ${COUNTRY_RISK[o.country] || "medium"}</div></div>
+        <div class="field"><div class="k">Funding</div><div class="v">${fundingLabel}</div></div>
+        ${ieaChips || `<div class="field"><div class="k">IEA tags</div><div class="v">No IEA tag mapped.</div></div>`}
+      `
+    }
+  ]);
+  wireDetailSourceChips();
+  openPanel();
+}
+
 function closeDetail() {
   overlay.classList.remove("open");
   panel.classList.remove("open");
   panel.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("pi-focus");
   document.querySelectorAll(".el.selected").forEach(c => c.classList.remove("selected"));
   document.querySelectorAll(".mineral-card.contains-element").forEach(c => c.classList.remove("contains-element"));
 }
@@ -4658,7 +5364,8 @@ const COUNTRY_RISK = {
   "China": "high", "Russia": "high", "Myanmar": "high",
   "USA": "low", "Canada": "low", "Australia": "low", "UK": "low",
   "Sweden": "low", "Norway": "low", "Greenland": "low", "Japan": "low",
-  "Korea": "low", "Italy": "low", "Germany": "low",
+  "Korea": "low", "Italy": "low", "Germany": "low", "France": "low",
+  "Estonia": "low", "Chile": "low",
   "Brazil": "medium", "India": "medium", "Vietnam": "medium",
   "Madagascar": "medium", "Malaysia": "medium", "Thailand": "medium",
   "Indonesia": "medium", "Sri Lanka": "medium", "Nigeria": "medium",
@@ -4681,6 +5388,9 @@ const COUNTRY_ISO = {
   "Korea":      { code: "KR", flag: "🇰🇷" },
   "Italy":      { code: "IT", flag: "🇮🇹" },
   "Germany":    { code: "DE", flag: "🇩🇪" },
+  "France":     { code: "FR", flag: "🇫🇷" },
+  "Estonia":    { code: "EE", flag: "🇪🇪" },
+  "Chile":      { code: "CL", flag: "🇨🇱" },
   "Brazil":     { code: "BR", flag: "🇧🇷" },
   "India":      { code: "IN", flag: "🇮🇳" },
   "Vietnam":    { code: "VN", flag: "🇻🇳" },
@@ -5119,7 +5829,10 @@ MINERALS.forEach(m => {
     <div class="country-row">${countryChips}</div>
     <div class="ree-row">${reeChips}</div>
   `;
-  card.addEventListener("click", () => selectMineral(m));
+  card.addEventListener("click", () => {
+    if (!activeMineral || activeMineral.rank !== m.rank) selectMineral(m);
+    openMineralDetail(m);
+  });
   mGrid.appendChild(card);
 });
 
@@ -5948,6 +6661,7 @@ function selectOperation(o) {
   /* Pulse attention on the matched element cells — non-disruptive substitute for auto-scroll */
   pulseHighlightedElements();
   showJumpHint(o.outputs.length);
+  if (typeof openOperationDetail === "function") openOperationDetail(o);
   if (typeof writeHash === "function") writeHash();
 }
 
@@ -6186,7 +6900,10 @@ function applyHash() {
       if (op) selectOperation(op);
     } else if (params.mineral) {
       const m = MINERALS.find(x => x.rank === parseInt(params.mineral, 10));
-      if (m) selectMineral(m);
+      if (m) {
+        selectMineral(m);
+        if (typeof openMineralDetail === "function") openMineralDetail(m);
+      }
     }
   } finally {
     _hashApplying = false;
@@ -6964,7 +7681,10 @@ function rebuildMineralCards() {
       <div class="country-row">${countryChips}</div>
       <div class="ree-row">${reeChips}</div>
     `;
-    card.addEventListener("click", () => selectMineral(m));
+    card.addEventListener("click", () => {
+      if (!activeMineral || activeMineral.rank !== m.rank) selectMineral(m);
+      openMineralDetail(m);
+    });
     grid.appendChild(card);
   });
 }
@@ -7447,8 +8167,24 @@ const NODE_TO_OP_RANK = {
 };
 
 let _kgPinnedNode = null;
+let _kgHoverNode = null;
 let _kgFilter = "all";
 let _kgShowAll = false;
+let _kgRedrawRaf = null;
+
+function getKgFocusNode() {
+  return _kgPinnedNode || _kgHoverNode;
+}
+
+function scheduleKgRedraw() {
+  if (_kgRedrawRaf) return;
+  _kgRedrawRaf = requestAnimationFrame(() => {
+    _kgRedrawRaf = null;
+    const focusNode = getKgFocusNode();
+    if (_kgShowAll) drawKgEdges(null);
+    else if (focusNode) drawKgEdges(focusNode);
+  });
+}
 
 function renderKnowledgeGraph() {
   const clusterEl = document.getElementById("kgClusters");
@@ -7499,15 +8235,15 @@ function renderKnowledgeGraph() {
   updateKgEdgesCount();
 
   /* === Node interactions === */
-  const edgeRows = edgesEl.querySelectorAll(".kg-edge-row");
-
   clusterEl.querySelectorAll(".kg-node").forEach(node => {
     node.addEventListener("mouseenter", () => {
       if (_kgPinnedNode) return; /* pinned state takes precedence */
-      applyKgFocus(node.dataset.node);
+      _kgHoverNode = node.dataset.node;
+      applyKgFocus(_kgHoverNode);
     });
     node.addEventListener("mouseleave", () => {
       if (_kgPinnedNode) return;
+      _kgHoverNode = null;
       clearKgFocus();
     });
     node.addEventListener("click", (e) => {
@@ -7527,12 +8263,18 @@ function renderKnowledgeGraph() {
       /* Otherwise toggle pin */
       if (_kgPinnedNode === id) {
         _kgPinnedNode = null;
+        _kgHoverNode = null;
         clearKgFocus();
       } else {
         _kgPinnedNode = id;
+        _kgHoverNode = null;
         applyKgFocus(id);
       }
     });
+  });
+
+  clusterEl.querySelectorAll(".kg-nodes").forEach(scroller => {
+    scroller.addEventListener("scroll", scheduleKgRedraw, { passive: true });
   });
 
   /* Click on canvas background clears pin */
@@ -7540,6 +8282,7 @@ function renderKnowledgeGraph() {
     if (e.target.closest(".kg-node")) return;
     if (_kgPinnedNode) {
       _kgPinnedNode = null;
+      _kgHoverNode = null;
       clearKgFocus();
     }
   });
@@ -7553,8 +8296,7 @@ function renderKnowledgeGraph() {
       chip.classList.add("active");
       applyKgFilter();
       /* Re-render curves if a node is focused */
-      if (_kgPinnedNode) drawKgEdges(_kgPinnedNode);
-      else if (_kgShowAll) drawKgEdges(null);
+      scheduleKgRedraw();
     });
   });
 
@@ -7563,19 +8305,19 @@ function renderKnowledgeGraph() {
     _kgShowAll = !_kgShowAll;
     const btn = document.getElementById("kgShowAll");
     btn.classList.toggle("active", _kgShowAll);
-    if (_kgShowAll) drawKgEdges(null);
-    else if (_kgPinnedNode) drawKgEdges(_kgPinnedNode);
+    if (_kgShowAll || getKgFocusNode()) scheduleKgRedraw();
     else clearOverlay();
   });
 
   /* Redraw curves when the canvas resizes (cluster grid reflows responsively) */
   if (typeof ResizeObserver !== "undefined") {
-    const ro = new ResizeObserver(() => {
-      if (_kgShowAll) drawKgEdges(null);
-      else if (_kgPinnedNode) drawKgEdges(_kgPinnedNode);
-    });
+    const ro = new ResizeObserver(scheduleKgRedraw);
     ro.observe(document.getElementById("kgCanvas"));
+    ro.observe(clusterEl);
   }
+
+  window.addEventListener("resize", scheduleKgRedraw, { passive: true });
+  window.addEventListener("scroll", scheduleKgRedraw, { passive: true });
 }
 
 function applyKgFocus(nodeId) {
@@ -7649,16 +8391,64 @@ function clearOverlay() {
   overlay.querySelectorAll(".kg-edge-curve").forEach(p => p.remove());
 }
 
+function rectIntersection(a, b) {
+  const left = Math.max(a.left, b.left);
+  const top = Math.max(a.top, b.top);
+  const right = Math.min(a.right, b.right);
+  const bottom = Math.min(a.bottom, b.bottom);
+  if (right <= left || bottom <= top) return null;
+  return {
+    left,
+    top,
+    right,
+    bottom,
+    width: right - left,
+    height: bottom - top
+  };
+}
+
+function edgePointOnRect(rect, towardX, towardY) {
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const dx = towardX - cx;
+  const dy = towardY - cy;
+  if (Math.abs(dx) < 0.01 && Math.abs(dy) < 0.01) return { x: cx, y: cy };
+
+  const tx = dx > 0
+    ? (rect.right - cx) / dx
+    : dx < 0
+      ? (rect.left - cx) / dx
+      : Infinity;
+  const ty = dy > 0
+    ? (rect.bottom - cy) / dy
+    : dy < 0
+      ? (rect.top - cy) / dy
+      : Infinity;
+  const t = Math.min(tx > 0 ? tx : Infinity, ty > 0 ? ty : Infinity);
+  return {
+    x: cx + dx * t,
+    y: cy + dy * t
+  };
+}
+
 function drawKgEdges(focusNodeId) {
   const overlay = document.getElementById("kgOverlay");
   const canvas  = document.getElementById("kgCanvas");
-  if (!overlay || !canvas) return;
+  const clusters = document.getElementById("kgClusters");
+  if (!overlay || !canvas || !clusters) return;
   clearOverlay();
 
   const cb = canvas.getBoundingClientRect();
-  overlay.setAttribute("width", cb.width);
-  overlay.setAttribute("height", cb.height);
-  overlay.setAttribute("viewBox", `0 0 ${cb.width} ${cb.height}`);
+  const gb = clusters.getBoundingClientRect();
+  const overlayLeft = gb.left - cb.left;
+  const overlayTop = gb.top - cb.top;
+  overlay.style.left = `${overlayLeft}px`;
+  overlay.style.top = `${overlayTop}px`;
+  overlay.style.width = `${gb.width}px`;
+  overlay.style.height = `${gb.height}px`;
+  overlay.setAttribute("width", gb.width);
+  overlay.setAttribute("height", gb.height);
+  overlay.setAttribute("viewBox", `0 0 ${gb.width} ${gb.height}`);
 
   /* Choose which edges to render */
   const filtered = KG_EDGES.filter(e => _kgFilter === "all" || e.type === _kgFilter);
@@ -7666,53 +8456,69 @@ function drawKgEdges(focusNodeId) {
     ? filtered.filter(e => e.s === focusNodeId || e.t === focusNodeId)
     : filtered; /* "show full graph" mode */
 
-  const nodePos = (id) => {
+  const nodeRect = (id) => {
     const el = canvas.querySelector(`.kg-node[data-node="${id}"]`);
     if (!el) return null;
-    const r = el.getBoundingClientRect();
+    const nodeBox = el.getBoundingClientRect();
+    const scroller = el.closest(".kg-nodes");
+    const scrollBox = scroller ? scroller.getBoundingClientRect() : gb;
+    const visibleInScroller = rectIntersection(nodeBox, scrollBox);
+    const visibleInClusters = visibleInScroller
+      ? rectIntersection(visibleInScroller, gb)
+      : null;
+    if (!visibleInClusters) return null;
+
+    const r = {
+      left: visibleInClusters.left - gb.left,
+      top: visibleInClusters.top - gb.top,
+      right: visibleInClusters.right - gb.left,
+      bottom: visibleInClusters.bottom - gb.top,
+      width: visibleInClusters.width,
+      height: visibleInClusters.height
+    };
     return {
-      cx: r.left + r.width / 2 - cb.left,
-      cy: r.top + r.height / 2 - cb.top,
+      cx: r.left + r.width / 2,
+      cy: r.top + r.height / 2,
       r
     };
   };
 
   const svgNS = "http://www.w3.org/2000/svg";
   edgesToDraw.forEach(e => {
-    const sp = nodePos(e.s); const tp = nodePos(e.t);
+    const sp = nodeRect(e.s); const tp = nodeRect(e.t);
     if (!sp || !tp) return;
 
-    /* Anchor curves to the edge of the source/target rects (not their centers)
-       so the arrowhead lands cleanly on the target edge. */
     const dx = tp.cx - sp.cx;
     const dy = tp.cy - sp.cy;
     const dist = Math.hypot(dx, dy);
     if (dist < 4) return;
 
-    /* Approximate edge anchor: shift each endpoint by a fraction of the
-       node half-size in the direction of the other endpoint. */
-    const sourceShrink = Math.min((sp.r.width / 2) - 4, dist * 0.35);
-    const targetShrink = Math.min((tp.r.width / 2) - 8, dist * 0.4);
-    const ux = dx / dist, uy = dy / dist;
-    const x1 = sp.cx + ux * sourceShrink;
-    const y1 = sp.cy + uy * sourceShrink;
-    const x2 = tp.cx - ux * targetShrink;
-    const y2 = tp.cy - uy * targetShrink;
+    const start = edgePointOnRect(sp.r, tp.cx, tp.cy);
+    const end = edgePointOnRect(tp.r, sp.cx, sp.cy);
+    const x1 = start.x;
+    const y1 = start.y;
+    const x2 = end.x;
+    const y2 = end.y;
 
-    /* Bezier control point: perpendicular offset for an arc */
-    const arcMag = Math.min(80, dist * 0.22);
-    const px = -uy * arcMag;
-    const py =  ux * arcMag;
-    const ctrlX = (x1 + x2) / 2 + px;
-    const ctrlY = (y1 + y2) / 2 + py;
+    const cdx = x2 - x1;
+    const cdy = y2 - y1;
+    const horizontalRoute = Math.abs(cdx) >= Math.abs(cdy);
+    const curve = Math.min(96, Math.max(28, Math.abs(horizontalRoute ? cdx : cdy) * 0.42));
+    const ctrl1X = horizontalRoute ? x1 + Math.sign(cdx || 1) * curve : x1;
+    const ctrl1Y = horizontalRoute ? y1 : y1 + Math.sign(cdy || 1) * curve;
+    const ctrl2X = horizontalRoute ? x2 - Math.sign(cdx || 1) * curve : x2;
+    const ctrl2Y = horizontalRoute ? y2 : y2 - Math.sign(cdy || 1) * curve;
 
     const direction = focusNodeId
       ? (e.s === focusNodeId ? "outgoing" : "incoming")
       : "outgoing";
 
     const path = document.createElementNS(svgNS, "path");
-    path.setAttribute("class", `kg-edge-curve ${e.type} ${direction}`);
-    path.setAttribute("d", `M${x1.toFixed(1)},${y1.toFixed(1)} Q${ctrlX.toFixed(1)},${ctrlY.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`);
+    path.setAttribute("class", `kg-edge-curve ${e.type} ${direction}${focusNodeId ? "" : " full-graph"}`);
+    path.dataset.src = e.s;
+    path.dataset.tgt = e.t;
+    path.dataset.type = e.type;
+    path.setAttribute("d", `M${x1.toFixed(1)},${y1.toFixed(1)} C${ctrl1X.toFixed(1)},${ctrl1Y.toFixed(1)} ${ctrl2X.toFixed(1)},${ctrl2Y.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`);
     overlay.appendChild(path);
   });
 }
@@ -7932,6 +8738,405 @@ window.addEventListener("click", () => { _hasInteracted = true; }, { once: true 
 
 /* Re-render stats when filter pills clicked too — they don't change data but keep parity */
 ctrl.addEventListener("click", () => updateStickyState());
+
+/* ===== PERIODIC INTELLIGENCE INTERFACE SHELL =====
+   Adds the layered access model requested in the PRD without changing the data model.
+   The periodic table stays the anchor; dense appendices are revealed one at a time. */
+let activePiMode = "explore";
+let activePiPanel = "table";
+let activePiMission = null;
+let activePiLens = "";
+let _piSwitchingForMission = false;
+
+const PI_PANEL_LABELS = {
+  table: "Elements",
+  minerals: "Minerals",
+  operations: "Operations",
+  timeline: "Timeline",
+  capital: "Capital",
+  countries: "Countries",
+  stats: "Stats",
+  "cross-capital": "Cross Capital",
+  iea: "IEA Framework",
+  topology: "Topology"
+};
+
+const PI_PANEL_TARGETS = {
+  table: ".table-wrap",
+  minerals: ".minerals-section",
+  operations: ".ops-section",
+  timeline: ".timeline-block",
+  capital: ".capital-block",
+  countries: ".country-block",
+  stats: "#statsBar",
+  "cross-capital": "#xdsSection",
+  iea: "#ieaSection",
+  topology: "#kgSection"
+};
+
+const MISSION_THREADS = {
+  magnet_supply_chain: {
+    label: "Magnet Supply Chain",
+    dataset: "ree",
+    scenario: "magnet",
+    panel: "topology",
+    elements: () => new Set([...MAGNET_REES]),
+    kg: ["lree", "hree", "bastnasite", "monazite", "permmagnet", "china", "exportcontrols", "forge", "r3", "r6"],
+    narrative: "Tracks Nd, Pr, Dy, and Tb from mineral hosts through separation, magnet manufacturing, policy support, and substitution pressure."
+  },
+  china_dependency: {
+    label: "China Dependency",
+    dataset: "ree",
+    scenario: "china",
+    panel: "topology",
+    elements: () => new Set([...CHINA_REES_ALL]),
+    kg: ["lree", "hree", "china", "exportcontrols", "metallization", "equipmentshortage", "forge", "r1", "r2", "r8"],
+    narrative: "Surfaces the export-control exposure layer and the institutional responses that reduce dependency on Chinese processing and equipment bottlenecks."
+  },
+  ev_bottleneck: {
+    label: "EV Bottleneck",
+    dataset: "lithium",
+    scenario: "battery",
+    panel: "operations",
+    elements: () => new Set([...BATTERY_CRITICAL, ...BATTERY_SECONDARY]),
+    kg: ["evmotors", "china", "projectvault", "r4", "r6", "r7"],
+    narrative: "Constrains the interface to battery-critical materials, funded operations, and chemistry/substitution pressure around EV scale-up."
+  },
+  heavy_ree_access: {
+    label: "Heavy REE Access",
+    dataset: "ree",
+    scenario: null,
+    panel: "minerals",
+    elements: () => new Set([39, 65, 66, 67, 68, 69, 70, 71]),
+    kg: ["hree", "ionclays", "eudialyte", "china", "australia", "brazil", "japan", "r2", "r4", "r7"],
+    narrative: "Focuses on yttrium and heavy rare earth access, where ion clays, eudialyte hosts, recycling, and strategic reserves matter most."
+  }
+};
+
+function setPiMode(mode) {
+  if (!["explore", "analysis", "mission"].includes(mode)) mode = "explore";
+  activePiMode = mode;
+  document.body.classList.remove("pi-mode-explore", "pi-mode-analysis", "pi-mode-mission");
+  document.body.classList.add(`pi-mode-${mode}`);
+  document.querySelectorAll("[data-pi-mode]").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.piMode === mode);
+  });
+  if (mode !== "mission") {
+    activePiMission = null;
+    clearMissionHighlight();
+    document.querySelectorAll("[data-pi-mission]").forEach(btn => btn.classList.remove("active"));
+  }
+  updatePiBreadcrumbs();
+}
+
+function setPiPanel(panel, shouldScroll = true) {
+  if (!PI_PANEL_LABELS[panel]) panel = "table";
+  activePiPanel = panel;
+  Object.keys(PI_PANEL_LABELS).forEach(key => document.body.classList.remove(`pi-panel-${key}`));
+  document.body.classList.add(`pi-panel-${panel}`);
+  document.querySelectorAll("[data-pi-panel]").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.piPanel === panel);
+  });
+  document.querySelectorAll("[data-pi-entry]").forEach(btn => {
+    btn.classList.toggle("active",
+      (panel === "table" && btn.dataset.piEntry === "elements") ||
+      (panel === "minerals" && btn.dataset.piEntry === "minerals") ||
+      (activePiMode === "mission" && btn.dataset.piEntry === "mission")
+    );
+  });
+  if (panel === "topology" && typeof scheduleKgRedraw === "function") {
+    setTimeout(scheduleKgRedraw, 120);
+  }
+  if (shouldScroll) {
+    const target = document.querySelector(PI_PANEL_TARGETS[panel]);
+    if (target) setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 40);
+  }
+  updatePiBreadcrumbs();
+}
+
+function clearMissionHighlight() {
+  document.querySelectorAll(".pi-mission-hit").forEach(el => el.classList.remove("pi-mission-hit"));
+}
+
+function applyMissionHighlight() {
+  clearMissionHighlight();
+  if (activePiMode !== "mission" || !activePiMission) return;
+  const mission = MISSION_THREADS[activePiMission];
+  const elementSet = mission.elements();
+  document.querySelectorAll(".el:not(.placeholder)").forEach(cell => {
+    const n = parseInt(cell.dataset.n, 10);
+    cell.classList.toggle("pi-mission-hit", elementSet.has(n));
+  });
+  document.querySelectorAll(".mineral-card").forEach(card => {
+    const m = MINERALS.find(x => x.rank === parseInt(card.dataset.rank, 10));
+    if (!m) return;
+    const nums = [...(m.primary || []), ...(m.other || [])];
+    card.classList.toggle("pi-mission-hit", nums.some(n => elementSet.has(n)));
+  });
+  const opMatches = (rank) => {
+    const o = OPERATIONS.find(x => x.rank === rank);
+    return !!o && (o.outputs || []).some(n => elementSet.has(n));
+  };
+  document.querySelectorAll(".op-card").forEach(card => {
+    card.classList.toggle("pi-mission-hit", opMatches(parseInt(card.dataset.rank, 10)));
+  });
+  document.querySelectorAll(".tl-chip").forEach(chip => {
+    chip.classList.toggle("pi-mission-hit", opMatches(parseInt(chip.dataset.rank, 10)));
+  });
+  document.querySelectorAll(".kg-node").forEach(node => {
+    node.classList.toggle("pi-mission-hit", mission.kg.includes(node.dataset.node));
+  });
+}
+
+function openMissionPanel(mission) {
+  const dSym = document.getElementById("dSymbol");
+  dSym.classList.add("mineral-detail");
+  dSym.style.setProperty("--cell-bg", "#0B0404");
+  dSym.style.setProperty("--cell-fg", "var(--bg-paper)");
+  document.getElementById("dNum").textContent = "MISSION";
+  document.getElementById("dSym").textContent = "M";
+  document.getElementById("dMass").textContent = getDatasetLabel(activeDataset);
+  document.getElementById("dCat").textContent = "Strategic pathway";
+  document.getElementById("dName").textContent = mission.label;
+  const dot = document.getElementById("dDot");
+  dot.style.background = "#B51A21";
+  document.getElementById("dDesigner").textContent = "Guided intelligence thread";
+  const elements = [...mission.elements()].map(n => SYM_BY_N[n]).filter(Boolean).join(" · ");
+  setDetailTabs([
+    {
+      id: "overview",
+      label: "Overview",
+      html: `
+        <div class="field"><div class="k">Narrative</div><div class="v">${mission.narrative}</div></div>
+        <div class="field"><div class="k">Relevant elements</div><div class="v mono">${elements}</div></div>
+      `
+    },
+    {
+      id: "pathway",
+      label: "Pathway",
+      html: `
+        <div class="field"><div class="k">Current panel</div><div class="v">${PI_PANEL_LABELS[mission.panel]}</div></div>
+        <div class="field"><div class="k">What to inspect next</div><div class="v">Follow highlighted cards, then use the tabs in this drawer to move from overview to production and geopolitics.</div></div>
+      `
+    }
+  ]);
+  openPanel();
+}
+
+function activatePiMission(id) {
+  const mission = MISSION_THREADS[id];
+  if (!mission) return;
+  if (activeDataset !== mission.dataset) {
+    _piSwitchingForMission = true;
+    switchDataset(mission.dataset);
+    _piSwitchingForMission = false;
+  }
+  activePiMission = id;
+  setPiMode("mission");
+  document.querySelectorAll("[data-pi-mission]").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.piMission === id);
+  });
+  if (mission.scenario) activateScenario(mission.scenario);
+  else if (activeScenario) clearScenario();
+  setPiPanel(mission.panel);
+  applyMissionHighlight();
+  openMissionPanel(mission);
+  writeHash();
+}
+
+function clearPiLens() {
+  document.querySelectorAll(".pi-lens-high, .pi-lens-medium, .pi-lens-low, .pi-lens-capital, .pi-lens-substitution").forEach(el => {
+    el.classList.remove("pi-lens-high", "pi-lens-medium", "pi-lens-low", "pi-lens-capital", "pi-lens-substitution");
+  });
+  document.body.classList.remove("pi-lens-active");
+  const legend = document.getElementById("piLensLegend");
+  if (legend) legend.innerHTML = "";
+}
+
+function applyPiLens(lens) {
+  activePiLens = lens || "";
+  clearPiLens();
+  if (!activePiLens) {
+    updatePiBreadcrumbs();
+    return;
+  }
+  document.body.classList.add("pi-lens-active");
+  const legend = document.getElementById("piLensLegend");
+  const addLegend = (items) => {
+    if (!legend) return;
+    legend.innerHTML = items.map(i => `<span class="pi-lens-key" style="--lens-color:${i.color}">${i.label}</span>`).join("");
+  };
+  if (lens === "risk" || lens === "geopolitics") {
+    addLegend([
+      { label: "high", color: "#B51A21" },
+      { label: "medium", color: "#EE8E42" },
+      { label: "low", color: "#3A7A5A" }
+    ]);
+    const riskForElement = {};
+    OPERATIONS.forEach(o => {
+      const risk = COUNTRY_RISK[o.country] || "medium";
+      (o.outputs || []).forEach(n => {
+        if (risk === "high" || !riskForElement[n]) riskForElement[n] = risk;
+        else if (risk === "medium" && riskForElement[n] !== "high") riskForElement[n] = risk;
+      });
+    });
+    document.querySelectorAll(".el:not(.placeholder)").forEach(cell => {
+      const risk = riskForElement[parseInt(cell.dataset.n, 10)];
+      if (risk) cell.classList.add(`pi-lens-${risk}`);
+    });
+    document.querySelectorAll(".op-card").forEach(card => {
+      const o = OPERATIONS.find(x => x.rank === parseInt(card.dataset.rank, 10));
+      if (o) card.classList.add(`pi-lens-${COUNTRY_RISK[o.country] || "medium"}`);
+    });
+    document.querySelectorAll(".mineral-card").forEach(card => {
+      const m = MINERALS.find(x => x.rank === parseInt(card.dataset.rank, 10));
+      const risks = m ? m.countries.map(c => COUNTRY_RISK[c] || "medium") : [];
+      const risk = risks.includes("high") ? "high" : risks.includes("medium") ? "medium" : risks.length ? "low" : "";
+      if (risk) card.classList.add(`pi-lens-${risk}`);
+    });
+  } else if (lens === "capital") {
+    addLegend([{ label: "funded", color: "#235597" }]);
+    const fundedElements = new Set();
+    OPERATIONS.filter(o => o.funding || o.fundingAmount).forEach(o => {
+      (o.outputs || []).forEach(n => fundedElements.add(n));
+      document.querySelector(`.op-card[data-rank="${o.rank}"]`)?.classList.add("pi-lens-capital");
+    });
+    document.querySelectorAll(".el:not(.placeholder)").forEach(cell => {
+      if (fundedElements.has(parseInt(cell.dataset.n, 10))) cell.classList.add("pi-lens-capital");
+    });
+  } else if (lens === "substitution") {
+    addLegend([{ label: "substitution pressure", color: "#7E2365" }]);
+    const subElements = new Set();
+    OPERATIONS.filter(o => o.substitutionTarget || /substitut|LFP|iron-nitride|RE-free|Co-free/i.test(`${o.name} ${o.mineralType} ${o.note}`)).forEach(o => {
+      (o.outputs || []).forEach(n => subElements.add(n));
+      document.querySelector(`.op-card[data-rank="${o.rank}"]`)?.classList.add("pi-lens-substitution");
+    });
+    document.querySelectorAll(".el:not(.placeholder)").forEach(cell => {
+      if (subElements.has(parseInt(cell.dataset.n, 10))) cell.classList.add("pi-lens-substitution");
+    });
+  }
+  updatePiBreadcrumbs();
+}
+
+function updatePiDatasetButtons() {
+  document.querySelectorAll("[data-pi-dataset]").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.piDataset === activeDataset);
+  });
+}
+
+function updatePiBreadcrumbs() {
+  const root = document.getElementById("piBreadcrumbs");
+  if (!root) return;
+  const parts = [
+    { label: getDatasetLabel(activeDataset), panel: "table" },
+    { label: activePiMode.charAt(0).toUpperCase() + activePiMode.slice(1), mode: activePiMode },
+    { label: activePiMission ? MISSION_THREADS[activePiMission].label : PI_PANEL_LABELS[activePiPanel], panel: activePiPanel }
+  ];
+  if (activeMineral) parts.push({ label: activeMineral.name, panel: "minerals" });
+  if (activeOperation) parts.push({ label: activeOperation.name, panel: "operations" });
+  if (activePiLens) parts.push({ label: `Lens: ${activePiLens}`, panel: activePiPanel });
+  root.innerHTML = parts.map((p, i) => {
+    const isLast = i === parts.length - 1;
+    const sep = isLast ? "" : `<span>&gt;</span>`;
+    if (isLast) return `<span class="pi-breadcrumb-current">${p.label}</span>`;
+    return `<button class="pi-breadcrumb-btn" data-breadcrumb-panel="${p.panel || ""}" data-breadcrumb-mode="${p.mode || ""}">${p.label}</button>${sep}`;
+  }).join("");
+  root.querySelectorAll(".pi-breadcrumb-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (btn.dataset.breadcrumbMode) setPiMode(btn.dataset.breadcrumbMode);
+      if (btn.dataset.breadcrumbPanel) setPiPanel(btn.dataset.breadcrumbPanel);
+    });
+  });
+  updatePiDatasetButtons();
+}
+
+function clearPiInterfaceState() {
+  activePiMission = null;
+  document.querySelectorAll("[data-pi-mission]").forEach(btn => btn.classList.remove("active"));
+  clearMissionHighlight();
+  document.getElementById("piLensSelect").value = "";
+  applyPiLens("");
+  if (activeScenario) clearScenario();
+  if (activeMineral) clearMineral();
+  if (activeOperation) clearOperation();
+  activeFilter = { type: "all" };
+  document.querySelectorAll(".pill").forEach(p => p.classList.toggle("active", p.dataset.filter === "all"));
+  applyFilter();
+  closeDetail();
+  writeHash();
+  updatePiBreadcrumbs();
+}
+
+document.querySelectorAll("[data-pi-mode]").forEach(btn => {
+  btn.addEventListener("click", () => setPiMode(btn.dataset.piMode));
+});
+document.querySelectorAll("[data-pi-panel]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (activePiMode === "explore") setPiMode("analysis");
+    setPiPanel(btn.dataset.piPanel);
+  });
+});
+document.querySelectorAll("[data-pi-entry]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const entry = btn.dataset.piEntry;
+    if (entry === "elements") {
+      setPiMode("explore");
+      setPiPanel("table");
+    } else if (entry === "minerals") {
+      setPiMode("analysis");
+      setPiPanel("minerals");
+    } else if (entry === "mission") {
+      activatePiMission(activePiMission || "magnet_supply_chain");
+    }
+  });
+});
+document.querySelectorAll("[data-pi-dataset]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (activeDataset !== btn.dataset.piDataset) switchDataset(btn.dataset.piDataset);
+    updatePiBreadcrumbs();
+  });
+});
+document.querySelectorAll("[data-pi-mission]").forEach(btn => {
+  btn.addEventListener("click", () => activatePiMission(btn.dataset.piMission));
+});
+document.getElementById("piLensSelect")?.addEventListener("change", e => applyPiLens(e.target.value));
+document.getElementById("piClearAll")?.addEventListener("click", clearPiInterfaceState);
+
+const _piSwitchDataset = switchDataset;
+switchDataset = function(key) {
+  _piSwitchDataset(key);
+  if (!_piSwitchingForMission && activePiMission && MISSION_THREADS[activePiMission]?.dataset !== key) {
+    activePiMission = null;
+    clearMissionHighlight();
+    document.querySelectorAll("[data-pi-mission]").forEach(btn => btn.classList.remove("active"));
+    if (activePiMode === "mission") setPiMode("analysis");
+  }
+  updatePiDatasetButtons();
+  applyMissionHighlight();
+  applyPiLens(activePiLens);
+  updatePiBreadcrumbs();
+};
+const _piRenderKnowledgeGraph = renderKnowledgeGraph;
+renderKnowledgeGraph = function() {
+  _piRenderKnowledgeGraph();
+  applyMissionHighlight();
+};
+const _piRenderTimeline = renderTimeline;
+renderTimeline = function() {
+  _piRenderTimeline();
+  applyMissionHighlight();
+};
+const _piSelectMineral = selectMineral;
+selectMineral = function(m) { _piSelectMineral(m); updatePiBreadcrumbs(); applyMissionHighlight(); };
+const _piClearMineral = clearMineral;
+clearMineral = function() { _piClearMineral(); updatePiBreadcrumbs(); applyMissionHighlight(); };
+const _piSelectOperation = selectOperation;
+selectOperation = function(o) { _piSelectOperation(o); updatePiBreadcrumbs(); applyMissionHighlight(); };
+const _piClearOperation = clearOperation;
+clearOperation = function() { _piClearOperation(); updatePiBreadcrumbs(); applyMissionHighlight(); };
+
+updatePiDatasetButtons();
+updatePiBreadcrumbs();
 
 /* ===== localStorage STATE PERSISTENCE =====
    On each writeHash call, mirror the hash to localStorage so it survives tab close / reload.
