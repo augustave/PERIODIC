@@ -6108,14 +6108,15 @@ batteryBtn.addEventListener("click", () => {
      mineral   ∈ 1..N                            — mineral rank to select
      tlmode    ∈ {firstYear, firstAnnounced, fid, compare}
      filter    ∈ {category-key, designer-name}   — periodic-table filter pill
-     dataset   ∈ {ree, lithium}                  — dataset overlay (added later)
+     dataset   ∈ {ree, lithium, cobalt}          — dataset overlay
    Only one of {scenario, op, mineral} is meaningful at a time; the writer
    reflects whichever is currently active.
 */
 let _hashWriting = false;
+let _hashApplying = false;
 
 function writeHash() {
-  if (_hashWriting) return;
+  if (_hashWriting || _hashApplying) return;
   const parts = [];
   if (activeScenario) parts.push(`scenario=${activeScenario}`);
   if (activeOperation) parts.push(`op=${activeOperation.rank}`);
@@ -6148,42 +6149,47 @@ function applyHash() {
   if (_hashWriting) return;
   const params = parseHash();
 
-  /* Dataset must apply first so subsequent op/mineral lookups hit the right arrays */
-  if (params.dataset && typeof switchDataset === "function" && params.dataset !== activeDataset) {
-    switchDataset(params.dataset);  /* this triggers a re-render; the rest still applies */
-  }
+  _hashApplying = true;
+  try {
+    /* Dataset must apply first so subsequent op/mineral lookups hit the right arrays */
+    if (params.dataset && typeof switchDataset === "function" && params.dataset !== activeDataset) {
+      switchDataset(params.dataset);  /* this triggers a re-render; the rest still applies */
+    }
 
-  /* Timeline mode */
-  if (params.tlmode && TIMELINE_MODES[params.tlmode]) {
-    activeTimelineMode = params.tlmode;
-    document.querySelectorAll(".tl-toggle-btn").forEach(b => {
-      b.classList.toggle("active", b.dataset.mode === params.tlmode);
-    });
-    renderTimeline();
-    renderSparkline();
-  } else if (params.tlmode === "compare") {
-    document.querySelector('.tl-toggle-btn[data-mode="compare"]')?.click();
-  }
+    /* Timeline mode */
+    if (params.tlmode && TIMELINE_MODES[params.tlmode]) {
+      activeTimelineMode = params.tlmode;
+      document.querySelectorAll(".tl-toggle-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.mode === params.tlmode);
+      });
+      renderTimeline();
+      renderSparkline();
+    } else if (params.tlmode === "compare") {
+      document.querySelector('.tl-toggle-btn[data-mode="compare"]')?.click();
+    }
 
-  /* Category/designer filter pill */
-  if (params.filter) {
-    const pill = document.querySelector(`.pill[data-filter="${params.filter}"]`)
-              || document.querySelector(`.pill[data-designer="${params.filter}"]`);
-    if (pill) pill.click();
-  }
+    /* Category/designer filter pill */
+    if (params.filter) {
+      const pill = document.querySelector(`.pill[data-filter="${params.filter}"]`)
+                || document.querySelector(`.pill[data-designer="${params.filter}"]`);
+      if (pill) pill.click();
+    }
 
-  /* Scenario (magnet / china / battery) */
-  if (params.scenario === "magnet" || params.scenario === "china" || params.scenario === "battery") {
-    if (activeScenario !== params.scenario) activateScenario(params.scenario);
-  }
+    /* Scenario (magnet / china / battery) */
+    if (params.scenario === "magnet" || params.scenario === "china" || params.scenario === "battery") {
+      if (activeScenario !== params.scenario) activateScenario(params.scenario);
+    }
 
-  /* Selection (op or mineral, mutually exclusive) */
-  if (params.op) {
-    const op = OPERATIONS.find(o => o.rank === parseInt(params.op, 10));
-    if (op) selectOperation(op);
-  } else if (params.mineral) {
-    const m = MINERALS.find(x => x.rank === parseInt(params.mineral, 10));
-    if (m) selectMineral(m);
+    /* Selection (op or mineral, mutually exclusive) */
+    if (params.op) {
+      const op = OPERATIONS.find(o => o.rank === parseInt(params.op, 10));
+      if (op) selectOperation(op);
+    } else if (params.mineral) {
+      const m = MINERALS.find(x => x.rank === parseInt(params.mineral, 10));
+      if (m) selectMineral(m);
+    }
+  } finally {
+    _hashApplying = false;
   }
 }
 
@@ -6194,9 +6200,11 @@ window.addEventListener("hashchange", applyHash);
    JSON copies a complete snapshot of the dataset (minerals + operations + element categories
    + reverse indices) to the clipboard. CSV downloads two flat tables joined by a tier column. */
 function buildExportPayload() {
+  const dsLabel = getDatasetLabel(activeDataset);
   return {
     meta: {
-      title: "Periodic & Pictorial — REE dataset",
+      title: `Periodic & Pictorial — ${dsLabel} dataset`,
+      dataset: activeDataset,
       generated: new Date().toISOString(),
       sources: [
         "USGS Mineral Commodity Summaries 2025",
@@ -6281,7 +6289,7 @@ document.getElementById("exportCsvBtn").addEventListener("click", () => {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `ree-dataset-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `${activeDataset}-dataset-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -6825,6 +6833,11 @@ Object.entries({
 });
 
 const DATASETS = { ree: DATASET_REE, lithium: DATASET_LITHIUM, cobalt: DATASET_COBALT };
+const DATASET_LABELS = { ree: "Rare Earths", lithium: "Lithium", cobalt: "Cobalt" };
+
+function getDatasetLabel(key) {
+  return DATASET_LABELS[key] || key;
+}
 
 function switchDataset(key) {
   if (!DATASETS[key]) return;
@@ -6903,8 +6916,16 @@ function switchDataset(key) {
   /* Re-render all dataset-dependent UI */
   rebuildMineralCards();
   rebuildOpCards();
-  renderTimeline();
-  renderSparkline();
+  if (activeTimelineMode === "compare") {
+    document.getElementById("timeline").style.display = "none";
+    document.getElementById("timelineCompare").style.display = "block";
+    renderCompare();
+  } else {
+    document.getElementById("timeline").style.display = "";
+    document.getElementById("timelineCompare").style.display = "none";
+    renderTimeline();
+    renderSparkline();
+  }
   renderCapital();
   renderCountryAccordion();
 
@@ -7011,7 +7032,7 @@ function renderStats() {
   if (!grid) return;
 
   const ds = DATASETS[activeDataset];
-  const dsLabel = activeDataset === "ree" ? "Rare Earths" : "Lithium";
+  const dsLabel = getDatasetLabel(activeDataset);
   const onlineCount = OPERATIONS.filter(o => o.status === "online").length;
   const buildCount = OPERATIONS.filter(o => o.status === "build").length;
   const projectCount = OPERATIONS.filter(o => o.status === "project").length;
@@ -7038,7 +7059,9 @@ function renderStats() {
       unit: activeDataset === "ree" ? "17 elements covered" : `${elementsCovered.size} element${elementsCovered.size === 1 ? '' : 's'} covered`,
       detail: activeDataset === "ree"
         ? "Lanthanides + Sc + Y. The full rare-earth series."
-        : "Single-element story. The whole industry orbits Li (3)."
+        : activeDataset === "lithium"
+          ? "Single-element story. The whole industry orbits Li (3)."
+          : "Cobalt supply, refining, recycling, and substitution pressure."
     },
     {
       accent: "ops",
@@ -7762,6 +7785,7 @@ document.getElementById("suClearAll")?.addEventListener("click", () => {
   const allPill = document.querySelector('.pill[data-filter="all"]');
   if (allPill && !allPill.classList.contains("active")) allPill.click();
   if (typeof updateStickyState === "function") updateStickyState();
+  if (typeof writeHash === "function") writeHash();
 });
 
 /* Timeline mode shortcuts */
