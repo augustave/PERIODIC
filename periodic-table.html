@@ -1130,8 +1130,6 @@
   .minerals-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    grid-auto-rows: min-content;
-    align-items: start;
     gap: 0;
     border-top: 1px solid var(--ink);
     border-left: 1px solid var(--ink);
@@ -1148,6 +1146,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    min-height: 240px;
     font-family: inherit;
     position: relative;
   }
@@ -1234,8 +1233,21 @@
     font-size: 12px;
     line-height: 1.45;
     opacity: 0.85;
-    padding: 8px 0 0 0;
+    flex: 1 1 auto;
+    min-height: 60px;
+    overflow-y: auto;
+    padding: 8px 4px 0 0;
+    /* Subtle scrollbar — only appears when content overflows */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(236, 233, 207, 0.32) transparent;
   }
+  .mineral-card .note::-webkit-scrollbar { width: 6px; }
+  .mineral-card .note::-webkit-scrollbar-track { background: transparent; }
+  .mineral-card .note::-webkit-scrollbar-thumb {
+    background: rgba(236, 233, 207, 0.28);
+    border-radius: 3px;
+  }
+  .mineral-card .note::-webkit-scrollbar-thumb:hover { background: rgba(236, 233, 207, 0.5); }
   .mineral-card .note::-webkit-scrollbar { width: 6px; }
   .mineral-card .note::-webkit-scrollbar-track { background: transparent; }
   .mineral-card .note::-webkit-scrollbar-thumb {
@@ -1267,6 +1279,7 @@
     flex-wrap: wrap;
     gap: 4px;
     padding-top: 2px;
+    flex-shrink: 0;
   }
   .country-chip {
     display: inline-flex;
@@ -1472,8 +1485,6 @@
   .ops-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    grid-auto-rows: min-content;
-    align-items: start;
     gap: 0;
     border-top: 1px solid var(--ink);
     border-left: 1px solid var(--ink);
@@ -1491,6 +1502,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    min-height: 260px;
     font-family: inherit;
     position: relative;
   }
@@ -1584,8 +1596,20 @@
     font-size: 12px;
     line-height: 1.45;
     opacity: 0.92;
-    padding: 8px 0 0 0;
+    flex: 1 1 auto;
+    min-height: 60px;
+    overflow-y: auto;
+    padding: 8px 4px 0 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(236, 233, 207, 0.32) transparent;
   }
+  .op-card .note::-webkit-scrollbar { width: 6px; }
+  .op-card .note::-webkit-scrollbar-track { background: transparent; }
+  .op-card .note::-webkit-scrollbar-thumb {
+    background: rgba(236, 233, 207, 0.28);
+    border-radius: 3px;
+  }
+  .op-card .note::-webkit-scrollbar-thumb:hover { background: rgba(236, 233, 207, 0.5); }
   .op-card .note::-webkit-scrollbar { width: 6px; }
   .op-card .note::-webkit-scrollbar-track { background: transparent; }
   .op-card .note::-webkit-scrollbar-thumb {
