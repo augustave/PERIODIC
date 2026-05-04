@@ -1,0 +1,43 @@
+/* ============================================================
+   layout.css — Structural / state-layer primitives
+   Visual CSS remains in the inline <style> block in index.html
+   ============================================================ */
+
+/* --- Visibility primitives --------------------------------- */
+.hidden { display: none !important; }
+
+/* Right panel (spec: #right-panel = real: #detailPanel) */
+#right-panel { display: none; }
+#right-panel:not(.hidden) { display: block; }
+
+/* --- Panel-open state --------------------------------------- */
+body.panel-open #center-canvas {
+  opacity: 0.3;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* --- Mission dimming --------------------------------------- */
+.dimmed {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* --- Mode visibility gates --------------------------------- */
+body.mode-explore .appendix { display: none; }
+body.mode-mission .non-relevant { opacity: 0.1; }
+
+/* --- Layout regions: semantic IDs map to existing classes -- */
+#app {
+  display: contents; /* transparent wrapper; existing layout is on .pi-shell */
+}
+
+#top-bar    { /* .pi-topbar — no additional overrides needed */ }
+#left-panel { /* .pi-left-panel — no additional overrides needed */ }
+#center-canvas { /* main content region — no additional overrides needed */ }
+#bottom-strip { /* .pi-bottom-strip — no additional overrides needed */ }
+
+/* --- Lens active hook --------------------------------------- */
+body[data-lens]:not([data-lens=""]) .lens-indicator {
+  opacity: 1;
+}

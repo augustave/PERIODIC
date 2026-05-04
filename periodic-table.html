@@ -1073,6 +1073,24 @@
     text-transform: uppercase;
     color: var(--ink-muted);
   }
+  .pi-state-item {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4px 8px;
+    border: 1px solid rgba(11,4,4,0.18);
+    background: rgba(236,233,207,0.72);
+    white-space: nowrap;
+  }
+  .pi-state-label {
+    color: var(--ink-muted);
+    font-size: 8px;
+  }
+  .pi-state-value {
+    color: var(--ink);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
   .pi-breadcrumb-btn {
     padding: 4px 7px;
     font-size: 8px;
@@ -1081,9 +1099,19 @@
     color: var(--ink);
   }
 
+  body.pi-shell.pi-mode-explore .masthead,
+  body.pi-shell.pi-mode-explore .dataset-strip,
   body.pi-shell.pi-mode-explore .controls,
   body.pi-shell.pi-mode-explore .magnet-bar,
   body.pi-shell.pi-mode-explore footer {
+    display: none;
+  }
+  body.pi-shell.pi-mode-explore .pi-bottom-strip {
+    display: flex;
+  }
+  body.pi-shell.pi-mode-explore .pi-block-nav,
+  body.pi-shell.pi-mode-explore .pi-block-missions,
+  body.pi-shell.pi-mode-explore .pi-block-lens {
     display: none;
   }
   body.pi-shell .minerals-section,
@@ -1149,11 +1177,14 @@
   }
 
   body.pi-mode-mission .el:not(.pi-mission-hit),
+  body.pi-mode-mission .kg-node:not(.pi-mission-hit) {
+    opacity: 0.18;
+    filter: saturate(0.55);
+  }
   body.pi-mode-mission .mineral-card:not(.pi-mission-hit),
   body.pi-mode-mission .op-card:not(.pi-mission-hit),
   body.pi-mode-mission .tl-chip:not(.pi-mission-hit) {
-    opacity: 0.18;
-    filter: saturate(0.55);
+    display: none;
   }
   .el.pi-mission-hit,
   .mineral-card.pi-mission-hit,
@@ -1549,7 +1580,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    min-height: 240px;
+    min-height: 148px;
     font-family: inherit;
     position: relative;
   }
@@ -1629,6 +1660,19 @@
     line-height: 1.3;
     word-break: break-word;
     opacity: 0.95;
+  }
+  .mineral-card .card-signal,
+  .op-card .card-signal {
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    line-height: 1.45;
+    text-transform: uppercase;
+    color: var(--card-fg);
+    opacity: 0.86;
+    border-top: 1px solid var(--card-rule);
+    padding-top: 10px;
+    margin-top: auto;
   }
   .mineral-card .note {
     font-family: "Fraunces", serif;
@@ -1905,7 +1949,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    min-height: 260px;
+    min-height: 156px;
     font-family: inherit;
     position: relative;
   }
@@ -1984,6 +2028,9 @@
     line-height: 1;
     letter-spacing: -0.01em;
     margin-top: 2px;
+  }
+  .op-card .card-signal {
+    margin-top: auto;
   }
   .op-card .operator-line {
     font-family: "DM Mono", monospace;
@@ -4002,7 +4049,7 @@
   </div>
 
   <aside class="pi-left-panel" aria-label="Mission navigation">
-    <div class="pi-block">
+    <div class="pi-block pi-block-starts">
       <div class="pi-block-label">Recommended starts</div>
       <div class="pi-entry-actions">
         <button class="pi-entry-btn active" data-pi-entry="elements"><span>Explore Elements</span><span class="meta">table</span></button>
@@ -4010,7 +4057,7 @@
         <button class="pi-entry-btn" data-pi-entry="mission"><span>Run Mission</span><span class="meta">guided</span></button>
       </div>
     </div>
-    <div class="pi-block">
+    <div class="pi-block pi-block-dataset">
       <div class="pi-block-label">Dataset</div>
       <div class="pi-panel-list">
         <button class="pi-nav-btn" data-pi-dataset="ree"><span>Rare Earths</span><span class="meta">REE</span></button>
@@ -4018,7 +4065,7 @@
         <button class="pi-nav-btn" data-pi-dataset="cobalt"><span>Cobalt</span><span class="meta">Co</span></button>
       </div>
     </div>
-    <div class="pi-block">
+    <div class="pi-block pi-block-nav">
       <div class="pi-block-label">Navigate</div>
       <div class="pi-panel-list">
         <button class="pi-nav-btn active" data-pi-panel="table"><span>Elements</span><span class="meta">anchor</span></button>
@@ -4031,7 +4078,7 @@
         <button class="pi-nav-btn" data-pi-panel="topology"><span>Topology</span><span class="meta">graph</span></button>
       </div>
     </div>
-    <div class="pi-block">
+    <div class="pi-block pi-block-missions">
       <div class="pi-block-label">Missions</div>
       <div class="pi-mission-list">
         <button class="pi-mission-btn" data-pi-mission="magnet_supply_chain"><span>Magnet Supply Chain</span><span class="meta">REE</span></button>
@@ -4040,14 +4087,17 @@
         <button class="pi-mission-btn" data-pi-mission="heavy_ree_access"><span>Heavy REE Access</span><span class="meta">HREE</span></button>
       </div>
     </div>
-    <div class="pi-block">
+    <div class="pi-block pi-block-lens">
       <div class="pi-lens-legend-label">Lens legend</div>
       <div class="pi-lens-legend" id="piLensLegend"></div>
     </div>
   </aside>
 
   <div class="pi-bottom-strip" id="piBreadcrumbs" aria-live="polite">
-    <span class="pi-breadcrumb-current">Rare Earths &gt; Elements</span>
+    <span class="pi-state-item"><span class="pi-state-label">Dataset</span><span class="pi-state-value">Rare Earths</span></span>
+    <span class="pi-state-item"><span class="pi-state-label">Mode</span><span class="pi-state-value">Explore</span></span>
+    <span class="pi-state-item"><span class="pi-state-label">Lens</span><span class="pi-state-value">None</span></span>
+    <span class="pi-state-item"><span class="pi-state-label">Selection</span><span class="pi-state-value">Elements</span></span>
   </div>
 
   <header class="masthead">
@@ -4742,6 +4792,7 @@ const overlay = document.getElementById("overlay");
 const panel = document.getElementById("detailPanel");
 
 function openPanel() {
+  if (typeof closeSectionDetail === "function") closeSectionDetail({ preserveFocus: true });
   overlay.classList.add("open");
   panel.classList.add("open");
   panel.setAttribute("aria-hidden", "false");
@@ -4974,7 +5025,7 @@ function openMineralDetail(m) {
     },
     {
       id: "production",
-      label: "Production",
+      label: "Supply",
       html: `
         ${productionRow || `<div class="field"><div class="k">Production</div><div class="v">No production figure mapped.</div></div>`}
         <div class="found-in-section">
@@ -4989,7 +5040,7 @@ function openMineralDetail(m) {
     },
     {
       id: "geopolitics",
-      label: "Geopolitics",
+      label: "Risk",
       html: `
         <div class="field"><div class="k">Countries</div><div class="v">${m.countries.join(" · ")}</div></div>
         <div class="field"><div class="k">Supply risk</div><div class="v">${m.countries.map(c => `${c}: ${COUNTRY_RISK[c] || "medium"}`).join(" · ")}</div></div>
@@ -5061,7 +5112,7 @@ function openOperationDetail(o) {
     },
     {
       id: "geopolitics",
-      label: "Geopolitics",
+      label: "Risk",
       html: `
         <div class="field"><div class="k">Country risk</div><div class="v">${o.country}: ${COUNTRY_RISK[o.country] || "medium"}</div></div>
         <div class="field"><div class="k">Funding</div><div class="v">${fundingLabel}</div></div>
@@ -5077,7 +5128,8 @@ function closeDetail() {
   overlay.classList.remove("open");
   panel.classList.remove("open");
   panel.setAttribute("aria-hidden", "true");
-  document.body.classList.remove("pi-focus");
+  const sectionOpen = document.getElementById("sectionDetailPanel")?.classList.contains("open");
+  if (!sectionOpen) document.body.classList.remove("pi-focus");
   document.querySelectorAll(".el.selected").forEach(c => c.classList.remove("selected"));
   document.querySelectorAll(".mineral-card.contains-element").forEach(c => c.classList.remove("contains-element"));
 }
@@ -5305,13 +5357,16 @@ function openSectionDetail(id) {
   sectionOverlay.classList.add("open");
   sectionPanel.classList.add("open");
   sectionPanel.setAttribute("aria-hidden", "false");
+  document.body.classList.add("pi-focus");
 }
 
-function closeSectionDetail() {
+function closeSectionDetail(options = {}) {
   if (!sectionPanel) return;
   sectionOverlay.classList.remove("open");
   sectionPanel.classList.remove("open");
   sectionPanel.setAttribute("aria-hidden", "true");
+  const detailOpen = document.getElementById("detailPanel")?.classList.contains("open");
+  if (!detailOpen && !options.preserveFocus) document.body.classList.remove("pi-focus");
 }
 
 document.getElementById("sectionCloseBtn")?.addEventListener("click", closeSectionDetail);
@@ -5805,6 +5860,23 @@ let activeOperation = null;
 let activeScenario = null;
 let activeDataset = "ree";  /* "ree" or "lithium" — default REE */
 
+function labelCase(value) {
+  const s = String(value || "").trim();
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : "";
+}
+
+function compactMineralSignal(m) {
+  const tier = labelCase(m.tier);
+  const supply = m.production ? "Supply share mapped" : `${m.countries.length} source geographies`;
+  return [tier, m.type, supply].filter(Boolean).join(" · ");
+}
+
+function compactOperationSignal(o) {
+  const status = labelCase(o.status);
+  const segment = o.segment ? labelCase(o.segment) : "Operation";
+  return [status, segment, o.country].filter(Boolean).join(" · ");
+}
+
 /* ===== RENDER MINERAL CARDS ===== */
 const mGrid = document.getElementById("mineralsGrid");
 MINERALS.forEach(m => {
@@ -5812,11 +5884,6 @@ MINERALS.forEach(m => {
   card.className = "mineral-card";
   card.dataset.rank = m.rank;
   card.dataset.tier = m.tier;
-  const reeChips = m.primary.map(n => `<span class="ree-chip">${SYM_BY_N[n]}</span>`).join("");
-  const countryChips = m.countries.map(c => renderCountryChip(c)).join("");
-  const productionRow = m.production
-    ? `<div class="stat-row"><span class="k">Production</span><span class="v">${m.production}</span></div>`
-    : "";
   card.innerHTML = `
     <div class="top-row">
       <div class="rank">${String(m.rank).padStart(2, "0")}  ·  ${m.tier.toUpperCase()}</div>
@@ -5824,10 +5891,7 @@ MINERALS.forEach(m => {
     </div>
     <div class="name">${m.name}</div>
     <div class="formula">${m.formula}</div>
-    <div class="note">${m.note}</div>
-    ${productionRow}
-    <div class="country-row">${countryChips}</div>
-    <div class="ree-row">${reeChips}</div>
+    <div class="card-signal">${compactMineralSignal(m)}</div>
   `;
   card.addEventListener("click", () => {
     if (!activeMineral || activeMineral.rank !== m.rank) selectMineral(m);
@@ -5866,6 +5930,7 @@ function selectMineral(m) {
     activeScenario = null;
     magnetBtn.classList.remove("active");
     chinaBtn.classList.remove("active");
+    batteryBtn.classList.remove("active");
   }
 
   /* mark active card */
@@ -5918,49 +5983,26 @@ ctrl.addEventListener("click", e => {
       activeScenario = null;
       magnetBtn.classList.remove("active");
       chinaBtn.classList.remove("active");
+      batteryBtn.classList.remove("active");
     }
   }
 });
 
 /* ===== RENDER OPERATION CARDS ===== */
 const opsGrid = document.getElementById("opsGrid");
-const FUNDING_MAX = Math.max(...OPERATIONS.filter(x => x.fundingAmount).map(x => x.fundingAmount));
 OPERATIONS.forEach(o => {
   const card = document.createElement("button");
   card.className = "op-card";
-  if (o.funding) card.classList.add("has-funding");
   card.dataset.rank = o.rank;
   card.dataset.status = o.status;
-  const reeChips = o.outputs.map(n => `<span class="ree-chip">${SYM_BY_N[n]}</span>`).join("");
-  const countryChip = renderCountryChip(o.country);
   const statusLabel = o.status.toUpperCase();
-  const capacityRow = o.capacity
-    ? `<div class="stat-row"><span class="k">Capacity</span><span class="v">${o.capacity}</span></div>`
-    : "";
-  let fundingBadge = "";
-  if (o.funding) {
-    const amt = o.fundingAmount;
-    const pct = amt ? Math.max(8, (amt / FUNDING_MAX) * 100) : 0;
-    const amtLabel = amt
-      ? (amt >= 1000 ? `$${(amt / 1000).toFixed(1)}B` : `$${amt}M`)
-      : "—";
-    fundingBadge = `<div class="funding-badge" title="${o.fundingNote || ''}" style="--fb-pct: ${pct}%;">
-      <div class="fb-row"><span>${o.funding}</span><span class="fb-amount">${amtLabel}</span></div>
-      <div class="fb-bar"></div>
-    </div>`;
-  }
   card.innerHTML = `
-    ${fundingBadge}
     <div class="top-row">
       <div class="rank-status">${String(o.rank).padStart(2, "0")}<span class="status-tag">${statusLabel}</span></div>
       <div class="mineral-tag">${o.mineralType}</div>
     </div>
     <div class="name">${o.name}</div>
-    <div class="operator-line">${o.operator} <span class="region">· ${o.region}</span></div>
-    <div class="note">${o.note}</div>
-    ${capacityRow}
-    <div class="country-row">${countryChip}</div>
-    <div class="ree-row">${reeChips}</div>
+    <div class="card-signal">${compactOperationSignal(o)}</div>
   `;
   card.addEventListener("click", () => selectOperation(o));
   opsGrid.appendChild(card);
@@ -6619,6 +6661,7 @@ function selectOperation(o) {
     activeScenario = null;
     magnetBtn.classList.remove("active");
     chinaBtn.classList.remove("active");
+    batteryBtn.classList.remove("active");
   }
 
   /* mark active op card, dim others */
@@ -6867,7 +6910,7 @@ function applyHash() {
   try {
     /* Dataset must apply first so subsequent op/mineral lookups hit the right arrays */
     if (params.dataset && typeof switchDataset === "function" && params.dataset !== activeDataset) {
-      switchDataset(params.dataset);  /* this triggers a re-render; the rest still applies */
+      commitPiState({ dataset: params.dataset }, { scroll: false, write: false });  /* this triggers a re-render; the rest still applies */
     }
 
     /* Timeline mode */
@@ -6897,14 +6940,20 @@ function applyHash() {
     /* Selection (op or mineral, mutually exclusive) */
     if (params.op) {
       const op = OPERATIONS.find(o => o.rank === parseInt(params.op, 10));
-      if (op) selectOperation(op);
+      if (op) {
+        commitPiState({ mode: "analysis", panel: "operations" }, { scroll: false, write: false });
+        selectOperation(op);
+      }
     } else if (params.mineral) {
       const m = MINERALS.find(x => x.rank === parseInt(params.mineral, 10));
       if (m) {
+        commitPiState({ mode: "analysis", panel: "minerals" }, { scroll: false, write: false });
         selectMineral(m);
         if (typeof openMineralDetail === "function") openMineralDetail(m);
       }
     }
+    updatePiDatasetButtons();
+    updatePiBreadcrumbs();
   } finally {
     _hashApplying = false;
   }
@@ -7020,6 +7069,7 @@ document.getElementById("printBtn").addEventListener("click", (e) => {
     activeScenario = null;
     magnetBtn.classList.remove("active");
     chinaBtn.classList.remove("active");
+    batteryBtn.classList.remove("active");
     document.querySelectorAll(".el:not(.placeholder)").forEach(c => c.classList.remove("featured", "featured-secondary", "dimmed"));
     document.querySelectorAll(".mineral-card, .op-card, .tl-chip").forEach(c => c.classList.remove("dimmed"));
   }
@@ -7558,7 +7608,12 @@ function getDatasetLabel(key) {
 
 function switchDataset(key) {
   if (!DATASETS[key]) return;
-  if (activeDataset === key) return;
+  if (activeDataset === key) {
+    if (typeof updatePiDatasetButtons === "function") updatePiDatasetButtons();
+    if (typeof updateStickyState === "function") updateStickyState();
+    if (typeof updatePiBreadcrumbs === "function") updatePiBreadcrumbs();
+    return;
+  }
 
   /* Clear all selection state */
   if (activeMineral) clearMineral();
@@ -7567,6 +7622,7 @@ function switchDataset(key) {
     activeScenario = null;
     magnetBtn.classList.remove("active");
     chinaBtn.classList.remove("active");
+    batteryBtn.classList.remove("active");
     document.querySelectorAll(".el:not(.placeholder)").forEach(c => c.classList.remove("featured", "featured-secondary", "dimmed"));
   }
 
@@ -7650,6 +7706,8 @@ function switchDataset(key) {
   document.querySelectorAll(".dataset-btn").forEach(b => {
     b.classList.toggle("active", b.dataset.dataset === key);
   });
+  if (typeof updatePiDatasetButtons === "function") updatePiDatasetButtons();
+  if (typeof updateStickyState === "function") updateStickyState();
 
   if (typeof writeHash === "function") writeHash();
 }
@@ -7664,11 +7722,6 @@ function rebuildMineralCards() {
     card.className = "mineral-card";
     card.dataset.rank = m.rank;
     card.dataset.tier = m.tier;
-    const reeChips = m.primary.map(n => `<span class="ree-chip">${SYM_BY_N[n]}</span>`).join("");
-    const countryChips = m.countries.map(c => renderCountryChip(c)).join("");
-    const productionRow = m.production
-      ? `<div class="stat-row"><span class="k">Production</span><span class="v">${m.production}</span></div>`
-      : "";
     card.innerHTML = `
       <div class="top-row">
         <div class="rank">${String(m.rank).padStart(2, "0")}  ·  ${m.tier.toUpperCase()}</div>
@@ -7676,10 +7729,7 @@ function rebuildMineralCards() {
       </div>
       <div class="name">${m.name}</div>
       <div class="formula">${m.formula}</div>
-      <div class="note">${m.note}</div>
-      ${productionRow}
-      <div class="country-row">${countryChips}</div>
-      <div class="ree-row">${reeChips}</div>
+      <div class="card-signal">${compactMineralSignal(m)}</div>
     `;
     card.addEventListener("click", () => {
       if (!activeMineral || activeMineral.rank !== m.rank) selectMineral(m);
@@ -7692,45 +7742,20 @@ function rebuildMineralCards() {
 function rebuildOpCards() {
   const grid = document.getElementById("opsGrid");
   grid.innerHTML = "";
-  const fundedAmounts = OPERATIONS.filter(x => x.fundingAmount).map(x => x.fundingAmount);
-  const FUNDING_MAX_DS = fundedAmounts.length ? Math.max(...fundedAmounts) : 1000;
 
   OPERATIONS.forEach(o => {
     const card = document.createElement("button");
     card.className = "op-card";
-    if (o.funding) card.classList.add("has-funding");
     card.dataset.rank = o.rank;
     card.dataset.status = o.status;
-    const reeChips = o.outputs.map(n => `<span class="ree-chip">${SYM_BY_N[n]}</span>`).join("");
-    const countryChip = renderCountryChip(o.country);
     const statusLabel = o.status.toUpperCase();
-    const capacityRow = o.capacity
-      ? `<div class="stat-row"><span class="k">Capacity</span><span class="v">${o.capacity}</span></div>`
-      : "";
-    let fundingBadge = "";
-    if (o.funding) {
-      const amt = o.fundingAmount;
-      const pct = amt ? Math.max(8, (amt / FUNDING_MAX_DS) * 100) : 0;
-      const amtLabel = amt
-        ? (amt >= 1000 ? `$${(amt / 1000).toFixed(1)}B` : `$${amt}M`)
-        : "—";
-      fundingBadge = `<div class="funding-badge" title="${o.fundingNote || ''}" style="--fb-pct: ${pct}%;">
-        <div class="fb-row"><span>${o.funding}</span><span class="fb-amount">${amtLabel}</span></div>
-        <div class="fb-bar"></div>
-      </div>`;
-    }
     card.innerHTML = `
-      ${fundingBadge}
       <div class="top-row">
         <div class="rank-status">${String(o.rank).padStart(2, "0")}<span class="status-tag">${statusLabel}</span></div>
         <div class="mineral-tag">${o.mineralType}</div>
       </div>
       <div class="name">${o.name}</div>
-      <div class="operator-line">${o.operator} <span class="region">· ${o.region}</span></div>
-      <div class="note">${o.note}</div>
-      ${capacityRow}
-      <div class="country-row">${countryChip}</div>
-      <div class="ree-row">${reeChips}</div>
+      <div class="card-signal">${compactOperationSignal(o)}</div>
     `;
     card.addEventListener("click", () => selectOperation(o));
     grid.appendChild(card);
@@ -7739,7 +7764,7 @@ function rebuildOpCards() {
 
 /* Wire up dataset toggle buttons (added in HTML) */
 document.querySelectorAll(".dataset-btn").forEach(btn => {
-  btn.addEventListener("click", () => switchDataset(btn.dataset.dataset));
+  btn.addEventListener("click", () => commitPiState({ dataset: btn.dataset.dataset }, { scroll: false }));
 });
 
 /* ============================================================ */
@@ -8568,7 +8593,7 @@ document.getElementById("suToggle").addEventListener("click", () => {
 
 /* Dataset shortcuts */
 document.querySelectorAll(".su-ds-btn").forEach(btn => {
-  btn.addEventListener("click", () => switchDataset(btn.dataset.suDataset));
+  btn.addEventListener("click", () => commitPiState({ dataset: btn.dataset.suDataset }, { scroll: false }));
 });
 
 /* Scenario shortcuts — proxy to existing buttons */
@@ -8826,6 +8851,15 @@ function setPiMode(mode) {
     clearMissionHighlight();
     document.querySelectorAll("[data-pi-mission]").forEach(btn => btn.classList.remove("active"));
   }
+  if (mode === "explore") {
+    activePiPanel = "table";
+    Object.keys(PI_PANEL_LABELS).forEach(key => document.body.classList.remove(`pi-panel-${key}`));
+    document.body.classList.add("pi-panel-table");
+    document.querySelectorAll("[data-pi-panel]").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.piPanel === "table");
+    });
+    try { closeDetail(); closeSectionDetail(); } catch(e) {}
+  }
   updatePiBreadcrumbs();
 }
 
@@ -9022,32 +9056,69 @@ function updatePiDatasetButtons() {
   document.querySelectorAll("[data-pi-dataset]").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.piDataset === activeDataset);
   });
+  document.querySelectorAll(".dataset-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.dataset === activeDataset);
+  });
+  document.querySelectorAll(".su-ds-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.suDataset === activeDataset);
+  });
+  document.body.dataset.activeDataset = activeDataset;
+}
+
+function getActiveSelectionLabel() {
+  if (activePiMission) return MISSION_THREADS[activePiMission]?.label || "Mission";
+  if (activeOperation) return activeOperation.name;
+  if (activeMineral) return activeMineral.name;
+  if (activeScenario) {
+    return ({ magnet: "Magnet-critical", china: "China-restricted", battery: "Battery-critical" })[activeScenario] || activeScenario;
+  }
+  if (activeFilter && activeFilter.type !== "all") return `Filter: ${activeFilter.value}`;
+  return PI_PANEL_LABELS[activePiPanel] || "Elements";
 }
 
 function updatePiBreadcrumbs() {
   const root = document.getElementById("piBreadcrumbs");
   if (!root) return;
-  const parts = [
-    { label: getDatasetLabel(activeDataset), panel: "table" },
-    { label: activePiMode.charAt(0).toUpperCase() + activePiMode.slice(1), mode: activePiMode },
-    { label: activePiMission ? MISSION_THREADS[activePiMission].label : PI_PANEL_LABELS[activePiPanel], panel: activePiPanel }
+  const modeLabel = activePiMode.charAt(0).toUpperCase() + activePiMode.slice(1);
+  const lensLabel = activePiLens ? labelCase(activePiLens) : "None";
+  const items = [
+    ["Dataset", getDatasetLabel(activeDataset)],
+    ["Mode", modeLabel],
+    ["Lens", lensLabel],
+    ["Selection", getActiveSelectionLabel()]
   ];
-  if (activeMineral) parts.push({ label: activeMineral.name, panel: "minerals" });
-  if (activeOperation) parts.push({ label: activeOperation.name, panel: "operations" });
-  if (activePiLens) parts.push({ label: `Lens: ${activePiLens}`, panel: activePiPanel });
-  root.innerHTML = parts.map((p, i) => {
-    const isLast = i === parts.length - 1;
-    const sep = isLast ? "" : `<span>&gt;</span>`;
-    if (isLast) return `<span class="pi-breadcrumb-current">${p.label}</span>`;
-    return `<button class="pi-breadcrumb-btn" data-breadcrumb-panel="${p.panel || ""}" data-breadcrumb-mode="${p.mode || ""}">${p.label}</button>${sep}`;
-  }).join("");
-  root.querySelectorAll(".pi-breadcrumb-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (btn.dataset.breadcrumbMode) setPiMode(btn.dataset.breadcrumbMode);
-      if (btn.dataset.breadcrumbPanel) setPiPanel(btn.dataset.breadcrumbPanel);
-    });
-  });
+  root.innerHTML = items.map(([k, v]) => `
+    <span class="pi-state-item">
+      <span class="pi-state-label">${k}</span>
+      <span class="pi-state-value">${v}</span>
+    </span>
+  `).join("");
   updatePiDatasetButtons();
+}
+
+function commitPiState(patch = {}, options = {}) {
+  const shouldScroll = options.scroll !== false;
+  const shouldWrite = options.write !== false;
+  if (patch.dataset && DATASETS[patch.dataset]) {
+    switchDataset(patch.dataset);
+  }
+  if (patch.mode) {
+    setPiMode(patch.mode);
+  }
+  if (patch.panel) {
+    setPiPanel(patch.panel, shouldScroll);
+  }
+  if (Object.prototype.hasOwnProperty.call(patch, "lens")) {
+    const lensSelect = document.getElementById("piLensSelect");
+    if (lensSelect) lensSelect.value = patch.lens || "";
+    applyPiLens(patch.lens || "");
+  }
+  if (patch.mission) {
+    activatePiMission(patch.mission);
+  }
+  updatePiDatasetButtons();
+  updatePiBreadcrumbs();
+  if (shouldWrite && typeof writeHash === "function") writeHash();
 }
 
 function clearPiInterfaceState() {
@@ -9068,38 +9139,37 @@ function clearPiInterfaceState() {
 }
 
 document.querySelectorAll("[data-pi-mode]").forEach(btn => {
-  btn.addEventListener("click", () => setPiMode(btn.dataset.piMode));
+  btn.addEventListener("click", () => commitPiState({ mode: btn.dataset.piMode }, { scroll: false }));
 });
 document.querySelectorAll("[data-pi-panel]").forEach(btn => {
   btn.addEventListener("click", () => {
-    if (activePiMode === "explore") setPiMode("analysis");
-    setPiPanel(btn.dataset.piPanel);
+    commitPiState({
+      mode: activePiMode === "explore" ? "analysis" : activePiMode,
+      panel: btn.dataset.piPanel
+    });
   });
 });
 document.querySelectorAll("[data-pi-entry]").forEach(btn => {
   btn.addEventListener("click", () => {
     const entry = btn.dataset.piEntry;
     if (entry === "elements") {
-      setPiMode("explore");
-      setPiPanel("table");
+      commitPiState({ mode: "explore", panel: "table" });
     } else if (entry === "minerals") {
-      setPiMode("analysis");
-      setPiPanel("minerals");
+      commitPiState({ mode: "analysis", panel: "minerals" });
     } else if (entry === "mission") {
-      activatePiMission(activePiMission || "magnet_supply_chain");
+      commitPiState({ mission: activePiMission || "magnet_supply_chain" });
     }
   });
 });
 document.querySelectorAll("[data-pi-dataset]").forEach(btn => {
   btn.addEventListener("click", () => {
-    if (activeDataset !== btn.dataset.piDataset) switchDataset(btn.dataset.piDataset);
-    updatePiBreadcrumbs();
+    commitPiState({ dataset: btn.dataset.piDataset }, { scroll: false });
   });
 });
 document.querySelectorAll("[data-pi-mission]").forEach(btn => {
-  btn.addEventListener("click", () => activatePiMission(btn.dataset.piMission));
+  btn.addEventListener("click", () => commitPiState({ mission: btn.dataset.piMission }));
 });
-document.getElementById("piLensSelect")?.addEventListener("change", e => applyPiLens(e.target.value));
+document.getElementById("piLensSelect")?.addEventListener("change", e => commitPiState({ lens: e.target.value }, { scroll: false }));
 document.getElementById("piClearAll")?.addEventListener("click", clearPiInterfaceState);
 
 const _piSwitchDataset = switchDataset;
