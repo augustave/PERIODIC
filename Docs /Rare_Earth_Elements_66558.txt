@@ -1,0 +1,44 @@
+graph TD
+    %% Nodes
+    PRC(Entity:China_PRC)
+    USA(Entity:USA)
+    REE(Concept:Rare_Earth_Elements)
+    CM(Concept:Critical_Minerals)
+    Refinement(Process:Mineral_Refinement)
+    
+    %% Relationships
+    PRC -- dominates --> REE
+    PRC -- dominates --> Refinement
+    USA -- dependentOn --> PRC
+    USA -- identifies_vulnerability_in --> REE
+    
+    %% Policy & Actions
+    EO_14017(Policy:EO_14017_Biden)
+    DPA(Policy:Defense_Production_Act)
+    USA -- enacted --> EO_14017
+    USA -- utilizes --> DPA
+    DPA -- accelerates --> Refinement
+    
+    %% Strategic Geography Clusters
+    subgraph Africa_Hubs [Mineral Rich Africa]
+        DRC(DRC:Cobalt_70pct)
+        RSA(South_Africa:Manganese)
+        Malawi(Malawi:Exploration)
+    end
+    
+    subgraph Allied_Partners [The Consumer Club]
+        AUS(Australia:Lynas)
+        CAN(Canada:ERGI)
+        JPN(Japan:Stockpiling)
+    end
+
+    PRC -- invests_heavily_in --> Africa_Hubs
+    USA -- seeks_diversification_via --> Africa_Hubs
+    USA -- collaborates_with --> Allied_Partners
+    AUS -- builds_facility_in --> USA
+    Refinement -- occurs_at --> USA_Mountain_Pass(Mine:Mountain_Pass_CA)
+
+    %% Risks
+    Embargo(Risk:Mineral_Embargo)
+    PRC -- may_utilize --> Embargo
+    Embargo -- threatens --> Tech_Sector(Industry:High_Tech_Defense)

@@ -3973,6 +3973,47 @@
   .kg-edge-row[data-type="enables"] .kg-edge-rel { background: rgba(35,85,151,0.1);  color: #235597; }
   .kg-edge-row[data-type="source"]  .kg-edge-rel { background: rgba(90,138,110,0.1); color: #3A7A5A; }
   .kg-edge-row[data-type="policy"]  .kg-edge-rel { background: rgba(126,90,155,0.1); color: #7E5A9B; }
+  /* Source-attribution chip — appears inline in the edge relation cell */
+  .kg-edge-src-tag {
+    display: inline-block;
+    font-family: "DM Mono", monospace;
+    font-size: 7px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 1px 4px;
+    margin-left: 5px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    opacity: 0.55;
+    font-style: normal;
+    vertical-align: middle;
+    cursor: help;
+    transition: opacity 0.15s ease;
+  }
+  .kg-edge-row:hover .kg-edge-src-tag { opacity: 0.9; }
+  /* Cited-sources footer in the topology section-detail panel */
+  .sd-sources-footer {
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(11,4,4,0.18);
+  }
+  .sd-sources-footer .sd-block-head { margin-bottom: 8px; }
+  .sd-sources-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .sd-source-chip {
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    padding: 4px 8px;
+    border: 1px solid rgba(11,4,4,0.3);
+    background: rgba(11,4,4,0.04);
+    color: var(--ink);
+  }
+  .sd-source-chip .sd-source-org { font-weight: 500; }
+  .sd-source-chip .sd-source-year { opacity: 0.55; margin-left: 4px; }
   .kg-legend {
     display: flex;
     gap: 20px;
@@ -5299,22 +5340,34 @@ const SECTION_INFO = {
     eyebrow: () => "Appendix · 関係図 · interactive supply-chain graph",
     title:   () => "Supply-Chain <span class=\"accent\">Topology</span>",
     deck:    () => "Six concept clusters and the edges binding them — REE classifications, mineralogy, technology, geography, geopolitical frameworks, and the IEA R1–R8 framework.",
-    facts:   () => [
-      ["Clusters", KG_CLUSTERS.length],
-      ["Total nodes", KG_CLUSTERS.reduce((s, c) => s + c.nodes.length, 0)],
-      ["Total edges", KG_EDGES.length],
-      ["Cross-linked nodes", Object.keys(NODE_TO_OP_RANK).length]
-    ],
+    facts:   () => {
+      const sourcedEdges = KG_EDGES.filter(e => e.source).length;
+      return [
+        ["Clusters", KG_CLUSTERS.length],
+        ["Total nodes", KG_CLUSTERS.reduce((s, c) => s + c.nodes.length, 0)],
+        ["Total edges", KG_EDGES.length],
+        ["Sourced edges", `${sourcedEdges} (${Math.round(sourcedEdges / KG_EDGES.length * 100)}%)`],
+        ["Cross-linked nodes", Object.keys(NODE_TO_OP_RANK).length]
+      ];
+    },
     blocks: [
       { head: "How to read", body: "Hover any node to see its connections drawn live as bezier curves in the cluster grid. Solid curves are outgoing edges (this node → other), dashed are incoming (other → this). Arrowheads always point at the target. Curve color matches edge type." },
       { head: "Edge types", body: "Threat (red): control or supply disruption. Enables (blue): a downstream dependency. Source (green): provenance / mineral-to-element relationship. Policy (purple): institutional response." },
-      { head: "Pin & cross-link", body: "Click a node to lock its highlight (click again or click background to release). Tech nodes that map to specific operations show a → Op badge — click that badge to surface the operation card." }
+      { head: "Pin & cross-link", body: "Click a node to lock its highlight (click again or click background to release). Tech nodes that map to specific operations show a → Op badge — click that badge to surface the operation card." },
+      { head: "Source attribution", body: "Edges that originate in a specific document carry a small chip (e.g., FPRI '21, MOFCOM 18, CFR '26). Hover the chip for the full citation. Sources cited across the graph are listed below." }
     ],
     bullets: [
       ["Filter chips at top", "Limit visible edges by type. Active type colors the chip and the curves drawn in the canvas."],
       ["Show full graph", "Italic toggle on the right — draws every edge at once. A density read of the whole network."],
       ["Mobile note", "On viewports under 720px the SVG curve overlay is hidden (curves get noisy). Filter chips, the cluster grid, and the edge table all remain functional."]
-    ]
+    ],
+    sourcesFooter: () => {
+      const cited = new Set(KG_EDGES.filter(e => e.source).map(e => e.source));
+      return Array.from(cited)
+        .map(id => SOURCES[id])
+        .filter(Boolean)
+        .sort((a, b) => a.year - b.year);
+    }
   }
 };
 
@@ -5350,6 +5403,24 @@ function openSectionDetail(id) {
     bodyHTML += `<ul class="sd-bullets">`
       + info.bullets.map(([k, v]) => `<li><span><strong>${k}</strong>${v}</span></li>`).join("")
       + `</ul>`;
+  }
+
+  /* Cited-sources footer (used by topology section) */
+  if (info.sourcesFooter) {
+    const sources = info.sourcesFooter();
+    if (sources.length) {
+      bodyHTML += `
+        <div class="sd-sources-footer">
+          <div class="sd-block-head">Cited sources · ${sources.length}</div>
+          <div class="sd-sources-list">
+            ${sources.map(s => `
+              <span class="sd-source-chip" title="${s.title}">
+                <span class="sd-source-org">${s.org}</span>
+                <span class="sd-source-year">${s.year}</span>
+              </span>`).join("")}
+          </div>
+        </div>`;
+    }
   }
 
   document.getElementById("sdBody").innerHTML = bodyHTML;
@@ -8071,17 +8142,23 @@ const KG_CLUSTERS = [
   },
   { id: "geo", name: "Key Geographies", accent: "where it is mined, processed, finished",
     nodes: [
-      { id: "china",    label: "China",          sub: "90% HREE processing · export controls" },
-      { id: "usa",      label: "United States",  sub: "Mountain Pass · Vulcan · Project Vault" },
-      { id: "eu",       label: "European Union", sub: "Carester · Neo Silmet · CRMA mandate" },
-      { id: "malaysia", label: "Malaysia",       sub: "Lynas LAMP refinery" },
-      { id: "brazil",   label: "Brazil",         sub: "Serra Verde · Aclara separation" },
-      { id: "australia", label: "Australia",     sub: "Lynas Mt Weld · Eneabba · Strategic Reserve" },
-      { id: "japan",    label: "Japan",          sub: "deep-sea mud · 30% reduction redesign" }
+      { id: "china",      label: "China",          sub: "62% raw · 90% HREE processing · export controls" },
+      { id: "usa",        label: "United States",  sub: "80% import reliance · 1.1% reserves · MP + Vulcan + Vault" },
+      { id: "eu",         label: "European Union", sub: "Carester · Neo Silmet · CRMA mandate" },
+      { id: "canada",     label: "Canada",         sub: "Tamarack · Electra · ERGI co-lead" },
+      { id: "malaysia",   label: "Malaysia",       sub: "Lynas LAMP refinery" },
+      { id: "brazil",     label: "Brazil",         sub: "Serra Verde · Aclara separation" },
+      { id: "australia",  label: "Australia",      sub: "Lynas Mt Weld · Eneabba · Strategic Reserve" },
+      { id: "japan",      label: "Japan",          sub: "deep-sea mud · 30% reduction redesign" },
+      { id: "africa_hubs", label: "Africa Mineral Hubs", sub: "DRC Co (70%) · S. Africa Mn · Ghana · Malawi" }
     ]
   },
   { id: "policy", name: "Geopolitical Frameworks", accent: "the institutional response",
     nodes: [
+      { id: "eo14017",        label: "EO 14017 (2021)",       sub: "Biden supply-chain review · the foundational order" },
+      { id: "dpa",            label: "Defense Production Act", sub: "DoD Title III authority · domestic build-out" },
+      { id: "ergi",           label: "ERGI",                  sub: "Energy Resource Governance Initiative · Canada-led" },
+      { id: "embargo",        label: "Mineral Embargo",       sub: "the policy lever China holds" },
       { id: "exportcontrols", label: "China Export Controls", sub: "Apr + Oct 2025 · $6.5T at risk" },
       { id: "forge",          label: "FORGE",                 sub: "55-nation bloc · evolved from MSP" },
       { id: "projectvault",   label: "Project Vault",         sub: "EXIM Bank · US strategic stockpile" },
@@ -8111,19 +8188,36 @@ const KG_CLUSTERS = [
   }
 ];
 
+/* Source registry — every KG edge can cite one of these. Footer-rendered
+   in the topology section-detail panel + as a small inline chip on edge rows. */
+const SOURCES = {
+  fpri_2021:    { title: "America's Critical Strategic Vulnerability: REE", org: "FPRI", year: 2021, short: "FPRI '21" },
+  usgs_mcs_25:  { title: "Mineral Commodity Summaries 2025",                org: "USGS", year: 2025, short: "USGS '25" },
+  iea_cmo:      { title: "Critical Minerals Outlook 2024",                  org: "IEA",  year: 2024, short: "IEA CMO" },
+  cfr_csr101:   { title: "Critical Minerals 101 (CSR101)",                  org: "CFR",  year: 2026, short: "CFR '26" },
+  mofcom_18:    { title: "Announcement No. 18 (REE Export Controls)",       org: "MOFCOM", year: 2025, short: "MOFCOM 18" },
+  mofcom_61:    { title: "Announcement No. 61 (Expanded Controls)",         org: "MOFCOM", year: 2025, short: "MOFCOM 61" },
+  doe_lpo:      { title: "DOE Loan Programs Office disclosures",            org: "DOE",  year: 2025, short: "DOE LPO" }
+};
+
 const KG_EDGES = [
   /* threats / control */
-  { s: "china",          t: "hree",         label: "controls 90% of processing",   type: "threat"  },
-  { s: "china",          t: "exportcontrols", label: "implements",                  type: "threat"  },
-  { s: "china",          t: "metalbottleneck", label: "monopolizes equipment",       type: "threat" },
-  { s: "exportcontrols", t: "defense",      label: "threatens supply",              type: "threat"  },
-  { s: "exportcontrols", t: "evmotor",      label: "threatens supply ($6.5T)",      type: "threat"  },
-  { s: "metalbottleneck", t: "permmagnet",  label: "blocks Western magnet capacity", type: "threat" },
-  { s: "equipshortage",  t: "metalbottleneck", label: "creates",                    type: "threat"  },
-  { s: "equipshortage",  t: "permmagnet",   label: "imposes 5–12× capex penalty",   type: "threat"  },
+  { s: "china",          t: "hree",         label: "controls 90% of processing",   type: "threat", source: "usgs_mcs_25" },
+  { s: "china",          t: "ree",          label: "dominates supply chain (62% raw)", type: "threat", source: "fpri_2021" },
+  { s: "china",          t: "exportcontrols", label: "implements",                  type: "threat", source: "mofcom_18" },
+  { s: "china",          t: "metalbottleneck", label: "monopolizes equipment",       type: "threat", source: "cfr_csr101" },
+  { s: "exportcontrols", t: "defense",      label: "threatens supply",              type: "threat", source: "mofcom_18" },
+  { s: "exportcontrols", t: "evmotor",      label: "threatens supply ($6.5T)",      type: "threat", source: "mofcom_61" },
+  { s: "metalbottleneck", t: "permmagnet",  label: "blocks Western magnet capacity", type: "threat", source: "cfr_csr101" },
+  { s: "equipshortage",  t: "metalbottleneck", label: "creates",                    type: "threat", source: "cfr_csr101" },
+  { s: "equipshortage",  t: "permmagnet",   label: "imposes 5–12× capex penalty",   type: "threat", source: "cfr_csr101" },
   { s: "ironnitride",    t: "permmagnet",   label: "could replace (RE-free)",       type: "threat"  },
   { s: "ironnitride",    t: "metalbottleneck", label: "designed to bypass",          type: "threat" },
-  { s: "valleysofdeath", t: "leapfrog",     label: "stalls scaling",                type: "threat"  },
+  { s: "valleysofdeath", t: "leapfrog",     label: "stalls scaling",                type: "threat", source: "cfr_csr101" },
+  { s: "usa",            t: "china",        label: "80% import reliance",           type: "threat", source: "fpri_2021" },
+  { s: "usa",            t: "embargo",      label: "vulnerable to",                 type: "threat", source: "fpri_2021" },
+  { s: "embargo",        t: "defense",      label: "would threaten",                type: "threat", source: "fpri_2021" },
+  { s: "china",          t: "africa_hubs",  label: "primary investor in",           type: "threat", source: "fpri_2021" },
 
   /* enables */
   { s: "hree",           t: "permmagnet",   label: "stabilizes (Dy / Tb)",          type: "enables" },
@@ -8151,31 +8245,43 @@ const KG_EDGES = [
   { s: "projectvault",   t: "usa",          label: "strategic insulation",          type: "policy"  },
   { s: "ausreserve",     t: "australia",    label: "1-year import buffer",          type: "policy"  },
   { s: "crma",           t: "eu",           label: "25% recycled mandate by 2030",  type: "policy"  },
-  { s: "leapfrog",       t: "china",        label: "designed to bypass",            type: "policy"  },
-  { s: "nedc",           t: "leapfrog",     label: "coordinates US strategy",       type: "policy"  },
-  { s: "inqtel",         t: "valleysofdeath", label: "bridges (patient capital)",   type: "policy"  },
-  { s: "inqtel",         t: "bioprotein",   label: "funds Alta Resources",          type: "policy"  },
-  { s: "inqtel",         t: "solventfreemet", label: "funds Phoenix Tailings",      type: "policy"  },
-  { s: "g7fund",         t: "valleysofdeath", label: "proposed bridge",             type: "policy"  },
+  { s: "leapfrog",       t: "china",        label: "designed to bypass",            type: "policy", source: "cfr_csr101" },
+  { s: "nedc",           t: "leapfrog",     label: "coordinates US strategy",       type: "policy", source: "cfr_csr101" },
+  { s: "inqtel",         t: "valleysofdeath", label: "bridges (patient capital)",   type: "policy", source: "cfr_csr101" },
+  { s: "inqtel",         t: "bioprotein",   label: "funds Alta Resources",          type: "policy", source: "cfr_csr101" },
+  { s: "inqtel",         t: "solventfreemet", label: "funds Phoenix Tailings",      type: "policy", source: "cfr_csr101" },
+  { s: "g7fund",         t: "valleysofdeath", label: "proposed bridge",             type: "policy", source: "cfr_csr101" },
   { s: "baotouindex",    t: "china",        label: "state-controlled pricing",      type: "policy"  },
+  /* FPRI 2021 — foundational US response architecture */
+  { s: "eo14017",        t: "usa",          label: "triggered the build-out",       type: "policy", source: "fpri_2021" },
+  { s: "eo14017",        t: "dpa",          label: "authorizes invocation of",      type: "policy", source: "fpri_2021" },
+  { s: "dpa",            t: "permmagnet",   label: "accelerates magnet capacity",   type: "policy", source: "fpri_2021" },
+  { s: "dpa",            t: "ironnitride",  label: "Title III award · Niron",       type: "policy", source: "fpri_2021" },
+  { s: "ergi",           t: "canada",       label: "coordinates",                   type: "policy", source: "fpri_2021" },
+  { s: "ergi",           t: "australia",    label: "consumer-club partner",         type: "policy", source: "fpri_2021" },
+  { s: "ergi",           t: "japan",        label: "consumer-club partner",         type: "policy", source: "fpri_2021" },
+  { s: "usa",            t: "africa_hubs",  label: "seeks diversification via",     type: "policy", source: "fpri_2021" },
+  { s: "usa",            t: "malaysia",     label: "funds Lynas LAMP refinement",   type: "policy", source: "fpri_2021" },
 
   /* IEA R1–R8 mappings — what each recommendation operationalizes */
-  { s: "r2", t: "projectvault",  label: "exemplifies (US stockpile)",  type: "policy" },
-  { s: "r2", t: "ausreserve",    label: "exemplifies (AUS stockpile)", type: "policy" },
-  { s: "r3", t: "metalbottleneck", label: "targets the bottleneck",    type: "policy" },
-  { s: "r4", t: "usa",           label: "DOE LPO loans flow here",     type: "policy" },
-  { s: "r4", t: "eu",            label: "CRMA + Carester loan",        type: "policy" },
-  { s: "r4", t: "australia",     label: "AUD 1.65B Eneabba support",   type: "policy" },
-  { s: "r5", t: "ladchrom",      label: "supply-side innovation",      type: "policy" },
-  { s: "r5", t: "aisep",         label: "supply-side innovation",      type: "policy" },
-  { s: "r5", t: "bioprotein",    label: "supply-side innovation",      type: "policy" },
-  { s: "r5", t: "phytomining",   label: "supply-side innovation",      type: "policy" },
-  { s: "r5", t: "nuton",         label: "supply-side innovation",      type: "policy" },
-  { s: "r6", t: "ironnitride",   label: "demand-side substitution",    type: "policy" },
-  { s: "r6", t: "japan",         label: "30% motor redesign",          type: "policy" },
-  { s: "r7", t: "crma",          label: "25% recycling mandate",       type: "policy" },
-  { s: "r7", t: "solventfreemet", label: "circular-loop integration",  type: "policy" },
-  { s: "r8", t: "baotouindex",   label: "counter-mechanism target",    type: "policy" }
+  { s: "r2", t: "projectvault",  label: "exemplifies (US stockpile)",  type: "policy", source: "iea_cmo" },
+  { s: "r2", t: "ausreserve",    label: "exemplifies (AUS stockpile)", type: "policy", source: "iea_cmo" },
+  { s: "r2", t: "embargo",       label: "buffers against",             type: "policy", source: "iea_cmo" },
+  { s: "r3", t: "metalbottleneck", label: "targets the bottleneck",    type: "policy", source: "iea_cmo" },
+  { s: "r4", t: "usa",           label: "DOE LPO loans flow here",     type: "policy", source: "doe_lpo" },
+  { s: "r4", t: "eu",            label: "CRMA + Carester loan",        type: "policy", source: "iea_cmo" },
+  { s: "r4", t: "australia",     label: "AUD 1.65B Eneabba support",   type: "policy", source: "iea_cmo" },
+  { s: "r4", t: "dpa",           label: "DPA Title III is the US instrument", type: "policy", source: "fpri_2021" },
+  { s: "r5", t: "ladchrom",      label: "supply-side innovation",      type: "policy", source: "iea_cmo" },
+  { s: "r5", t: "aisep",         label: "supply-side innovation",      type: "policy", source: "iea_cmo" },
+  { s: "r5", t: "bioprotein",    label: "supply-side innovation",      type: "policy", source: "iea_cmo" },
+  { s: "r5", t: "phytomining",   label: "supply-side innovation",      type: "policy", source: "iea_cmo" },
+  { s: "r5", t: "nuton",         label: "supply-side innovation",      type: "policy", source: "iea_cmo" },
+  { s: "r6", t: "ironnitride",   label: "demand-side substitution",    type: "policy", source: "iea_cmo" },
+  { s: "r6", t: "japan",         label: "30% motor redesign",          type: "policy", source: "iea_cmo" },
+  { s: "r7", t: "crma",          label: "25% recycling mandate",       type: "policy", source: "iea_cmo" },
+  { s: "r7", t: "solventfreemet", label: "circular-loop integration",  type: "policy", source: "iea_cmo" },
+  { s: "r8", t: "baotouindex",   label: "counter-mechanism target",    type: "policy", source: "iea_cmo" }
 ];
 
 /* Tech-cluster nodes that map to specific REE operations — clicking the
@@ -8238,12 +8344,17 @@ function renderKnowledgeGraph() {
   const nodeLabel = {};
   KG_CLUSTERS.forEach(c => c.nodes.forEach(n => { nodeLabel[n.id] = n.label; }));
 
-  edgesEl.innerHTML = KG_EDGES.map((e, i) => `
+  edgesEl.innerHTML = KG_EDGES.map((e, i) => {
+    const srcChip = e.source && SOURCES[e.source]
+      ? ` <span class="kg-edge-src-tag" title="${SOURCES[e.source].title} (${SOURCES[e.source].org} ${SOURCES[e.source].year})">${SOURCES[e.source].short}</span>`
+      : "";
+    return `
     <div class="kg-edge-row" data-type="${e.type}" data-edge-idx="${i}" data-src="${e.s}" data-tgt="${e.t}">
       <span class="kg-edge-src">${nodeLabel[e.s] || e.s}</span>
-      <span class="kg-edge-rel">${e.label}</span>
+      <span class="kg-edge-rel">${e.label}${srcChip}</span>
       <span class="kg-edge-tgt">${nodeLabel[e.t] || e.t}</span>
-    </div>`).join("");
+    </div>`;
+  }).join("");
 
   /* Filter chip counts */
   const counts = { all: KG_EDGES.length, threat: 0, enables: 0, source: 0, policy: 0 };

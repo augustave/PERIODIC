@@ -1,0 +1,22 @@
+{
+  "document_metadata": {
+    "title": "America’s Critical Strategic Vulnerability: Rare Earth Elements",
+    "source": "FPRI",
+    "date": "June 2021"
+  },
+  "new_nodes": [
+    { "id": "PRC", "type": "Entity:Nation", "properties": { "global_raw_production": "62%", "refinement_dominance": "high" } },
+    { "id": "USA", "type": "Entity:Nation", "properties": { "import_reliance_on_china": "80%", "reserve_share": "1.1%" } },
+    { "id": "REE", "type": "Concept:Material", "sub_type": "Critical_Minerals" },
+    { "id": "Lynas_Corp", "type": "Entity:Organization", "sub_type": "Australian_Mining" },
+    { "id": "Defense_Production_Act", "type": "Policy:USA", "impact": "Streamlines_domestic_mine_construction" },
+    { "id": "Africa_Mineral_Hubs", "type": "Category:Geography", "members": ["DRC", "South Africa", "Ghana", "Malawi"] }
+  ],
+  "new_edges": [
+    { "source": "PRC", "target": "REE", "relationship": "dominates_supply_chain" },
+    { "source": "USA", "target": "PRC", "relationship": "strategically_vulnerable_to" },
+    { "source": "USA", "target": "Lynas_Corp", "relationship": "funds_refinement_facility" },
+    { "source": "USA", "target": "REE", "relationship": "seeks_to_stockpile" },
+    { "source": "PRC", "target": "Africa_Mineral_Hubs", "relationship": "primary_investor" }
+  ]
+}
