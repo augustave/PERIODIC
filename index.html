@@ -1104,7 +1104,7 @@
   body.pi-shell.pi-mode-explore .dataset-strip,
   body.pi-shell.pi-mode-explore .controls,
   body.pi-shell.pi-mode-explore .magnet-bar,
-  body.pi-shell.pi-mode-explore footer {
+  body.pi-shell.pi-mode-explore footer:not(.site-footer) {
     display: none;
   }
   body.pi-shell.pi-mode-explore .pi-bottom-strip {
@@ -3161,6 +3161,57 @@
   }
   .cb-fine-divider { opacity: 0.4; }
 
+  /* === Minimal utility site-footer (repo + license, GitHub-style dark band) === */
+  .site-footer {
+    background: var(--ink);
+    color: var(--bg-paper);
+    border-top: 1px solid var(--ink);
+    padding: 18px 40px;
+    font-family: "DM Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .sf-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .sf-left, .sf-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .sf-mark { font-weight: 500; opacity: 0.92; }
+  .sf-sep { opacity: 0.4; }
+  .sf-copy { opacity: 0.55; }
+  .sf-link {
+    color: var(--bg-paper);
+    text-decoration: none;
+    opacity: 0.75;
+    transition: opacity 0.15s ease, border-color 0.15s ease;
+    padding: 4px 9px;
+    border: 1px solid rgba(236, 233, 207, 0.32);
+  }
+  .sf-link:hover {
+    opacity: 1;
+    border-color: var(--bg-paper);
+  }
+  .sf-icon {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 11px;
+    margin-right: 3px;
+    vertical-align: text-top;
+  }
+  @media (max-width: 720px) {
+    .site-footer { padding: 14px 14px; }
+    .sf-inner { flex-direction: column; gap: 10px; }
+  }
+  @media print { .site-footer { display: none !important; } }
+
   /* === 3 · Sticky utility bar === */
   .sticky-util {
     position: fixed;
@@ -4461,6 +4512,25 @@
       <span id="cbBuildId">Build <span id="cbBuildHash">—</span></span>
     </div>
   </section>
+
+  <!-- Minimal utility site-footer — repo + license; the editorial credits live in colophon-bar above -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="sf-inner">
+      <div class="sf-left">
+        <span class="sf-mark">Periodic &amp; Pictorial</span>
+        <span class="sf-sep">·</span>
+        <span class="sf-copy">© 2026 ANP STUDIO</span>
+      </div>
+      <div class="sf-right">
+        <a class="sf-link" href="https://github.com/augustave/PERIODIC" target="_blank" rel="noopener">
+          <span class="sf-icon">↗</span> GitHub
+        </a>
+        <a class="sf-link" href="https://github.com/augustave/PERIODIC/blob/main/LICENSE" target="_blank" rel="noopener">
+          MIT License
+        </a>
+      </div>
+    </div>
+  </footer>
 
   <!-- 3 · Sticky utility bar (fixed) — now absorbs the old floating jump-hint -->
   <div class="sticky-util" id="stickyUtil">
