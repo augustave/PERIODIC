@@ -3186,6 +3186,29 @@
   .sf-mark { font-weight: 500; opacity: 0.92; }
   .sf-sep { opacity: 0.4; }
   .sf-copy { opacity: 0.55; }
+  /* US flag chip — inline SVG renders consistently across platforms */
+  .sf-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.7;
+    transition: opacity 0.15s ease;
+    cursor: default;
+  }
+  .sf-flag:hover { opacity: 1; }
+  .sf-flag-svg {
+    width: 19px;
+    height: 10px;
+    border: 1px solid rgba(236, 233, 207, 0.32);
+    flex-shrink: 0;
+    display: block;
+  }
+  .sf-flag-text {
+    font-family: "DM Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
   .sf-link {
     color: var(--bg-paper);
     text-decoration: none;
@@ -4550,6 +4573,32 @@
         <span class="sf-mark">Periodic &amp; Pictorial</span>
         <span class="sf-sep">·</span>
         <span class="sf-copy">© 2026 ANP STUDIO</span>
+        <span class="sf-sep">·</span>
+        <span class="sf-flag" role="img" aria-label="Made in the United States" title="Made in the USA">
+          <svg class="sf-flag-svg" viewBox="0 0 19 10" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <rect width="19" height="10" fill="#ECE9CF"/>
+            <g fill="#B51A21">
+              <rect y="0"      width="19" height="0.769"/>
+              <rect y="1.538"  width="19" height="0.769"/>
+              <rect y="3.077"  width="19" height="0.769"/>
+              <rect y="4.615"  width="19" height="0.769"/>
+              <rect y="6.154"  width="19" height="0.769"/>
+              <rect y="7.692"  width="19" height="0.769"/>
+              <rect y="9.231"  width="19" height="0.769"/>
+            </g>
+            <rect width="7.6" height="5.385" fill="#235597"/>
+            <g fill="#ECE9CF">
+              <circle cx="0.7" cy="0.55"  r="0.20"/><circle cx="2.0"  cy="0.55"  r="0.20"/><circle cx="3.3"  cy="0.55"  r="0.20"/><circle cx="4.6"  cy="0.55"  r="0.20"/><circle cx="5.9"  cy="0.55"  r="0.20"/><circle cx="7.2"  cy="0.55"  r="0.20"/>
+              <circle cx="1.35" cy="1.20" r="0.20"/><circle cx="2.65" cy="1.20" r="0.20"/><circle cx="3.95" cy="1.20" r="0.20"/><circle cx="5.25" cy="1.20" r="0.20"/><circle cx="6.55" cy="1.20" r="0.20"/>
+              <circle cx="0.7" cy="1.85"  r="0.20"/><circle cx="2.0"  cy="1.85"  r="0.20"/><circle cx="3.3"  cy="1.85"  r="0.20"/><circle cx="4.6"  cy="1.85"  r="0.20"/><circle cx="5.9"  cy="1.85"  r="0.20"/><circle cx="7.2"  cy="1.85"  r="0.20"/>
+              <circle cx="1.35" cy="2.50" r="0.20"/><circle cx="2.65" cy="2.50" r="0.20"/><circle cx="3.95" cy="2.50" r="0.20"/><circle cx="5.25" cy="2.50" r="0.20"/><circle cx="6.55" cy="2.50" r="0.20"/>
+              <circle cx="0.7" cy="3.15"  r="0.20"/><circle cx="2.0"  cy="3.15"  r="0.20"/><circle cx="3.3"  cy="3.15"  r="0.20"/><circle cx="4.6"  cy="3.15"  r="0.20"/><circle cx="5.9"  cy="3.15"  r="0.20"/><circle cx="7.2"  cy="3.15"  r="0.20"/>
+              <circle cx="1.35" cy="3.80" r="0.20"/><circle cx="2.65" cy="3.80" r="0.20"/><circle cx="3.95" cy="3.80" r="0.20"/><circle cx="5.25" cy="3.80" r="0.20"/><circle cx="6.55" cy="3.80" r="0.20"/>
+              <circle cx="0.7" cy="4.45"  r="0.20"/><circle cx="2.0"  cy="4.45"  r="0.20"/><circle cx="3.3"  cy="4.45"  r="0.20"/><circle cx="4.6"  cy="4.45"  r="0.20"/><circle cx="5.9"  cy="4.45"  r="0.20"/><circle cx="7.2"  cy="4.45"  r="0.20"/>
+            </g>
+          </svg>
+          <span class="sf-flag-text">Made in USA</span>
+        </span>
       </div>
       <div class="sf-right">
         <a class="sf-link" href="https://github.com/augustave/PERIODIC" target="_blank" rel="noopener">
