@@ -1100,17 +1100,16 @@
     color: var(--ink);
   }
 
-  /* Focused-chrome rules: applied in BOTH analysis and mission modes (the only two modes now) */
-  body.pi-shell.pi-mode-analysis .masthead,
-  body.pi-shell.pi-mode-mission  .masthead,
-  body.pi-shell.pi-mode-analysis .dataset-strip,
-  body.pi-shell.pi-mode-mission  .dataset-strip,
-  body.pi-shell.pi-mode-analysis .controls,
-  body.pi-shell.pi-mode-mission  .controls,
-  body.pi-shell.pi-mode-analysis .magnet-bar,
-  body.pi-shell.pi-mode-mission  .magnet-bar,
-  body.pi-shell.pi-mode-analysis footer:not(.site-footer),
-  body.pi-shell.pi-mode-mission  footer:not(.site-footer) {
+  /* Focused-chrome rules: applied ONLY in mission mode. Analysis mode (the default)
+     keeps the editorial masthead, dataset strip, controls, magnet bar, and legacy
+     footer visible — visual identity is preserved per PRD non-goal "Do not redesign
+     full visual identity". The substrate panel still renders BELOW the masthead
+     as the meaningful primary surface. */
+  body.pi-shell.pi-mode-mission .masthead,
+  body.pi-shell.pi-mode-mission .dataset-strip,
+  body.pi-shell.pi-mode-mission .controls,
+  body.pi-shell.pi-mode-mission .magnet-bar,
+  body.pi-shell.pi-mode-mission footer:not(.site-footer) {
     display: none;
   }
   body.pi-shell .minerals-section,
@@ -9369,18 +9368,17 @@ setTimeout(() => {
   }
   applyHash();
 
-  /* Mineral-First doctrine: if no specific selection comes from hash/localStorage,
-     auto-open the Bastnäsite (rank 1) dossier. The page should land already-active,
-     not waiting for the user to onboard. */
-  setTimeout(() => {
-    const hashHasSelection = location.hash && /(mineral|op|element)=/.test(location.hash);
-    if (!hashHasSelection && !activeMineral && !activeOperation && activeDataset === "ree") {
-      const bast = MINERALS.find(m => m.rank === 1);
-      if (bast && typeof openMineralDetail === "function") {
-        openMineralDetail(bast);
-      }
-    }
-  }, 200);
+  /* Mineral-First doctrine note:
+     The PRD calls for a right-side dossier panel to open on load. The current
+     #detailPanel is a CENTERED MODAL — opening it on load completely covers
+     the substrate (mineral grid + periodic table) which IS the landing the
+     doctrine wants visible.
+
+     We ship the substrate as the landing surface itself: 20 mineral cards
+     above the periodic-table reference layer, with the Bastnäsite mineral
+     visually highlighted (first in the grid) and the rest-state CSS dimming
+     non-REE elements. A user click on any mineral card opens the modal —
+     no auto-open until #detailPanel is converted to a right-drawer. */
 }, 100);
 
 /* ======================================================
