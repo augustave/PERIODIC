@@ -1100,19 +1100,17 @@
     color: var(--ink);
   }
 
-  body.pi-shell.pi-mode-explore .masthead,
-  body.pi-shell.pi-mode-explore .dataset-strip,
-  body.pi-shell.pi-mode-explore .controls,
-  body.pi-shell.pi-mode-explore .magnet-bar,
-  body.pi-shell.pi-mode-explore footer:not(.site-footer) {
-    display: none;
-  }
-  body.pi-shell.pi-mode-explore .pi-bottom-strip {
-    display: flex;
-  }
-  body.pi-shell.pi-mode-explore .pi-block-nav,
-  body.pi-shell.pi-mode-explore .pi-block-missions,
-  body.pi-shell.pi-mode-explore .pi-block-lens {
+  /* Focused-chrome rules: applied in BOTH analysis and mission modes (the only two modes now) */
+  body.pi-shell.pi-mode-analysis .masthead,
+  body.pi-shell.pi-mode-mission  .masthead,
+  body.pi-shell.pi-mode-analysis .dataset-strip,
+  body.pi-shell.pi-mode-mission  .dataset-strip,
+  body.pi-shell.pi-mode-analysis .controls,
+  body.pi-shell.pi-mode-mission  .controls,
+  body.pi-shell.pi-mode-analysis .magnet-bar,
+  body.pi-shell.pi-mode-mission  .magnet-bar,
+  body.pi-shell.pi-mode-analysis footer:not(.site-footer),
+  body.pi-shell.pi-mode-mission  footer:not(.site-footer) {
     display: none;
   }
   body.pi-shell .minerals-section,
@@ -1125,6 +1123,10 @@
   body.pi-shell .sticky-util {
     display: none;
   }
+  /* Substrate panel = the doctrine default. Periodic table sits as REFERENCE LAYER above
+     mineral cards, which are the PRIMARY object. Both surfaces visible together. */
+  body.pi-panel-substrate .table-wrap,
+  body.pi-panel-substrate .minerals-section,
   body.pi-panel-minerals .minerals-section,
   body.pi-panel-operations .ops-section,
   body.pi-panel-timeline .ops-section,
@@ -4102,15 +4104,14 @@
 
 </style>
 </head>
-<body class="pi-shell pi-mode-explore pi-panel-table">
+<body class="pi-shell pi-mode-analysis pi-panel-substrate" data-active-dataset="ree">
 
 <div id="app">
 
   <header id="top-bar" class="pi-topbar" aria-label="Periodic intelligence controls">
     <div class="pi-brand">Periodic Intelligence</div>
     <div class="pi-mode-switch" role="tablist" aria-label="Interface mode">
-      <button class="pi-chip active" data-pi-mode="explore">Explore</button>
-      <button class="pi-chip" data-pi-mode="analysis">Analysis</button>
+      <button class="pi-chip active" data-pi-mode="analysis">Analysis</button>
       <button class="pi-chip" data-pi-mode="mission">Mission</button>
     </div>
     <div class="pi-top-actions">
@@ -4125,19 +4126,11 @@
     </div>
   </header>
 
-  <aside id="left-panel" class="pi-left-panel" aria-label="Mission navigation">
-    <div class="pi-block pi-block-starts">
-      <div class="pi-block-label">Recommended starts</div>
-      <div class="pi-entry-actions">
-        <button class="pi-entry-btn active" data-pi-entry="elements"><span>Explore Elements</span><span class="meta">table</span></button>
-        <button class="pi-entry-btn" data-pi-entry="minerals"><span>View Minerals</span><span class="meta">2 clicks</span></button>
-        <button class="pi-entry-btn" data-pi-entry="mission"><span>Run Mission</span><span class="meta">guided</span></button>
-      </div>
-    </div>
+  <aside id="left-panel" class="pi-left-panel" aria-label="Substrate navigation">
     <div class="pi-block pi-block-dataset">
       <div class="pi-block-label">Dataset</div>
       <div class="pi-panel-list">
-        <button class="pi-nav-btn" data-pi-dataset="ree"><span>Rare Earths</span><span class="meta">REE</span></button>
+        <button class="pi-nav-btn active" data-pi-dataset="ree"><span>Rare Earths</span><span class="meta">REE</span></button>
         <button class="pi-nav-btn" data-pi-dataset="lithium"><span>Lithium</span><span class="meta">Li</span></button>
         <button class="pi-nav-btn" data-pi-dataset="cobalt"><span>Cobalt</span><span class="meta">Co</span></button>
       </div>
@@ -4145,13 +4138,11 @@
     <div class="pi-block pi-block-nav">
       <div class="pi-block-label">Navigate</div>
       <div class="pi-panel-list">
-        <button class="pi-nav-btn active" data-pi-panel="table"><span>Elements</span><span class="meta">anchor</span></button>
-        <button class="pi-nav-btn" data-pi-panel="minerals"><span>Minerals</span><span class="meta">hosts</span></button>
+        <button class="pi-nav-btn active" data-pi-panel="substrate"><span>Substrate</span><span class="meta">minerals</span></button>
         <button class="pi-nav-btn" data-pi-panel="operations"><span>Operations</span><span class="meta">projects</span></button>
-        <button class="pi-nav-btn" data-pi-panel="timeline"><span>Timeline</span><span class="meta">build</span></button>
-        <button class="pi-nav-btn" data-pi-panel="capital"><span>Capital</span><span class="meta">funding</span></button>
         <button class="pi-nav-btn" data-pi-panel="countries"><span>Countries</span><span class="meta">risk</span></button>
-        <button class="pi-nav-btn" data-pi-panel="iea"><span>IEA Framework</span><span class="meta">R1-R8</span></button>
+        <button class="pi-nav-btn" data-pi-panel="capital"><span>Capital</span><span class="meta">funding</span></button>
+        <button class="pi-nav-btn" data-pi-panel="iea"><span>Policy</span><span class="meta">IEA R1–R8</span></button>
         <button class="pi-nav-btn" data-pi-panel="topology"><span>Topology</span><span class="meta">graph</span></button>
       </div>
     </div>
@@ -4189,7 +4180,7 @@
     <div class="meta">
       <div><span class="label">Issue</span> No. 01</div>
       <div><span class="label">Elements</span> 118</div>
-      <div><span class="label">Click</span> for detail</div>
+      <div><span class="label">Substrate</span> minerals first</div>
     </div>
   </header>
 
@@ -5212,8 +5203,9 @@ function openOperationDetail(o) {
     const rec = IEA_RECS.find(r => r.id === id);
     return `<div class="field"><div class="k">${id}</div><div class="v">${rec ? rec.title : "IEA recommendation"}</div></div>`;
   }).join("");
+  const _amt = Number.isFinite(o.fundingAmount) ? o.fundingAmount : null;
   const fundingLabel = o.funding
-    ? `${o.funding}${o.fundingAmount ? ` · ${o.fundingAmount >= 1000 ? "$" + (o.fundingAmount/1000).toFixed(2) + "B" : "$" + o.fundingAmount + "M"}` : ""}`
+    ? `${o.funding}${_amt != null ? ` · ${_amt >= 1000 ? "$" + (_amt/1000).toFixed(2) + "B" : "$" + _amt + "M"}` : " · undisclosed"}`
     : "No public federal funding mapped.";
 
   setDetailTabs([
@@ -8892,26 +8884,28 @@ ctrl.addEventListener("click", () => updateStickyState());
 /* ===== PERIODIC INTELLIGENCE INTERFACE SHELL =====
    Adds the layered access model requested in the PRD without changing the data model.
    The periodic table stays the anchor; dense appendices are revealed one at a time. */
-let activePiMode = "explore";
-let activePiPanel = "table";
+let activePiMode = "analysis";
+let activePiPanel = "substrate";
 let activePiMission = null;
 let activePiLens = "";
 let _piSwitchingForMission = false;
 
 const PI_PANEL_LABELS = {
-  table: "Elements",
-  minerals: "Minerals",
+  substrate: "Substrate",
+  table: "Elements",          /* legacy alias — substrate now covers this surface */
+  minerals: "Minerals",       /* legacy alias — folded into substrate */
   operations: "Operations",
   timeline: "Timeline",
   capital: "Capital",
   countries: "Countries",
   stats: "Stats",
   "cross-capital": "Cross Capital",
-  iea: "IEA Framework",
+  iea: "Policy",              /* renamed from "IEA Framework" per doctrine */
   topology: "Topology"
 };
 
 const PI_PANEL_TARGETS = {
+  substrate: ".minerals-section",  /* scroll-target: minerals are the primary layer */
   table: ".table-wrap",
   minerals: ".minerals-section",
   operations: ".ops-section",
@@ -8923,6 +8917,9 @@ const PI_PANEL_TARGETS = {
   iea: "#ieaSection",
   topology: "#kgSection"
 };
+
+/* Substrate aliases — clicking the legacy entry buttons or panel keys redirects here. */
+const PI_PANEL_ALIASES = { table: "substrate", minerals: "substrate" };
 
 const MISSION_THREADS = {
   magnet_supply_chain: {
@@ -8964,7 +8961,9 @@ const MISSION_THREADS = {
 };
 
 function setPiMode(mode) {
-  if (!["explore", "analysis", "mission"].includes(mode)) mode = "explore";
+  /* "explore" is a legacy alias — silently rewrite to analysis (focused chrome lives in pi-mode-analysis now) */
+  if (mode === "explore") mode = "analysis";
+  if (!["analysis", "mission"].includes(mode)) mode = "analysis";
   activePiMode = mode;
   document.body.classList.remove("pi-mode-explore", "pi-mode-analysis", "pi-mode-mission");
   document.body.classList.add(`pi-mode-${mode}`);
@@ -8976,32 +8975,18 @@ function setPiMode(mode) {
     clearMissionHighlight();
     document.querySelectorAll("[data-pi-mission]").forEach(btn => btn.classList.remove("active"));
   }
-  if (mode === "explore") {
-    activePiPanel = "table";
-    Object.keys(PI_PANEL_LABELS).forEach(key => document.body.classList.remove(`pi-panel-${key}`));
-    document.body.classList.add("pi-panel-table");
-    document.querySelectorAll("[data-pi-panel]").forEach(btn => {
-      btn.classList.toggle("active", btn.dataset.piPanel === "table");
-    });
-    try { closeDetail(); closeSectionDetail(); } catch(e) {}
-  }
   updatePiBreadcrumbs();
 }
 
 function setPiPanel(panel, shouldScroll = true) {
-  if (!PI_PANEL_LABELS[panel]) panel = "table";
+  /* Legacy aliases (table, minerals) collapse into substrate */
+  if (PI_PANEL_ALIASES[panel]) panel = PI_PANEL_ALIASES[panel];
+  if (!PI_PANEL_LABELS[panel]) panel = "substrate";
   activePiPanel = panel;
   Object.keys(PI_PANEL_LABELS).forEach(key => document.body.classList.remove(`pi-panel-${key}`));
   document.body.classList.add(`pi-panel-${panel}`);
   document.querySelectorAll("[data-pi-panel]").forEach(btn => {
     btn.classList.toggle("active", btn.dataset.piPanel === panel);
-  });
-  document.querySelectorAll("[data-pi-entry]").forEach(btn => {
-    btn.classList.toggle("active",
-      (panel === "table" && btn.dataset.piEntry === "elements") ||
-      (panel === "minerals" && btn.dataset.piEntry === "minerals") ||
-      (activePiMode === "mission" && btn.dataset.piEntry === "mission")
-    );
   });
   if (panel === "topology" && typeof scheduleKgRedraw === "function") {
     setTimeout(scheduleKgRedraw, 120);
@@ -9349,15 +9334,35 @@ const LS_KEY = "periodic_pictorial_state";
   };
 })();
 
-/* Initial-load hash application — deferred to the very end so all renders + dataset wiring exist */
+/* Initial-load hash application — deferred to the very end so all renders + dataset wiring exist.
+   Mineral-First doctrine: URL hash always wins. localStorage may restore selection state
+   (mineral, op, scenario) but the DATASET must default to "ree" unless URL hash overrides it. */
 setTimeout(() => {
   if (!location.hash) {
     try {
       const saved = localStorage.getItem(LS_KEY);
-      if (saved) history.replaceState(null, "", location.pathname + location.search + saved);
+      if (saved) {
+        /* Strip any persisted dataset param so we always land on REE on cold start */
+        const cleaned = saved.replace(/[#&]dataset=[a-z]+/g, "").replace(/^&/, "#");
+        const final = cleaned.startsWith("#") ? cleaned : (cleaned ? "#" + cleaned : "");
+        if (final) history.replaceState(null, "", location.pathname + location.search + final);
+      }
     } catch(e) {}
   }
   applyHash();
+
+  /* Mineral-First doctrine: if no specific selection comes from hash/localStorage,
+     auto-open the Bastnäsite (rank 1) dossier. The page should land already-active,
+     not waiting for the user to onboard. */
+  setTimeout(() => {
+    const hashHasSelection = location.hash && /(mineral|op|element)=/.test(location.hash);
+    if (!hashHasSelection && !activeMineral && !activeOperation && activeDataset === "ree") {
+      const bast = MINERALS.find(m => m.rank === 1);
+      if (bast && typeof openMineralDetail === "function") {
+        openMineralDetail(bast);
+      }
+    }
+  }, 200);
 }, 100);
 
 /* ======================================================
