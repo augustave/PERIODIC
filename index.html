@@ -1123,8 +1123,26 @@
   body.pi-shell .sticky-util {
     display: none;
   }
-  /* Substrate panel = the doctrine default. Periodic table sits as REFERENCE LAYER above
-     mineral cards, which are the PRIMARY object. Both surfaces visible together. */
+  /* Substrate panel = the doctrine default. Mineral cards are the PRIMARY object;
+     periodic table is the REFERENCE LAYER. Both visible, but minerals lead. */
+  body.pi-panel-substrate #center-canvas {
+    display: flex;
+    flex-direction: column;
+  }
+  /* Render order: minerals-section first, then table-wrap as reference */
+  body.pi-panel-substrate .minerals-section { order: 1; }
+  body.pi-panel-substrate .table-wrap       { order: 2; opacity: 0.92; }
+  /* In substrate's resting state (no mineral or op selected), softly de-emphasize
+     non-REE cells so the periodic table reads as a reference grid, not the headline.
+     Lanthanides + Sc (21) + Y (39) keep full prominence; everything else dims.
+     :has(.el.featured) matches once any selection adds the featured class — at which
+     point the existing selectMineral/selectOperation styling takes over and our
+     rest-state rule auto-disables. No JS toggling needed. */
+  body.pi-panel-substrate .ptable:not(:has(.el.featured)) .el:not([data-cat="lanthanide"]):not([data-n="21"]):not([data-n="39"]) {
+    opacity: 0.42;
+    transition: opacity 0.3s ease;
+  }
+  body.pi-panel-substrate .el { transition: opacity 0.25s ease; }
   body.pi-panel-substrate .table-wrap,
   body.pi-panel-substrate .minerals-section,
   body.pi-panel-minerals .minerals-section,
