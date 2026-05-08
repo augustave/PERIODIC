@@ -1112,6 +1112,7 @@
   body.pi-shell.pi-mode-mission footer:not(.site-footer) {
     display: none;
   }
+  body.pi-shell .table-wrap,
   body.pi-shell .minerals-section,
   body.pi-shell .ops-section,
   body.pi-shell .stats-bar,
@@ -1119,9 +1120,13 @@
   body.pi-shell .iea-section,
   body.pi-shell .kg-section,
   body.pi-shell .colophon-bar,
-  body.pi-shell .sticky-util {
+  body.pi-shell .sticky-util,
+  body.pi-shell footer:not(.site-footer) {
     display: none;
   }
+  /* The legacy color-mapping <footer> (legend + designer note) is logically a caption
+     to the periodic table — only show it on the substrate panel where the table appears. */
+  body.pi-panel-substrate footer:not(.site-footer) { display: block; }
   /* Substrate panel = the doctrine default. Mineral cards are the PRIMARY object;
      periodic table is the REFERENCE LAYER. Both visible, but minerals lead. */
   body.pi-panel-substrate #center-canvas {
