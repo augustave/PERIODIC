@@ -1128,9 +1128,16 @@
     display: flex;
     flex-direction: column;
   }
-  /* Render order: minerals-section first, then table-wrap as reference */
-  body.pi-panel-substrate .minerals-section { order: 1; }
-  body.pi-panel-substrate .table-wrap       { order: 2; opacity: 0.92; }
+  /* Render order inside #center-canvas (flex column):
+       masthead, dataset-strip, controls, magnet-bar         (default order: 0)
+       minerals-section                                      (order: 1)  ← primary
+       table-wrap                                            (order: 2)  ← reference
+       legacy color-mapping <footer> (legend + designer note) (order: 3)  ← caption to the table
+     Without an explicit order on the legacy footer it would default to 0 and
+     render ABOVE the substrate, which is what the "footer in the middle" bug was. */
+  body.pi-panel-substrate .minerals-section          { order: 1; }
+  body.pi-panel-substrate .table-wrap                { order: 2; opacity: 0.92; }
+  body.pi-panel-substrate footer:not(.site-footer)   { order: 3; }
   /* In substrate's resting state (no mineral or op selected), softly de-emphasize
      non-REE cells so the periodic table reads as a reference grid, not the headline.
      Lanthanides + Sc (21) + Y (39) keep full prominence; everything else dims.
