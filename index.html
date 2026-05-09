@@ -1330,9 +1330,17 @@
       top: auto;
       left: auto;
       width: 100%;
-      max-height: none;
+      /* Cap height at narrow viewports so the navigation panel doesn't take
+         1000+ pixels of vertical space pushing the substrate landing way
+         below the fold. Internal scroll keeps the full nav reachable. */
+      max-height: 220px;
+      overflow-y: auto;
       margin-bottom: 16px;
+      scrollbar-width: thin;
     }
+    /* On narrow viewports, hide the missions block in analysis mode (visible
+       via the Mission tab when needed) and tighten the nav block padding. */
+    body.pi-mode-analysis .pi-left-panel .pi-block-missions { display: none; }
     .pi-bottom-strip {
       left: 8px;
       right: 8px;
@@ -9119,14 +9127,21 @@ function activatePiMission(id) {
   });
   if (mission.scenario) activateScenario(mission.scenario);
   else if (activeScenario) clearScenario();
-  setPiPanel(mission.panel);
+  /* Apply the panel without scrolling — we'll scroll to the periodic table
+     instead (below) since missions are element-centric and the highlighted
+     cells are the meaningful focal point. */
+  setPiPanel(mission.panel, false);
   applyMissionHighlight();
-  /* Do NOT auto-open the mission modal — it covers the filtered substrate
-     and adds body.pi-focus (which dims .table-wrap to opacity 0.46, making
-     the page look broken). The user can click any highlighted mineral or
-     element to see details on demand. The mission filter itself (mineral
-     cards filtered to HREE-bearing only, periodic-table cells outlined for
-     the mission's element set) is the meaningful UI. */
+
+  /* Do NOT auto-open the mission modal — it covers the filtered substrate.
+     Instead, scroll the user to the periodic table so they immediately see
+     the highlighted mission elements. The filtered mineral cards remain
+     above for scroll-up reference. */
+  setTimeout(() => {
+    const tableEl = document.querySelector(".table-wrap");
+    if (tableEl) tableEl.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, 80);
+
   writeHash();
 }
 
