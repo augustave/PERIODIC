@@ -1516,12 +1516,20 @@
     body.print-compact .ca-op-name { font-size: 10pt; }
   }
 
-  /* fade-in entrance */
+  /* fade-in entrance.
+     IMPORTANT: fill-mode is `backwards`, NOT `both`/`forwards`. With `both`, the
+     animation's final `to { opacity: 1 }` keyframe persists after the animation
+     ends, locking the cell at opacity 1 and overriding every dim rule that
+     follows (mission filter, substrate rest-state, lens overlay). With
+     `backwards`, the FROM keyframe extends only BEFORE the animation starts
+     (so cells are invisible until their staggered delay fires); after the
+     animation completes, opacity drops back to the CSS cascade — letting the
+     mission/substrate/lens rules take effect. */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .el { animation: fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+  .el { animation: fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
 
   /* Featured states for mineral highlighting */
   .el.featured {
@@ -9113,7 +9121,12 @@ function activatePiMission(id) {
   else if (activeScenario) clearScenario();
   setPiPanel(mission.panel);
   applyMissionHighlight();
-  openMissionPanel(mission);
+  /* Do NOT auto-open the mission modal — it covers the filtered substrate
+     and adds body.pi-focus (which dims .table-wrap to opacity 0.46, making
+     the page look broken). The user can click any highlighted mineral or
+     element to see details on demand. The mission filter itself (mineral
+     cards filtered to HREE-bearing only, periodic-table cells outlined for
+     the mission's element set) is the meaningful UI. */
   writeHash();
 }
 
