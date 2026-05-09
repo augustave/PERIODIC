@@ -1112,9 +1112,55 @@
   body.pi-shell.pi-mode-mission footer:not(.site-footer) {
     display: none;
   }
-  body.pi-shell .table-wrap,
+  /* === DOCTRINE 1.1 — LAYERED ARCHITECTURE ===
+     The periodic table (.table-wrap) is a PERSISTENT GLOBAL REFERENCE LAYER.
+     It renders once on app init, never unmounts, never moves between modes.
+     Position: fixed-bottom dock, height 35vh, z-index 10 (below mineral z-20
+     and overlay z-30). Mineral and section content scroll independently above. */
+  body.pi-shell .table-wrap {
+    position: fixed;
+    bottom: 0;
+    left: 292px;       /* clear the fixed left sidebar */
+    right: 16px;
+    height: 35vh;
+    min-height: 240px;
+    z-index: 10;
+    background: var(--bg-paper);
+    border: 1px solid var(--ink);
+    border-bottom: none;
+    box-shadow: 0 -16px 40px -22px rgba(11,4,4,0.32);
+    overflow: auto;
+    padding: 10px 12px 6px;
+    display: block !important;  /* never conditionally hidden — D1 mandate */
+  }
+  /* Compact periodic-table grid inside the dock — cells shrink to fit 35vh height.
+     The full 9-row layout (periods 1-7 + lanthanides + actinides) compresses
+     to roughly half-size compared to the original. Click + highlight behaviors
+     stay intact. */
+  body.pi-shell .table-wrap .ptable {
+    grid-template-columns: repeat(18, minmax(36px, 1fr));
+    grid-template-rows: repeat(7, minmax(34px, 1fr)) 8px repeat(2, minmax(34px, 1fr));
+    min-width: 0;
+    gap: 2px;
+  }
+  body.pi-shell .table-wrap .el {
+    aspect-ratio: auto;
+    padding: 3px 4px;
+    font-size: 9px;
+  }
+  body.pi-shell .table-wrap .el .num   { font-size: 8px; }
+  body.pi-shell .table-wrap .el .sym   { font-size: 14px; line-height: 1; }
+  body.pi-shell .table-wrap .el .name,
+  body.pi-shell .table-wrap .el .mass  { display: none; } /* tooltip-on-hover; minimal in dock */
+  /* Body needs bottom padding so document content can scroll past the dock */
+  body.pi-shell { padding-bottom: calc(35vh + 24px); }
+
+  /* Sections render in document flow above the docked table layer (z-10).
+     z-20 keeps them visually atop, but they DO NOT contain the periodic table. */
   body.pi-shell .minerals-section,
   body.pi-shell .ops-section,
+  body.pi-shell .capital-block,
+  body.pi-shell .country-block,
   body.pi-shell .stats-bar,
   body.pi-shell .xds-section,
   body.pi-shell .iea-section,
@@ -1123,38 +1169,29 @@
   body.pi-shell .sticky-util,
   body.pi-shell footer:not(.site-footer) {
     display: none;
+    position: relative;
+    z-index: 20;
   }
-  /* The legacy color-mapping <footer> (legend + designer note) is logically a caption
-     to the periodic table — only show it on the substrate panel where the table appears. */
-  body.pi-panel-substrate footer:not(.site-footer) { display: block; }
-  /* Substrate panel = the doctrine default. Mineral cards are the PRIMARY object;
-     periodic table is the REFERENCE LAYER. Both visible, but minerals lead. */
-  body.pi-panel-substrate #center-canvas {
-    display: flex;
-    flex-direction: column;
+  /* Mission/lens overlays float above mineral content but below modal panels */
+  body.pi-shell .pi-mission-overlay,
+  body.pi-shell .pi-lens-overlay {
+    z-index: 30;
+    pointer-events: none;
   }
-  /* Render order inside #center-canvas (flex column):
-       masthead, dataset-strip, controls, magnet-bar         (default order: 0)
-       minerals-section                                      (order: 1)  ← primary
-       table-wrap                                            (order: 2)  ← reference
-       legacy color-mapping <footer> (legend + designer note) (order: 3)  ← caption to the table
-     Without an explicit order on the legacy footer it would default to 0 and
-     render ABOVE the substrate, which is what the "footer in the middle" bug was. */
-  body.pi-panel-substrate .minerals-section          { order: 1; }
-  body.pi-panel-substrate .table-wrap                { order: 2; opacity: 0.92; }
-  body.pi-panel-substrate footer:not(.site-footer)   { order: 3; }
-  /* In substrate's resting state (no mineral or op selected), softly de-emphasize
-     non-REE cells so the periodic table reads as a reference grid, not the headline.
-     Lanthanides + Sc (21) + Y (39) keep full prominence; everything else dims.
-     :has(.el.featured) matches once any selection adds the featured class — at which
-     point the existing selectMineral/selectOperation styling takes over and our
-     rest-state rule auto-disables. No JS toggling needed. */
-  body.pi-panel-substrate .ptable:not(:has(.el.featured)) .el:not([data-cat="lanthanide"]):not([data-n="21"]):not([data-n="39"]) {
-    opacity: 0.42;
-    transition: opacity 0.3s ease;
+
+  /* The legacy color-mapping <footer> is the periodic-table caption — visible
+     when substrate panel is active (where the mineral grid renders above the
+     persistent table). */
+  body.pi-panel-substrate footer:not(.site-footer) { display: block; position: relative; z-index: 20; }
+
+  /* Resting-state dim: non-REE cells fade to 42% so the table reads as a
+     reference grid; selection or mission auto-disables this via :has(.el.featured)
+     or via the mission rule's higher specificity. */
+  body.pi-shell .ptable:not(:has(.el.featured)) .el:not([data-cat="lanthanide"]):not([data-n="21"]):not([data-n="39"]) {
+    opacity: 0.55;
   }
-  body.pi-panel-substrate .el { transition: opacity 0.25s ease; }
-  body.pi-panel-substrate .table-wrap,
+  body.pi-shell .el { transition: opacity 0.25s ease; }
+
   body.pi-panel-substrate .minerals-section,
   body.pi-panel-minerals .minerals-section,
   body.pi-panel-operations .ops-section,
@@ -1319,7 +1356,7 @@
   /* Responsive tweaks */
   @media (max-width: 900px) {
     body,
-    body.pi-shell { padding: 84px 16px 80px; }
+    body.pi-shell { padding: 84px 16px calc(32vh + 24px); }
     .pi-topbar {
       grid-template-columns: 1fr;
       align-items: stretch;
@@ -1341,6 +1378,11 @@
     /* On narrow viewports, hide the missions block in analysis mode (visible
        via the Mission tab when needed) and tighten the nav block padding. */
     body.pi-mode-analysis .pi-left-panel .pi-block-missions { display: none; }
+    /* Element-layer dock spans full visible width when sidebar isn't fixed */
+    body.pi-shell .table-wrap { left: 8px; right: 8px; height: 32vh; }
+  }
+  @media (max-width: 720px) {
+    body.pi-shell .table-wrap { height: 30vh; }
     .pi-bottom-strip {
       left: 8px;
       right: 8px;
