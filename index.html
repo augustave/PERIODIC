@@ -562,6 +562,11 @@
     transform: translate(-50%, -50%) scale(1);
   }
 
+  /* === Single-panel-root mode toggle (R1 doctrine) === */
+  .dp-section { display: none; }
+  .detail-panel.pi-section-mode .dp-dossier { display: none; }
+  .detail-panel.pi-section-mode .dp-section { display: block; }
+
   /* === Section-detail panel (about-this-section card) === */
   .sd-header {
     padding: 36px 36px 22px;
@@ -1043,6 +1048,8 @@
     padding-top: 8px;
   }
   body.pi-lens-active .pi-lens-legend { display: flex; }
+  .pi-block-lens { display: none; }
+  body.pi-lens-active .pi-block-lens { display: block; }
   .pi-lens-key {
     display: inline-flex;
     align-items: center;
@@ -1100,60 +1107,82 @@
     color: var(--ink);
   }
 
-  /* Focused-chrome rules: applied ONLY in mission mode. Analysis mode (the default)
-     keeps the editorial masthead, dataset strip, controls, magnet bar, and legacy
-     footer visible — visual identity is preserved per PRD non-goal "Do not redesign
-     full visual identity". The substrate panel still renders BELOW the masthead
-     as the meaningful primary surface. */
-  body.pi-shell.pi-mode-mission .masthead,
-  body.pi-shell.pi-mode-mission .dataset-strip,
-  body.pi-shell.pi-mode-mission .controls,
-  body.pi-shell.pi-mode-mission .magnet-bar,
-  body.pi-shell.pi-mode-mission footer:not(.site-footer) {
+  /* Command-table shell: the left rail owns dataset/nav controls. The old
+     editorial masthead and inline controls stay out of the primary stage. */
+  body.pi-shell .masthead,
+  body.pi-shell .dataset-strip,
+  body.pi-shell .controls,
+  body.pi-shell .magnet-bar {
     display: none;
   }
   /* === DOCTRINE 1.1 — LAYERED ARCHITECTURE ===
-     The periodic table (.table-wrap) is a PERSISTENT GLOBAL REFERENCE LAYER.
-     It renders once on app init, never unmounts, never moves between modes.
-     Position: fixed-bottom dock, height 35vh, z-index 10 (below mineral z-20
-     and overlay z-30). Mineral and section content scroll independently above. */
+     #main-stage owns three sibling layers:
+     #mineral-layer (z-20), #element-layer (z-10), #overlay-layer (z-30).
+     The periodic table mounts once inside #element-layer and only receives
+     state-driven highlight/dim class changes. */
+  #main-stage {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+  }
+  #mineral-layer {
+    display: contents;
+  }
+  #element-layer {
+    order: 150;
+    position: relative;
+    height: auto;
+    z-index: 10;
+    pointer-events: auto;
+    margin: 16px 0 32px;
+  }
+  #overlay-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    pointer-events: none;
+  }
+  #mineral-layer > .masthead { order: 20; }
+  #mineral-layer > .dataset-strip { order: 30; }
+  #mineral-layer > .controls { order: 40; }
+  #mineral-layer > .magnet-bar { order: 45; }
+  #mineral-layer > footer:not(.site-footer) { order: 60; }
+  #mineral-layer > .minerals-section { order: 70; }
+  #mineral-layer > .ops-section { order: 80; }
+  #mineral-layer > .stats-bar { order: 90; }
+  #mineral-layer > .xds-section { order: 100; }
+  #mineral-layer > .iea-section { order: 110; }
+  #mineral-layer > .kg-section { order: 120; }
+  #mineral-layer > .colophon-bar { order: 900; }
+  #mineral-layer > .site-footer { order: 910; }
+  #mineral-layer > .sticky-util { order: 1000; }
+  /* The table itself remains a stable dock within the global element layer.
+     It renders once on app init, never unmounts, and never moves between modes. */
   body.pi-shell .table-wrap {
-    position: fixed;
-    bottom: 0;
-    left: 292px;       /* clear the fixed left sidebar */
-    right: 16px;
-    height: 35vh;
-    min-height: 240px;
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    height: auto;
+    min-height: 0;
     z-index: 10;
     background: var(--bg-paper);
     border: 1px solid var(--ink);
-    border-bottom: none;
-    box-shadow: 0 -16px 40px -22px rgba(11,4,4,0.32);
-    overflow: auto;
+    box-shadow: none;
+    overflow: visible;
     padding: 10px 12px 6px;
     display: block !important;  /* never conditionally hidden — D1 mandate */
+    pointer-events: auto;
   }
-  /* Compact periodic-table grid inside the dock — cells shrink to fit 35vh height.
-     The full 9-row layout (periods 1-7 + lanthanides + actinides) compresses
-     to roughly half-size compared to the original. Click + highlight behaviors
-     stay intact. */
+  /* Full command-table scale: one global table, visible as the first surface. */
   body.pi-shell .table-wrap .ptable {
-    grid-template-columns: repeat(18, minmax(36px, 1fr));
-    grid-template-rows: repeat(7, minmax(34px, 1fr)) 8px repeat(2, minmax(34px, 1fr));
-    min-width: 0;
-    gap: 2px;
+    grid-template-columns: repeat(18, minmax(58px, 1fr));
+    grid-template-rows: repeat(7, minmax(64px, auto)) 18px repeat(2, minmax(64px, auto));
+    min-width: 1120px;
+    gap: 4px;
   }
-  body.pi-shell .table-wrap .el {
-    aspect-ratio: auto;
-    padding: 3px 4px;
-    font-size: 9px;
-  }
-  body.pi-shell .table-wrap .el .num   { font-size: 8px; }
-  body.pi-shell .table-wrap .el .sym   { font-size: 14px; line-height: 1; }
-  body.pi-shell .table-wrap .el .name,
-  body.pi-shell .table-wrap .el .mass  { display: none; } /* tooltip-on-hover; minimal in dock */
-  /* Body needs bottom padding so document content can scroll past the dock */
-  body.pi-shell { padding-bottom: calc(35vh + 24px); }
+  body.pi-shell { padding-bottom: 24px; }
 
   /* Sections render in document flow above the docked table layer (z-10).
      z-20 keeps them visually atop, but they DO NOT contain the periodic table. */
@@ -1356,7 +1385,7 @@
   /* Responsive tweaks */
   @media (max-width: 900px) {
     body,
-    body.pi-shell { padding: 84px 16px calc(32vh + 24px); }
+    body.pi-shell { padding: 84px 16px 24px; }
     .pi-topbar {
       grid-template-columns: 1fr;
       align-items: stretch;
@@ -1378,11 +1407,10 @@
     /* On narrow viewports, hide the missions block in analysis mode (visible
        via the Mission tab when needed) and tighten the nav block padding. */
     body.pi-mode-analysis .pi-left-panel .pi-block-missions { display: none; }
-    /* Element-layer dock spans full visible width when sidebar isn't fixed */
-    body.pi-shell .table-wrap { left: 8px; right: 8px; height: 32vh; }
+    body.pi-shell #element-layer { margin: 18px 0 24px; }
   }
   @media (max-width: 720px) {
-    body.pi-shell .table-wrap { height: 30vh; }
+    body.pi-shell #element-layer { margin: 14px 0 20px; }
     .pi-bottom-strip {
       left: 8px;
       right: 8px;
@@ -1579,7 +1607,10 @@
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  .el { animation: fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
+  .el {
+    animation: fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) backwards;
+    animation-fill-mode: backwards !important;
+  }
 
   /* Featured states for mineral highlighting */
   .el.featured {
@@ -3524,7 +3555,7 @@
     100% { opacity: 1;    transform: scale(1);    filter: brightness(1) saturate(1); }
   }
   .el.dataset-flash {
-    animation: datasetScan 0.46s cubic-bezier(0.2, 0.8, 0.3, 1) both !important;
+    animation: datasetScan 0.46s cubic-bezier(0.2, 0.8, 0.3, 1) backwards !important;
   }
 
   /* ======== CROSS-DATASET COMPARISON SECTION ======== */
@@ -4198,6 +4229,7 @@
   <header id="top-bar" class="pi-topbar" aria-label="Periodic intelligence controls">
     <div class="pi-brand">Periodic Intelligence</div>
     <div class="pi-mode-switch" role="tablist" aria-label="Interface mode">
+      <button class="pi-chip" data-pi-mode="explore">Explore</button>
       <button class="pi-chip active" data-pi-mode="analysis">Analysis</button>
       <button class="pi-chip" data-pi-mode="mission">Mission</button>
     </div>
@@ -4214,6 +4246,12 @@
   </header>
 
   <aside id="left-panel" class="pi-left-panel" aria-label="Substrate navigation">
+    <div class="pi-block pi-block-entry">
+      <div class="pi-entry-actions">
+        <button class="pi-entry-btn active" data-pi-entry="minerals"><span>View Minerals</span><span class="meta">2 clicks</span></button>
+        <button class="pi-entry-btn" data-pi-entry="mission"><span>Run Mission</span><span class="meta">guided</span></button>
+      </div>
+    </div>
     <div class="pi-block pi-block-dataset">
       <div class="pi-block-label">Dataset</div>
       <div class="pi-panel-list">
@@ -4225,11 +4263,13 @@
     <div class="pi-block pi-block-nav">
       <div class="pi-block-label">Navigate</div>
       <div class="pi-panel-list">
-        <button class="pi-nav-btn active" data-pi-panel="substrate"><span>Substrate</span><span class="meta">minerals</span></button>
+        <button class="pi-nav-btn" data-pi-panel="table"><span>Elements</span><span class="meta">anchor</span></button>
+        <button class="pi-nav-btn active" data-pi-panel="substrate"><span>Minerals</span><span class="meta">hosts</span></button>
         <button class="pi-nav-btn" data-pi-panel="operations"><span>Operations</span><span class="meta">projects</span></button>
+        <button class="pi-nav-btn" data-pi-panel="timeline"><span>Timeline</span><span class="meta">build</span></button>
         <button class="pi-nav-btn" data-pi-panel="countries"><span>Countries</span><span class="meta">risk</span></button>
         <button class="pi-nav-btn" data-pi-panel="capital"><span>Capital</span><span class="meta">funding</span></button>
-        <button class="pi-nav-btn" data-pi-panel="iea"><span>Policy</span><span class="meta">IEA R1–R8</span></button>
+        <button class="pi-nav-btn" data-pi-panel="iea"><span>IEA Framework</span><span class="meta">R1–R8</span></button>
         <button class="pi-nav-btn" data-pi-panel="topology"><span>Topology</span><span class="meta">graph</span></button>
       </div>
     </div>
@@ -4248,7 +4288,8 @@
     </div>
   </aside>
 
-  <main id="center-canvas">
+  <main id="main-stage">
+  <section id="mineral-layer" aria-label="Mineral intelligence surface">
   <header class="masthead">
     <div class="colophon">
       <div><span class="label">Source</span> Take Nakano</div>
@@ -4337,10 +4378,6 @@
         <span class="ec-icon">⌗</span><span>Share</span>
       </button>
     </div>
-  </div>
-
-  <div class="table-wrap">
-    <div class="ptable" id="ptable"></div>
   </div>
 
   <footer>
@@ -4697,47 +4734,55 @@
   </div>
 
 
+  </section><!-- #mineral-layer -->
+
+  <section id="element-layer" aria-label="Global periodic table reference">
+    <div class="table-wrap">
+      <div class="ptable" id="ptable"></div>
+    </div>
+  </section>
+
+  <section id="overlay-layer" aria-hidden="true"></section>
+
   </main>
+
+  <div class="detail-overlay" id="overlay"></div>
+  <div class="detail-panel" id="right-panel" data-legacy-id="detailPanel" role="dialog" aria-modal="true" aria-hidden="true">
+    <button class="detail-close" id="closeBtn" aria-label="Close">×</button>
+    <div class="dp-dossier" id="dpDossier">
+      <div class="detail-header">
+        <div class="detail-symbol" id="dSymbol">
+          <div class="num" id="dNum"></div>
+          <div class="sym" id="dSym"></div>
+          <div class="mass" id="dMass"></div>
+        </div>
+        <div class="detail-name">
+          <div class="super" id="dCat"></div>
+          <h2 id="dName"></h2>
+          <div class="designer-tag">
+            <span class="dot" id="dDot"></span>
+            <span id="dDesigner"></span>
+          </div>
+        </div>
+      </div>
+      <div class="detail-tabs" id="detailTabs" role="tablist" aria-label="Detail panel tabs"></div>
+      <div class="detail-body" id="dBody"></div>
+    </div>
+    <div class="dp-section" id="dpSection" aria-hidden="true">
+      <div class="sd-header">
+        <div class="sd-eyebrow" id="sdEyebrow"></div>
+        <h2 class="sd-title" id="sdTitle"></h2>
+        <div class="sd-deck" id="sdDeck"></div>
+      </div>
+      <div class="sd-body" id="sdBody"></div>
+    </div>
+  </div>
 
 </div><!-- #app -->
 
-  <div class="detail-overlay" id="overlay"></div>
-  <div class="detail-panel" id="detailPanel" role="dialog" aria-modal="true" aria-hidden="true">
-    <button class="detail-close" id="closeBtn" aria-label="Close">×</button>
-    <div class="detail-header">
-      <div class="detail-symbol" id="dSymbol">
-        <div class="num" id="dNum"></div>
-        <div class="sym" id="dSym"></div>
-        <div class="mass" id="dMass"></div>
-      </div>
-      <div class="detail-name">
-        <div class="super" id="dCat"></div>
-        <h2 id="dName"></h2>
-        <div class="designer-tag">
-          <span class="dot" id="dDot"></span>
-          <span id="dDesigner"></span>
-        </div>
-      </div>
-    </div>
-    <div class="detail-tabs" id="detailTabs" role="tablist" aria-label="Detail panel tabs"></div>
-    <div class="detail-body" id="dBody"></div>
-  </div>
-
-  <!-- Section Detail Panel — opens when a section title is clicked -->
-  <div class="detail-overlay" id="sectionOverlay"></div>
-  <div class="section-detail-panel" id="sectionDetailPanel" role="dialog" aria-modal="true" aria-hidden="true">
-    <button class="detail-close" id="sectionCloseBtn" aria-label="Close">×</button>
-    <div class="sd-header">
-      <div class="sd-eyebrow" id="sdEyebrow"></div>
-      <h2 class="sd-title" id="sdTitle"></h2>
-      <div class="sd-deck" id="sdDeck"></div>
-    </div>
-    <div class="sd-body" id="sdBody"></div>
-  </div>
-
-<script type="module">
-import { state, setState, registerRenderer } from './js/state/store.js';
-import { openPanel as _openPanel, closePanel as _closePanel } from './js/components/panel.js';
+<script>
+const state = window.periodicState || {};
+const registerRenderer = window.registerRenderer || function registerRendererFallback() {};
 
 /* ===== CATEGORY → DESIGNER COLOR MAP ===== */
 const CATS = {
@@ -4992,8 +5037,11 @@ ctrl.addEventListener("click", e => {
 });
 
 /* ===== DETAIL PANEL ===== */
+function getDetailPanel() {
+  return document.getElementById("right-panel") || document.getElementById("detailPanel");
+}
 const overlay = document.getElementById("overlay");
-const panel = document.getElementById("detailPanel");
+const panel = getDetailPanel();
 
 function openPanel() {
   if (typeof closeSectionDetail === "function") closeSectionDetail({ preserveFocus: true });
@@ -5331,10 +5379,9 @@ function openOperationDetail(o) {
 
 function closeDetail() {
   overlay.classList.remove("open");
-  panel.classList.remove("open");
+  panel.classList.remove("open", "pi-section-mode");
   panel.setAttribute("aria-hidden", "true");
-  const sectionOpen = document.getElementById("sectionDetailPanel")?.classList.contains("open");
-  if (!sectionOpen) document.body.classList.remove("pi-focus");
+  document.body.classList.remove("pi-focus");
   document.querySelectorAll(".el.selected").forEach(c => c.classList.remove("selected"));
   document.querySelectorAll(".mineral-card.contains-element").forEach(c => c.classList.remove("contains-element"));
 }
@@ -5382,7 +5429,7 @@ const SECTION_INFO = {
       const list = OPERATIONS;
       const status = { online: 0, build: 0, project: 0 };
       list.forEach(o => { if (status[o.status] != null) status[o.status]++; });
-      const funded = list.filter(o => o.fundingAmount).reduce((s, o) => s + o.fundingAmount, 0);
+      const funded = list.filter(o => Number.isFinite(o.fundingAmount)).reduce((s, o) => s + o.fundingAmount, 0);
       return [
         ["Total ops", list.length],
         ["Online", status.online],
@@ -5408,7 +5455,7 @@ const SECTION_INFO = {
     deck:    () => DATASETS[activeDataset].meta.capitalDeck,
     facts:   () => {
       const segs = { mining: 0, separation: 0, refining: 0, magnets: 0, recycling: 0 };
-      OPERATIONS.forEach(o => { if (o.fundingAmount && segs[o.segment] != null) segs[o.segment] += o.fundingAmount; });
+      OPERATIONS.forEach(o => { if (Number.isFinite(o.fundingAmount) && segs[o.segment] != null) segs[o.segment] += o.fundingAmount; });
       const fmt = v => v >= 1000 ? `$${(v/1000).toFixed(1)}B` : v ? `$${v}M` : "—";
       return [
         ["Mining", fmt(segs.mining)],
@@ -5435,7 +5482,7 @@ const SECTION_INFO = {
     facts:   () => {
       const byCountry = {};
       OPERATIONS.forEach(o => {
-        if (!o.fundingAmount) return;
+        if (!Number.isFinite(o.fundingAmount)) return;
         byCountry[o.country] = (byCountry[o.country] || 0) + o.fundingAmount;
       });
       const top = Object.entries(byCountry).sort((a, b) => b[1] - a[1]).slice(0, 4);
@@ -5523,13 +5570,9 @@ const SECTION_INFO = {
   }
 };
 
-const sectionPanel = document.getElementById("sectionDetailPanel");
-const sectionOverlay = document.getElementById("sectionOverlay");
-
 function openSectionDetail(id) {
   const info = SECTION_INFO[id];
   if (!info) { console.warn("[section-detail] unknown section id:", id); return; }
-  try { closeDetail(); } catch(e) { /* element panel may not exist yet */ }
 
   document.getElementById("sdEyebrow").textContent = info.eyebrow();
   document.getElementById("sdTitle").innerHTML = info.title();
@@ -5559,23 +5602,13 @@ function openSectionDetail(id) {
 
   document.getElementById("sdBody").innerHTML = bodyHTML;
 
-  sectionOverlay.classList.add("open");
-  sectionPanel.classList.add("open");
-  sectionPanel.setAttribute("aria-hidden", "false");
-  document.body.classList.add("pi-focus");
+  openPanel();
+  panel.classList.add("pi-section-mode");
 }
 
 function closeSectionDetail(options = {}) {
-  if (!sectionPanel) return;
-  sectionOverlay.classList.remove("open");
-  sectionPanel.classList.remove("open");
-  sectionPanel.setAttribute("aria-hidden", "true");
-  const detailOpen = document.getElementById("detailPanel")?.classList.contains("open");
-  if (!detailOpen && !options.preserveFocus) document.body.classList.remove("pi-focus");
+  closeDetail();
 }
-
-document.getElementById("sectionCloseBtn")?.addEventListener("click", closeSectionDetail);
-sectionOverlay?.addEventListener("click", closeSectionDetail);
 
 /* Click delegation — both bubble (for static titles) AND capture (so any
    parent stopPropagation upstream doesn't swallow the click). Wrapped in
@@ -6681,7 +6714,7 @@ function renderCapital() {
   const counts = {};
   SEGMENTS.forEach(s => { totals[s.key] = 0; counts[s.key] = 0; });
   OPERATIONS.forEach(o => {
-    if (o.fundingAmount && o.segment) {
+    if (Number.isFinite(o.fundingAmount) && o.segment && Object.hasOwn(totals, o.segment)) {
       totals[o.segment] += o.fundingAmount;
       counts[o.segment] += 1;
     } else if (o.funding && o.segment) {
@@ -8987,7 +9020,7 @@ const PI_PANEL_LABELS = {
   countries: "Countries",
   stats: "Stats",
   "cross-capital": "Cross Capital",
-  iea: "Policy",              /* renamed from "IEA Framework" per doctrine */
+  iea: "IEA Framework",
   topology: "Topology"
 };
 
@@ -9048,9 +9081,7 @@ const MISSION_THREADS = {
 };
 
 function setPiMode(mode) {
-  /* "explore" is a legacy alias — silently rewrite to analysis (focused chrome lives in pi-mode-analysis now) */
-  if (mode === "explore") mode = "analysis";
-  if (!["analysis", "mission"].includes(mode)) mode = "analysis";
+  if (!["explore", "analysis", "mission"].includes(mode)) mode = "analysis";
   activePiMode = mode;
   document.body.classList.remove("pi-mode-explore", "pi-mode-analysis", "pi-mode-mission");
   document.body.classList.add(`pi-mode-${mode}`);
@@ -9452,7 +9483,7 @@ setTimeout(() => {
 
   /* Mineral-First doctrine note:
      The PRD calls for a right-side dossier panel to open on load. The current
-     #detailPanel is a CENTERED MODAL — opening it on load completely covers
+     #right-panel is still styled as a CENTERED MODAL — opening it on load completely covers
      the substrate (mineral grid + periodic table) which IS the landing the
      doctrine wants visible.
 
@@ -9460,7 +9491,7 @@ setTimeout(() => {
      above the periodic-table reference layer, with the Bastnäsite mineral
      visually highlighted (first in the grid) and the rest-state CSS dimming
      non-REE elements. A user click on any mineral card opens the modal —
-     no auto-open until #detailPanel is converted to a right-drawer. */
+     no auto-open until #right-panel is converted to a true right-drawer. */
 }, 100);
 
 /* ======================================================
