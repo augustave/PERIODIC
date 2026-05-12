@@ -1,9 +1,12 @@
 // js/components/panel.js — Primary detail panel open/close
-// Spec names this #right-panel; the live element ID is #detailPanel (also given id="right-panel"
-// in the new index.html so both IDs work).
+// Spec names this #right-panel; keep #detailPanel as a legacy fallback.
+
+function getPanel() {
+  return document.getElementById("right-panel") || document.getElementById("detailPanel");
+}
 
 export function openPanel(content) {
-  const panel   = document.getElementById("detailPanel");
+  const panel   = getPanel();
   const overlay = document.getElementById("overlay");
   if (!panel || !overlay) return;
   if (content != null) {
@@ -17,7 +20,7 @@ export function openPanel(content) {
 }
 
 export function closePanel() {
-  const panel   = document.getElementById("detailPanel");
+  const panel   = getPanel();
   const overlay = document.getElementById("overlay");
   if (!panel || !overlay) return;
   overlay.classList.remove("open");

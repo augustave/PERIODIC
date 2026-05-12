@@ -6,12 +6,12 @@
 /* --- Visibility primitives --------------------------------- */
 .hidden { display: none !important; }
 
-/* Right panel (spec: #right-panel = real: #detailPanel) */
-#right-panel { display: none; }
-#right-panel:not(.hidden) { display: block; }
+/* Right panel: #right-panel is the live dossier surface.
+   Visibility is controlled by .detail-panel.open in index.html. */
+#right-panel.hidden { display: none !important; }
 
 /* --- Panel-open state --------------------------------------- */
-body.panel-open #center-canvas {
+body.panel-open #main-stage {
   opacity: 0.3;
   pointer-events: none;
   transition: opacity 0.2s ease;
@@ -34,7 +34,26 @@ body.mode-mission .non-relevant { opacity: 0.1; }
 
 #top-bar    { /* .pi-topbar — no additional overrides needed */ }
 #left-panel { /* .pi-left-panel — no additional overrides needed */ }
-#center-canvas { /* main content region — no additional overrides needed */ }
+#main-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+#mineral-layer { display: contents; }
+#element-layer {
+  order: 150;
+  position: relative;
+  width: 100%;
+  height: auto;
+  z-index: 10;
+  pointer-events: auto;
+}
+#overlay-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}
 #bottom-strip { /* .pi-bottom-strip — no additional overrides needed */ }
 
 /* --- Lens active hook --------------------------------------- */
