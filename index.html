@@ -7142,10 +7142,9 @@ function applyHash() {
       if (pill) pill.click();
     }
 
-    /* Scenario (magnet / china / battery) */
-    if (params.scenario === "magnet" || params.scenario === "china" || params.scenario === "battery") {
-      if (activeScenario !== params.scenario) activateScenario(params.scenario);
-    }
+    /* Scenarios (magnet / china / battery) are NEVER auto-activated from URL
+       or localStorage — they are transient UI dim states that require an
+       explicit user click. Ignored here. */
 
     /* Selection (op or mineral, mutually exclusive) */
     if (params.op) {
