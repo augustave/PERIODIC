@@ -41,7 +41,7 @@ body.mode-mission .non-relevant { opacity: 0.1; }
 }
 #mineral-layer { display: contents; }
 #element-layer {
-  order: 150;
+  order: 5;
   position: relative;
   width: 100%;
   height: auto;
