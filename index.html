@@ -1157,32 +1157,49 @@
   #mineral-layer > .colophon-bar { order: 900; }
   #mineral-layer > .site-footer { order: 910; }
   #mineral-layer > .sticky-util { order: 1000; }
-  /* The table itself remains a stable dock within the global element layer.
-     It renders once on app init, never unmounts, and never moves between modes. */
-  body.pi-shell .table-wrap {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    right: auto;
-    height: auto;
+  /* The table itself remains a stable PERSISTENT BOTTOM DOCK within the global
+     element layer. It renders once on app init, never unmounts, never moves
+     between modes, and is visible on every panel without scrolling.
+     PRD 1.1 doctrine — restored after R3 regression sequence. */
+  body.pi-shell #element-layer {
+    margin: 0;
     min-height: 0;
+    height: 0;
+  }
+  body.pi-shell .table-wrap {
+    position: fixed;
+    bottom: 0;
+    left: 280px;            /* clear the 248px left panel + 16px gutter + 16px gap */
+    right: 16px;
+    height: 35vh;
+    min-height: 240px;
     z-index: 10;
     background: var(--bg-paper);
-    border: 1px solid var(--ink);
-    box-shadow: none;
-    overflow: visible;
+    border-top: 1px solid var(--ink);
+    box-shadow: 0 -8px 24px -12px rgba(11,4,4,0.18);
+    overflow: auto;
     padding: 10px 12px 6px;
     display: block !important;  /* never conditionally hidden — D1 mandate */
     pointer-events: auto;
   }
-  /* Full command-table scale: one global table, visible as the first surface. */
+  /* Compact cell sizing inside the dock so the full 9-row table fits 35vh. */
   body.pi-shell .table-wrap .ptable {
-    grid-template-columns: repeat(18, minmax(58px, 1fr));
-    grid-template-rows: repeat(7, minmax(64px, auto)) 18px repeat(2, minmax(64px, auto));
-    min-width: 1120px;
-    gap: 4px;
+    grid-template-columns: repeat(18, minmax(36px, 1fr));
+    grid-template-rows: repeat(7, minmax(34px, auto)) 14px repeat(2, minmax(34px, auto));
+    min-width: 0;
+    gap: 3px;
   }
-  body.pi-shell { padding-bottom: 24px; }
+  body.pi-shell .table-wrap .el {
+    min-height: 34px;
+    padding: 3px 4px;
+  }
+  body.pi-shell .table-wrap .el .sym { font-size: 13px; }
+  body.pi-shell .table-wrap .el .num { font-size: 8px; }
+  body.pi-shell .table-wrap .el .nm,
+  body.pi-shell .table-wrap .el .name,
+  body.pi-shell .table-wrap .el .mass { display: none; }
+  /* Body must reserve space below content for the fixed dock. */
+  body.pi-shell { padding-bottom: calc(35vh + 24px); }
 
   /* Sections render in document flow above the docked table layer (z-10).
      z-20 keeps them visually atop, but they DO NOT contain the periodic table. */
@@ -1407,10 +1424,20 @@
     /* On narrow viewports, hide the missions block in analysis mode (visible
        via the Mission tab when needed) and tighten the nav block padding. */
     body.pi-mode-analysis .pi-left-panel .pi-block-missions { display: none; }
-    body.pi-shell #element-layer { margin: 18px 0 24px; }
+    body.pi-shell .table-wrap {
+      left: 8px;
+      right: 8px;
+      height: 32vh;
+      min-height: 200px;
+    }
+    body.pi-shell { padding-bottom: calc(32vh + 24px); }
   }
   @media (max-width: 720px) {
-    body.pi-shell #element-layer { margin: 14px 0 20px; }
+    body.pi-shell .table-wrap {
+      height: 30vh;
+      min-height: 180px;
+    }
+    body.pi-shell { padding-bottom: calc(30vh + 24px); }
     .pi-bottom-strip {
       left: 8px;
       right: 8px;
