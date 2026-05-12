@@ -1192,12 +1192,7 @@
      persistent table). */
   body.pi-panel-substrate footer:not(.site-footer) { display: block; position: relative; z-index: 20; }
 
-  /* Resting-state dim: non-REE cells fade to 42% so the table reads as a
-     reference grid; selection or mission auto-disables this via :has(.el.featured)
-     or via the mission rule's higher specificity. */
-  body.pi-shell .ptable:not(:has(.el.featured)) .el:not([data-cat="lanthanide"]):not([data-n="21"]):not([data-n="39"]) {
-    opacity: 0.55;
-  }
+  /* Cell opacity transition kept for mission / lens / selection-triggered dims. */
   body.pi-shell .el { transition: opacity 0.25s ease; }
 
   body.pi-panel-substrate .minerals-section,
@@ -9449,8 +9444,12 @@ setTimeout(() => {
     try {
       const saved = localStorage.getItem(LS_KEY);
       if (saved) {
-        /* Strip any persisted dataset param so we always land on REE on cold start */
-        const cleaned = saved.replace(/[#&]dataset=[a-z]+/g, "").replace(/^&/, "#");
+        /* Strip persisted dataset + scenario params so cold start lands on REE
+           with no active scenario (avoids ghost dims from a prior session). */
+        const cleaned = saved
+          .replace(/[#&]dataset=[a-z]+/g, "")
+          .replace(/[#&]scenario=[a-z]+/g, "")
+          .replace(/^&/, "#");
         const final = cleaned.startsWith("#") ? cleaned : (cleaned ? "#" + cleaned : "");
         if (final) history.replaceState(null, "", location.pathname + location.search + final);
       }
