@@ -9440,20 +9440,31 @@ const LS_KEY = "periodic_pictorial_state";
    Mineral-First doctrine: URL hash always wins. localStorage may restore selection state
    (mineral, op, scenario) but the DATASET must default to "ree" unless URL hash overrides it. */
 setTimeout(() => {
+  /* Strip scenario from URL hash on every cold load — scenario is a transient
+     UI dim state, not a shareable link state. Same for any persisted dataset
+     to enforce REE as cold-start default. Applies whether the params came
+     from a previous URL or a localStorage replay. */
+  const stripParams = h => h
+    .replace(/[#&]dataset=[a-z]+/g, "")
+    .replace(/[#&]scenario=[a-z]+/g, "")
+    .replace(/^&/, "#");
+
   if (!location.hash) {
     try {
       const saved = localStorage.getItem(LS_KEY);
       if (saved) {
-        /* Strip persisted dataset + scenario params so cold start lands on REE
-           with no active scenario (avoids ghost dims from a prior session). */
-        const cleaned = saved
-          .replace(/[#&]dataset=[a-z]+/g, "")
-          .replace(/[#&]scenario=[a-z]+/g, "")
-          .replace(/^&/, "#");
+        const cleaned = stripParams(saved);
         const final = cleaned.startsWith("#") ? cleaned : (cleaned ? "#" + cleaned : "");
         if (final) history.replaceState(null, "", location.pathname + location.search + final);
       }
     } catch(e) {}
+  } else {
+    /* URL hash carried in from a previous session — strip transient params */
+    const cleaned = stripParams(location.hash);
+    if (cleaned !== location.hash) {
+      const final = cleaned.startsWith("#") ? cleaned : (cleaned ? "#" + cleaned : "");
+      history.replaceState(null, "", location.pathname + location.search + final);
+    }
   }
   applyHash();
 
